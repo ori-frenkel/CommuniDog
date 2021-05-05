@@ -2,10 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/registerConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".Register">
+    tools:context=".RegisterActivity">
+
 
     <ImageView
         android:id="@+id/app_logo"
@@ -19,7 +21,7 @@
         app:srcCompat="@drawable/logo_full" />
 
     <TextView
-        android:id="@+id/register"
+        android:id="@+id/registerScreenTitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -40,7 +42,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/register" />
+        app:layout_constraintTop_toBottomOf="@+id/registerScreenTitleTextView" />
 
     <EditText
         android:id="@+id/input_email_register"

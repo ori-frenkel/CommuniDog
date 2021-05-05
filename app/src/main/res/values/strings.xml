@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CommuniDog</string>
+    <string name="add_marker_textView_hint">write the description here</string>
+    <string name="add_marker_description_title">Marker description</string>
 </resources>
