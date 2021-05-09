@@ -1,5 +1,6 @@
 package communi.dog.aplicatiion;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -14,6 +15,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class RegisterActivity extends AppCompatActivity {
 
     EditText id;
@@ -22,6 +32,10 @@ public class RegisterActivity extends AppCompatActivity {
     EditText pass2;
     Button register;
     TextView to_register_btn;
+    private ArrayList<String> allIDs;
+    private ArrayList<String> allInUseIDs;
+    private DatabaseReference IdsRef;
+    private DatabaseReference usersRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +49,28 @@ public class RegisterActivity extends AppCompatActivity {
         register = findViewById(R.id.register_bt);
         to_register_btn = findViewById(R.id.back_to_login);
 
-        register.setOnClickListener(v -> checkDataEntered());
+        allIDs = new ArrayList<>();
+        allInUseIDs = new ArrayList<>();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference iDsRef = database.getReference("ID's");
+        this.IdsRef = iDsRef;
+        DatabaseReference usersRef = database.getReference("Users");
+        this.usersRef = usersRef;
 
+
+        readDataIds(new FirebaseCallback() {
+            @Override
+            public void onCallback(List<String> list) {
+            }
+        });
+
+        readDataIdsInUse(new FirebaseCallback() {
+            @Override
+            public void onCallback(List<String> list) {
+            }
+        });
+
+        register.setOnClickListener(v -> checkDataEntered());
         to_register_btn.setOnClickListener(v ->
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
 
@@ -53,7 +87,6 @@ public class RegisterActivity extends AppCompatActivity {
         boolean valid_input = true;
         boolean id_known = true;
 
-        // input validation
         if (isEmpty(id)) {
             id.setError("id is required!");
             valid_input = false;
@@ -89,8 +122,9 @@ public class RegisterActivity extends AppCompatActivity {
         if (valid_input) {
             Toast t = Toast.makeText(this, "input is valid", Toast.LENGTH_SHORT);
             t.show();
+            addUser();
+            startActivity(new Intent(this, LoginActivity.class)); //todo: Maybe to MapScreenActivity?
         }
-
     }
 
     boolean isEmail(EditText text) {
@@ -103,19 +137,71 @@ public class RegisterActivity extends AppCompatActivity {
         return TextUtils.isEmpty(str);
     }
 
-    boolean idExistsInDB(EditText id) {
-        // this method checks if the id is in the DB
-        return true;
-    }
-
-    boolean idDoubleUser(EditText id) {
-        // this method check if this id already has a user in the app
+    private boolean idDoubleUser(EditText id) {
+        for (String item: allInUseIDs){
+            if (item.equals(id.getText().toString())) {
+                return true;
+            }
+        }
         return false;
     }
 
+    private boolean idExistsInDB(EditText id){
+        for (String item: allIDs){
+            if (item.equals(id.getText().toString())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private interface FirebaseCallback{
+        void onCallback(List<String> list);
+    }
+
+    private void readDataIds(FirebaseCallback firebaseCallback){
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds: snapshot.getChildren()){
+                    if (ds != null) {
+                        allIDs.add((String)ds.getValue());
+                    }
+                }
+                firebaseCallback.onCallback(allIDs);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        };
+        IdsRef.addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    private void readDataIdsInUse(FirebaseCallback firebaseCallback){
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds: snapshot.getChildren()){
+                    if (ds != null) {
+                        String id = ds.child("id").getValue(String.class);
+                        allInUseIDs.add(id);
+                    }
+                }
+                firebaseCallback.onCallback(allInUseIDs);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        };
+        usersRef.addListenerForSingleValueEvent(valueEventListener);
+    }
+
     void addUser() {
-        // this method is called ones the data was successfully entered and the id in known
-        // we add the new user's details to the user's DB
+        User newUser = new User(this.id.getText().toString(),
+                this.emailAddress.getText().toString(), this.pass1.getText().toString());
+        this.usersRef.push().setValue(newUser);
     }
 
 }

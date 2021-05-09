@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "595257365318",
+    "firebase_url": "https://communidog-44acd-default-rtdb.firebaseio.com",
+    "project_id": "communidog-44acd",
+    "storage_bucket": "communidog-44acd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:595257365318:android:b34dce3f8330dbf3ab8b47",
+        "android_client_info": {
+          "package_name": "communi.dog.aplicatiion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "595257365318-srdapqn97at7942ci3mees10k6n0kdkp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWl7IXozLC2pUvWCD3JGBhjcvd5cs69Fg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "595257365318-srdapqn97at7942ci3mees10k6n0kdkp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
