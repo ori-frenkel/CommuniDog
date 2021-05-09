@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -63,10 +64,14 @@ public class LoginActivity extends AppCompatActivity {
 
         findViewById(R.id.login_button).setOnClickListener(v -> { //todo: check
             if (isUserExists(idEditText, userPassword)){
+                Intent successIntent = new Intent(this, MainActivity.class);
+                successIntent.putExtra("userId", idEditText.getText().toString());
+                startActivity(successIntent);
                 // todo: Move to other activity?
             }
             else{
-                //todo: a Toast?
+                Toast t = Toast.makeText(this, "id is unknown", Toast.LENGTH_SHORT); //todo: new Toast?
+                t.show();
             }
         });
 

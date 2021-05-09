@@ -105,6 +105,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         }
 
+        //todo: don't check the db if the user failed before?
 
         // DB validation
         if (!idExistsInDB(id)) {
@@ -123,7 +124,10 @@ public class RegisterActivity extends AppCompatActivity {
             Toast t = Toast.makeText(this, "input is valid", Toast.LENGTH_SHORT);
             t.show();
             addUser();
-            startActivity(new Intent(this, LoginActivity.class)); //todo: Maybe to MapScreenActivity?
+
+            Intent successIntent = new Intent(this, MainActivity.class); //todo: Maybe to MapScreenActivity?
+            successIntent.putExtra("userId", id.getText().toString());
+            startActivity(successIntent);
         }
     }
 
