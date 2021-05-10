@@ -87,7 +87,7 @@ public class RegisterActivity extends AppCompatActivity {
         boolean valid_input = true;
         boolean id_known = true;
 
-        if (isEmpty(id)) {
+        if (isEmpty(id) || id.getText().toString().length() != 9) {
             id.setError("id is required!");
             valid_input = false;
         }
