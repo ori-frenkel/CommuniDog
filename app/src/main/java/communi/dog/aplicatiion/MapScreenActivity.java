@@ -42,6 +42,7 @@ public class MapScreenActivity extends AppCompatActivity {
     private MapView mMapView = null;
     private final ArrayList<Marker> mapMarkers = new ArrayList<>();
     private Location currentLocation = null;
+    private String userId;
 
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
@@ -117,6 +118,9 @@ public class MapScreenActivity extends AppCompatActivity {
                     activityIntent.getDoubleExtra("marker_longitude", 0));
 //            mapToLocation(mapMarkers.get(mapMarkers.size() - 1).getPosition());
         }
+
+        Intent intent = getIntent();
+        userId = intent.getStringExtra("userId");
     }
 
     private void initializeMap() {

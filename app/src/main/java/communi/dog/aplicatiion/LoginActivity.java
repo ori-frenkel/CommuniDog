@@ -22,6 +22,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Objects;
 
+import android.widget.Button;
+import android.text.Editable;
+import android.text.TextWatcher;
+
 public class LoginActivity extends AppCompatActivity {
 
     private HashMap<String, String> allUsers;
@@ -79,6 +83,25 @@ public class LoginActivity extends AppCompatActivity {
         readDataIdsInUse(new FirebaseCallback(){
             @Override
             public void onCallback(HashMap<String, String> allUsers) {
+            }
+        });
+
+        Button loginButton = findViewById(R.id.login_button);
+        loginButton.setEnabled(false);
+
+        idEditText.addTextChangedListener(new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void afterTextChanged(Editable s) {
+                loginButton.setEnabled(!idEditText.getText().toString().equals("") && !userPassword.getText().toString().equals(""));
+            }
+        });
+
+        userPassword.addTextChangedListener(new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void afterTextChanged(Editable s) {
+                loginButton.setEnabled(!idEditText.getText().toString().equals("") && !userPassword.getText().toString().equals(""));
             }
         });
     }
