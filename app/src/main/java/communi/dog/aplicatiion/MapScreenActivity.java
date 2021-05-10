@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -39,8 +40,10 @@ import java.util.Arrays;
 public class MapScreenActivity extends AppCompatActivity {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private final double MAP_ZOOM = 18.0;
+    private final double MAP_MAX_ZOOM = 20.0;
+    private final double MAP_MIN_ZOOM = 9.0;
     private MapView mMapView = null;
-    private final ArrayList<Marker> mapMarkers = new ArrayList<>();
+    private final ArrayList<MapState.MarkerDescriptor> mapMarkers = new ArrayList<>();
     private Location currentLocation = null;
 
     private final LocationListener mLocationListener = new LocationListener() {
@@ -93,13 +96,6 @@ public class MapScreenActivity extends AppCompatActivity {
         btnMoreInfo.setOnClickListener(v ->
                 Toast.makeText(this, "link to more info screen", Toast.LENGTH_SHORT).show());
 
-        ImageView btnBack = findViewById(R.id.buttonTempBackToRegister);
-        btnBack.setOnClickListener(v -> {
-            Toast.makeText(this, "this is a temp button for development", Toast.LENGTH_SHORT).show();
-            goBackToLoginScreen();
-        });
-
-
         if (activityIntent.hasExtra("map_old_state")) {
             restoreMapState((MapState) activityIntent.getSerializableExtra("map_old_state"));
         } else if (savedInstanceState == null) {
@@ -107,45 +103,33 @@ public class MapScreenActivity extends AppCompatActivity {
             if (!mapToCurrentLocation()) {
                 // todo: set initial coordinates using database?
                 IGeoPoint initialLocation = new GeoPoint(32.1007, 34.8070);
-                mapToLocation(initialLocation, false);
+                centerMap(initialLocation, false);
             }
         }
 
         if (activityIntent.getBooleanExtra("add_marker", false)) {
-            addMarker(activityIntent.getStringExtra("marker_description"),
+            addMarker(activityIntent.getStringExtra("marker_title"),
                     activityIntent.getDoubleExtra("marker_latitude", 0),
-                    activityIntent.getDoubleExtra("marker_longitude", 0));
-//            mapToLocation(mapMarkers.get(mapMarkers.size() - 1).getPosition());
+                    activityIntent.getDoubleExtra("marker_longitude", 0),
+                    activityIntent.getIntExtra("marker_logo_res", 0));
         }
     }
 
     private void initializeMap() {
-        final DisplayMetrics dm = this.getResources().getDisplayMetrics();
-
         // initialize the map
         mMapView = findViewById(R.id.mapview);
         mMapView.setTileSource(TileSourceFactory.MAPNIK);
         mMapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.ALWAYS);
         mMapView.setMultiTouchControls(true);
         mMapView.getController().setZoom(MAP_ZOOM);
+        mMapView.setMaxZoomLevel(MAP_MAX_ZOOM);
+        mMapView.setMinZoomLevel(MAP_MIN_ZOOM);
 
         // enable user location
         LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, mLocationListener);
         mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, mLocationListener);
 
-        // set my location on the map
-        MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mMapView);
-        mLocationOverlay.enableMyLocation();
-        mLocationOverlay.enableFollowLocation();
-        mLocationOverlay.setOptionsMenuEnabled(true);
-
-        // set scale bar
-        ScaleBarOverlay mScaleBarOverlay = new ScaleBarOverlay(mMapView);
-        mScaleBarOverlay.setCentred(true);
-        mScaleBarOverlay.setScaleBarOffset(dm.widthPixels / 2, 10);
-
-        // set event receiver
         final MapEventsReceiver mReceive = new MapEventsReceiver() {
             @Override
             public boolean singleTapConfirmedHelper(GeoPoint p) {
@@ -157,72 +141,91 @@ public class MapScreenActivity extends AppCompatActivity {
                 Intent intent = new Intent(MapScreenActivity.this, AddMarkerActivity.class);
                 intent.putExtra("marker_latitude", p.getLatitude());
                 intent.putExtra("marker_longitude", p.getLongitude());
-                intent.putExtra("map_old_state", new MapState(mapMarkers, mMapView.getMapCenter()));
+                intent.putExtra("map_old_state", currMapState());
                 startActivity(intent);
                 return false;
             }
         };
-
-        // add map overlays
-        mMapView.getOverlays().add(mLocationOverlay);
-        mMapView.getOverlays().add(mScaleBarOverlay);
         mMapView.getOverlays().add(new MapEventsOverlay(mReceive));
+
+        addMyLocationIconOnMap();
+        addScaleBarOnMap();
+    }
+
+    private void addMyLocationIconOnMap() {
+        // set my location on the map
+        MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mMapView);
+        mLocationOverlay.enableMyLocation();
+        mLocationOverlay.enableFollowLocation();
+        mLocationOverlay.setOptionsMenuEnabled(true);
+
+        // add to map
+        mMapView.getOverlays().add(mLocationOverlay);
+    }
+
+    private void addScaleBarOnMap() {
+        final DisplayMetrics dm = this.getResources().getDisplayMetrics();
+        // set scale bar
+        ScaleBarOverlay mScaleBarOverlay = new ScaleBarOverlay(mMapView);
+        mScaleBarOverlay.setCentred(true);
+        mScaleBarOverlay.setScaleBarOffset(dm.widthPixels / 2, 10);
+
+        // add to map
+        mMapView.getOverlays().add(mScaleBarOverlay);
     }
 
     private boolean mapToCurrentLocation() {
         if (currentLocation == null) return false;
         GeoPoint myPosition = new GeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude());
-        mapToLocation(myPosition, true);
+        centerMap(myPosition, true);
         return true;
     }
 
-    private void mapToLocation(IGeoPoint location, boolean animate) {
+    private void centerMap(IGeoPoint newCenter, boolean animate) {
         if (animate) {
-            mMapView.getController().animateTo(location);
+            mMapView.getController().animateTo(newCenter);
         } else {
-            mMapView.setExpectedCenter(location);
+            mMapView.setExpectedCenter(newCenter);
         }
         mMapView.getController().setZoom(MAP_ZOOM);
     }
 
-    private void goBackToLoginScreen() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.putExtra("map_old_state", new MapState(mapMarkers, mMapView.getMapCenter()));
-        startActivity(intent);
+    private void addMarker(String title, double latitude, double longitude, int iconId) {
+        MapState.MarkerDescriptor descriptor = new MapState.MarkerDescriptor(latitude, longitude,
+                title, iconId);
+        addMarker(descriptor);
     }
 
-    private void addMarker(String title, double aLatitude, double aLongitude) {
-        GeoPoint point = new GeoPoint(aLatitude, aLongitude);
+    private void addMarker(MapState.MarkerDescriptor descriptor) {
+        GeoPoint point = new GeoPoint(descriptor.latitude, descriptor.longitude);
         Marker myMarker = new Marker(mMapView);
+        Drawable icon = descriptor.iconId == 0 ? mMapView.getRepository().getDefaultMarkerIcon() :
+                getResources().getDrawable(descriptor.iconId);
 
         myMarker.setPosition(point);
-        myMarker.setTitle(title);
+        myMarker.setTitle(descriptor.title);
         myMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
+        myMarker.setIcon(icon);
+        // todo: make marker small when zooming out
 
         mMapView.getOverlays().add(myMarker);
-        mapMarkers.add(myMarker);
+        mapMarkers.add(descriptor);
     }
 
-    private void restoreMapState(@Nullable MapState oldState) {
+    private void restoreMapState(MapState oldState) {
         if (oldState == null) {
             return;
         }
         for (MapState.MarkerDescriptor descriptor : oldState.markersDescriptors) {
-            addMarker(descriptor.title, descriptor.latitude, descriptor.longitude);
+            addMarker(descriptor);
         }
-        mapToLocation(oldState.currLocation, false);
+        GeoPoint mapCenter = new GeoPoint(oldState.mapCenterLatitude, oldState.mapCenterLongitude);
+        centerMap(mapCenter, false);
+        mMapView.getController().setZoom(oldState.zoom);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, int[] grantResults) {
-        ArrayList<String> permissionsToRequest =
-                new ArrayList<>(Arrays.asList(permissions).subList(0, grantResults.length));
-        if (permissionsToRequest.size() > 0) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    permissionsToRequest.toArray(new String[0]),
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
-        }
+    private MapState currMapState() {
+        return new MapState(mapMarkers, mMapView.getMapCenter(), mMapView.getZoomLevelDouble());
     }
 
     private void requestPermissionsIfNecessary(String[] permissions) {
@@ -242,52 +245,72 @@ public class MapScreenActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, int[] grantResults) {
+        ArrayList<String> permissionsToRequest =
+                new ArrayList<>(Arrays.asList(permissions).subList(0, grantResults.length));
+        if (permissionsToRequest.size() > 0) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    permissionsToRequest.toArray(new String[0]),
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         System.out.println("MainActivity.onSaveInstanceState");
         super.onSaveInstanceState(outState);
-        outState.putSerializable("markers", new MapState(mapMarkers, mMapView.getMapCenter()));
+        outState.putSerializable("map_old_state", currMapState());
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         System.out.println("MainActivity.onRestoreInstanceState");
         super.onRestoreInstanceState(savedInstanceState);
-        Serializable oldState = savedInstanceState.getSerializable("markers");
+        Serializable oldState = savedInstanceState.getSerializable("map_old_state");
         if (!(oldState instanceof MapState)) {
             return; // ignore
         }
         restoreMapState((MapState) oldState);
     }
 
-    private static class MapState implements Serializable {
-        ArrayList<MarkerDescriptor> markersDescriptors;
-        IGeoPoint currLocation;
-
-        public MapState(ArrayList<Marker> markers, IGeoPoint currLocation) {
-            this.currLocation = currLocation;
-
-            this.markersDescriptors = new ArrayList<>();
-            for (Marker marker : markers) {
-                this.markersDescriptors.add(new MarkerDescriptor(marker));
-            }
-        }
-
-        public static class MarkerDescriptor implements Serializable {
-            double latitude;
-            double longitude;
-            String title;
-
-            MarkerDescriptor(Marker marker) {
-                this.latitude = marker.getPosition().getLatitude();
-                this.longitude = marker.getPosition().getLongitude();
-                this.title = marker.getTitle();
-            }
-        }
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        goBackToLoginScreen();
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra("map_old_state", currMapState());
+        startActivity(intent);
+    }
+
+    /**
+     * class that stores the information of a marker
+     */
+    private static class MapState implements Serializable {
+        ArrayList<MarkerDescriptor> markersDescriptors;
+        double mapCenterLatitude;
+        double mapCenterLongitude;
+        double zoom;
+
+        public MapState(ArrayList<MarkerDescriptor> markers, IGeoPoint mapCenter, double zoom) {
+            this.mapCenterLatitude = mapCenter.getLatitude();
+            this.mapCenterLongitude = mapCenter.getLongitude();
+            this.zoom = zoom;
+            this.markersDescriptors = new ArrayList<>();
+            this.markersDescriptors = markers;
+        }
+
+        public static class MarkerDescriptor implements Serializable {
+            final double latitude;
+            final double longitude;
+            final int iconId;
+            final String title;
+
+            MarkerDescriptor(double latitude, double longitude, String title, int iconId) {
+                this.latitude = latitude;
+                this.longitude = longitude;
+                this.title = title;
+                this.iconId = iconId;
+            }
+        }
     }
 }

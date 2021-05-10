@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,11 +29,13 @@ public class AddMarkerActivity extends AppCompatActivity {
         ImageView buttonSaveMarker = findViewById(R.id.buttonSaveMarker);
         buttonSaveMarker.setOnClickListener(view -> {
             Intent newIntent = new Intent(this, MapScreenActivity.class);
+
             newIntent.putExtra("add_marker", true);
             newIntent.putExtra("marker_latitude", latitude);
             newIntent.putExtra("marker_longitude", longitude);
-            newIntent.putExtra("marker_description", markerText.getText().toString());
+            newIntent.putExtra("marker_title", markerText.getText().toString());
             newIntent.putExtra("map_old_state", activityIntent.getSerializableExtra("map_old_state"));
+            newIntent.putExtra("marker_logo_res", getMarkerLogoBySelectedRadio());
             startActivity(newIntent);
         });
 
@@ -49,4 +54,24 @@ public class AddMarkerActivity extends AppCompatActivity {
             startActivity(newIntent);
         });
     }
+
+
+    private int getMarkerLogoBySelectedRadio() {
+        final RadioGroup typeRadioGroup = findViewById(R.id.radioMarkerType);
+        switch (typeRadioGroup.getCheckedRadioButtonId()) {
+            case R.id.radioBtnMarkerTypeDogisiter: {
+                return R.drawable.man_carrying_dog_with_belt;
+            }
+            case R.id.radioBtnMarkerTypeFood: {
+                return R.drawable.dog_smelling_a_bone;
+            }
+            case R.id.radioBtnMarkerTypeMedicine: {
+                return R.drawable.dog_with_first_aid_kit_bag;
+            }
+            default:
+                return 0;
+        }
+
+    }
+
 }

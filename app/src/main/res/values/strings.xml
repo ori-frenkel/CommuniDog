@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">CommuniDog</string>
     <string name="add_marker_textView_hint">write the description here</string>
-    <string name="add_marker_description_title">Marker description</string>
+    <string name="add_marker_description_title">Add Marker</string>
     <string name="register_title">Register</string>
     <string name="register_id">id</string>
     <string name="register_email">email address</string>
@@ -16,4 +16,7 @@
     <string name="login_password">password</string>
     <string name="login_id">id</string>
     <string name="login_title">Login</string>
+    <string name="marker_type_digisiter_radio_btn_text">Dogisiter</string>
+    <string name="marker_type_food_radio_btn_text">Food</string>
+    <string name="marker_type_medicine_radio_btn_text">Medicine</string>
 </resources>
