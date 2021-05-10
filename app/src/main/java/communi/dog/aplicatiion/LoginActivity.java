@@ -32,7 +32,6 @@ public class LoginActivity extends AppCompatActivity {
     private DatabaseReference usersRef;
 
     @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -68,8 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(successIntent);
                 // todo: Move to other activity?
             } else {
-                Toast t = Toast.makeText(this, "id is unknown", Toast.LENGTH_SHORT); //todo: new Toast?
-                t.show();
+                Toast.makeText(this, "id is unknown", Toast.LENGTH_SHORT).show(); //todo: new Toast?
             }
         });
 
@@ -142,6 +140,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        //todo: exit app - maybe ask if sure?
+        //todo: exit app - maybe ask if the user is sure
     }
 }

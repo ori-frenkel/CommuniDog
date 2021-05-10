@@ -31,7 +31,7 @@ public class AddMarkerActivity extends AppCompatActivity {
             saveAdditionIntent.putExtra("marker_latitude", latitude);
             saveAdditionIntent.putExtra("marker_longitude", longitude);
             saveAdditionIntent.putExtra("marker_title", getMarkerTitle());
-            saveAdditionIntent.putExtra("marker_logo_res", getMarkerLogoBySelectedRadio());
+            saveAdditionIntent.putExtra("marker_icon_res", getMarkerLogoBySelectedRadio());
             saveAdditionIntent.putExtra("map_old_state", activityIntent.getSerializableExtra("map_old_state"));
             saveAdditionIntent.putExtra("userId", activityIntent.getStringExtra("userId"));
             startActivity(saveAdditionIntent);
@@ -61,6 +61,7 @@ public class AddMarkerActivity extends AppCompatActivity {
                 return R.drawable.dog_with_first_aid_kit_bag;
             }
             default:
+                // the default icon value
                 return 0;
         }
     }

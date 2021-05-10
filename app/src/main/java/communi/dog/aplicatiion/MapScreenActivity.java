@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
@@ -48,6 +49,7 @@ public class MapScreenActivity extends AppCompatActivity {
     private final double MAP_ZOOM = 18.0;
     private final double MAP_MAX_ZOOM = 20.0;
     private final double MAP_MIN_ZOOM = 9.0;
+    private final int DEFAULT_MARKER_ICON_ID = 0;
     private MapView mMapView = null;
     private final ArrayList<MapState.MarkerDescriptor> mapMarkers = new ArrayList<>();
     private Location currentLocation = null;
@@ -129,14 +131,14 @@ public class MapScreenActivity extends AppCompatActivity {
             addMarker(activityIntent.getStringExtra("marker_title"),
                     activityIntent.getDoubleExtra("marker_latitude", 0),
                     activityIntent.getDoubleExtra("marker_longitude", 0),
-                    activityIntent.getIntExtra("marker_logo_res", 0));
+                    activityIntent.getIntExtra("marker_icon_res", DEFAULT_MARKER_ICON_ID));
         }
 
         // DB
         userId = activityIntent.getStringExtra("userId");
-        //todo: why not save only the id and pass in to MyProfile screen? why do we need here all the rest?
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         this.usersRef = database.getReference("Users");
+        //todo: why not save only the id and pass in to MyProfile screen? why do we need here all the rest?
         currentUser = new User();
 
         readDataUsers(new MapScreenActivity.FirebaseCallback() {
@@ -232,17 +234,18 @@ public class MapScreenActivity extends AppCompatActivity {
     private void addMarker(MapState.MarkerDescriptor descriptor) {
         GeoPoint point = new GeoPoint(descriptor.latitude, descriptor.longitude);
         Marker myMarker = new Marker(mMapView);
-        Drawable icon = descriptor.iconId == 0 ? mMapView.getRepository().getDefaultMarkerIcon() :
-                getResources().getDrawable(descriptor.iconId);
+        Drawable icon = descriptor.iconId == DEFAULT_MARKER_ICON_ID ?
+                mMapView.getRepository().getDefaultMarkerIcon() :
+                ResourcesCompat.getDrawable(getResources(), descriptor.iconId, getTheme());
 
         myMarker.setPosition(point);
         myMarker.setTitle(descriptor.title);
         myMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
         myMarker.setIcon(icon);
-        // todo: make marker small when zooming out
+        // todo: make marker's icon smaller when zooming out
 
-        mMapView.getOverlays().add(myMarker);
         mapMarkers.add(descriptor);
+        mMapView.getOverlays().add(myMarker);
     }
 
     private void restoreMapState(MapState oldState) {

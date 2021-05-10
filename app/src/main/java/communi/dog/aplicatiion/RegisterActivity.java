@@ -54,10 +54,8 @@ public class RegisterActivity extends AppCompatActivity {
         allIDs = new ArrayList<>();
         allInUseIDs = new ArrayList<>();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference iDsRef = database.getReference("ID's");
-        this.IdsRef = iDsRef;
-        DatabaseReference usersRef = database.getReference("Users");
-        this.usersRef = usersRef;
+        this.IdsRef = database.getReference("ID's");
+        this.usersRef = database.getReference("Users");
         register.setEnabled(false);
 
 
@@ -134,15 +132,15 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     boolean checkButtonRegisterEnable() {
-        return !id.getText().toString().equals("") && !emailAddress.getText().toString().equals("")
-                && !pass1.getText().toString().equals("") && !pass2.getText().toString().equals("");
+//        return !id.getText().toString().equals("") && !emailAddress.getText().toString().equals("")
+//                && !pass1.getText().toString().equals("") && !pass2.getText().toString().equals("");
+        return !isEmpty(id) && !isEmpty(emailAddress) && !isEmpty(pass1) && !isEmpty(pass2);
     }
 
 
     void checkDataEntered() {
         boolean valid_input = true;
         boolean id_known = true;
-
         if (isEmpty(id) || id.getText().toString().length() != 9) {
             id.setError("id is required!");
             valid_input = false;
@@ -165,23 +163,20 @@ public class RegisterActivity extends AppCompatActivity {
 
         // DB validation
         if (!idExistsInDB(id)) {
-            Toast t = Toast.makeText(this, "id is unknown", Toast.LENGTH_SHORT);
-            t.show();
+            Toast.makeText(this, "id is unknown", Toast.LENGTH_SHORT).show();
             valid_input = false;
         } else {
             if (idDoubleUser(id)) {
-                Toast t = Toast.makeText(this, "id is already register", Toast.LENGTH_SHORT);
-                t.show();
+                Toast.makeText(this, "id is already register", Toast.LENGTH_SHORT).show();
                 valid_input = false;
             }
         }
 
         if (valid_input) {
-            Toast t = Toast.makeText(this, "input is valid", Toast.LENGTH_SHORT);
-            t.show();
+            Toast.makeText(this, "input is valid", Toast.LENGTH_SHORT).show();
             addUser();
 
-            Intent successIntent = new Intent(this, MainActivity.class); //todo: Maybe to MapScreenActivity?
+            Intent successIntent = new Intent(this, MapScreenActivity.class); //todo: Maybe to MapScreenActivity?
             successIntent.putExtra("userId", id.getText().toString());
             startActivity(successIntent);
         }
@@ -193,26 +188,31 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     boolean isEmpty(EditText text) {
-        CharSequence str = text.getText().toString();
-        return TextUtils.isEmpty(str);
+//        CharSequence str = text.getText().toString();
+//        return TextUtils.isEmpty(str);
+        return text.getText().toString().isEmpty();
     }
 
     private boolean idDoubleUser(EditText id) {
-        for (String item : allInUseIDs) {
-            if (item.equals(id.getText().toString())) {
-                return true;
-            }
-        }
-        return false;
+//        for (String item : allInUseIDs) {
+//            if (item.equals(id.getText().toString())) {
+//                return true;
+//            }
+//        }
+//        return false;
+        // todo: is there a better way to check that? do we really need to hold all id's in memory? why not a simple DB query??
+        //  also, why don't we have a class for all the db queries? e.g. getPassword(id), isRegistered(id) etc.
+        return allInUseIDs.contains(id.getText().toString());
     }
 
     private boolean idExistsInDB(EditText id) {
-        for (String item : allIDs) {
-            if (item.equals(id.getText().toString())) {
-                return true;
-            }
-        }
-        return false;
+//        for (String item : allIDs) {
+//            if (item.equals(id.getText().toString())) {
+//                return true;
+//            }
+//        }
+//        return false;
+        return allIDs.contains(id.getText().toString());
     }
 
     private interface FirebaseCallback {
