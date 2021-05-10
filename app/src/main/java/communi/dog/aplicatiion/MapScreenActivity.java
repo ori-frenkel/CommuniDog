@@ -63,10 +63,10 @@ public class MapScreenActivity extends AppCompatActivity {
         System.out.println("MainActivity.onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_screen);
+        final Intent activityIntent = getIntent();
         Context ctx = this.getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
-        final Intent activityIntent = getIntent();
         requestPermissionsIfNecessary(new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -85,20 +85,25 @@ public class MapScreenActivity extends AppCompatActivity {
         // enable user location
         LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, mLocationListener);
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, mLocationListener);
 
 
         if (activityIntent.hasExtra("map_old_state")) {
             restoreMapState((MapState) activityIntent.getSerializableExtra("map_old_state"));
         } else if (savedInstanceState == null) {
-            map.setExpectedCenter(new GeoPoint(31.90166253460957, 35.01005315434265));
-            map.getController().setZoom(18.0);
+            // new map
+            if (!mapToCurrentLocation()) {
+                // todo: set initial coordinates using database?
+                IGeoPoint initialLocation = new GeoPoint(31.90166253460957, 35.01005315434265);
+                mapToLocation(initialLocation);
+            }
         }
 
         if (activityIntent.getBooleanExtra("add_marker", false)) {
             addMarker(activityIntent.getStringExtra("marker_description"),
                     activityIntent.getDoubleExtra("marker_latitude", 0),
                     activityIntent.getDoubleExtra("marker_longitude", 0));
-            map.getController().animateTo(mapMarkers.get(mapMarkers.size() - 1).getPosition());
+            mapToLocation(mapMarkers.get(mapMarkers.size() - 1).getPosition());
         }
 
 
@@ -122,11 +127,7 @@ public class MapScreenActivity extends AppCompatActivity {
 
         ImageView btCenterMap = findViewById(R.id.buttonCenterMap);
         btCenterMap.setOnClickListener(view -> {
-            if (currentLocation != null) {
-                GeoPoint myPosition = new GeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude());
-                map.getController().animateTo(myPosition);
-                map.getController().setZoom(18.0);
-            }
+            mapToCurrentLocation();
         });
 
 
@@ -143,6 +144,18 @@ public class MapScreenActivity extends AppCompatActivity {
             Toast.makeText(this, "this is a temp button for development", Toast.LENGTH_SHORT).show();
             goBackToLoginScreen();
         });
+    }
+
+    private boolean mapToCurrentLocation() {
+        if (currentLocation == null) return false;
+        GeoPoint myPosition = new GeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude());
+        mapToLocation(myPosition);
+        return true;
+    }
+
+    private void mapToLocation(IGeoPoint location) {
+        map.getController().animateTo(location);
+        map.getController().setZoom(18.0);
     }
 
     private void goBackToLoginScreen() {
@@ -171,8 +184,7 @@ public class MapScreenActivity extends AppCompatActivity {
         for (MapState.MarkerDescriptor descriptor : oldState.markersDescriptors) {
             addMarker(descriptor.title, descriptor.latitude, descriptor.longitude);
         }
-        map.setExpectedCenter(oldState.currLocation);
-        map.getController().setZoom(18.0);
+        mapToLocation(oldState.currLocation);
     }
 
     @Override
