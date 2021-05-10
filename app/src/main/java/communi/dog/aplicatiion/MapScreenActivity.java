@@ -33,6 +33,12 @@ import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +51,11 @@ public class MapScreenActivity extends AppCompatActivity {
     private MapView mMapView = null;
     private final ArrayList<MapState.MarkerDescriptor> mapMarkers = new ArrayList<>();
     private Location currentLocation = null;
+
+    // user info
+    private String userId;
+    private User currentUser;
+    private DatabaseReference usersRef;
 
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
@@ -89,8 +100,16 @@ public class MapScreenActivity extends AppCompatActivity {
         btCenterMap.setOnClickListener(v -> mapToCurrentLocation());
 
         ImageView btnMyProfile = findViewById(R.id.buttonMyProfileInMapActivity);
-        btnMyProfile.setOnClickListener(v ->
-                Toast.makeText(this, "link to my profile screen", Toast.LENGTH_SHORT).show());
+        btnMyProfile.setOnClickListener(v -> {
+            Toast.makeText(this, "link to my profile screen", Toast.LENGTH_SHORT).show();
+            Intent myProfileIntent = new Intent(this, MyProfileActivity.class);
+            myProfileIntent.putExtra("id", currentUser.getId());
+            myProfileIntent.putExtra("password", currentUser.getPassword());
+            myProfileIntent.putExtra("email", currentUser.getEmail());
+            myProfileIntent.putExtra("map_old_state", currMapState());
+            //todo: add map old state
+            startActivity(myProfileIntent);
+        });
 
         ImageView btnMoreInfo = findViewById(R.id.buttonMoreInfoMapActivity);
         btnMoreInfo.setOnClickListener(v ->
@@ -113,6 +132,18 @@ public class MapScreenActivity extends AppCompatActivity {
                     activityIntent.getDoubleExtra("marker_longitude", 0),
                     activityIntent.getIntExtra("marker_logo_res", 0));
         }
+
+        // DB
+        userId = activityIntent.getStringExtra("userId");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        this.usersRef = database.getReference("Users");
+        currentUser = new User();
+
+        readDataUsers(new MapScreenActivity.FirebaseCallback() {
+            @Override
+            public void onCallback(User user) {
+            }
+        });
     }
 
     private void initializeMap() {
@@ -142,6 +173,8 @@ public class MapScreenActivity extends AppCompatActivity {
                 intent.putExtra("marker_latitude", p.getLatitude());
                 intent.putExtra("marker_longitude", p.getLongitude());
                 intent.putExtra("map_old_state", currMapState());
+                intent.putExtra("userId", getIntent().getStringExtra("userId"));
+
                 startActivity(intent);
                 return false;
             }
@@ -312,5 +345,33 @@ public class MapScreenActivity extends AppCompatActivity {
                 this.iconId = iconId;
             }
         }
+    }
+
+    // DB
+    private interface FirebaseCallback {
+        void onCallback(User user);
+    }
+
+    private void readDataUsers(MapScreenActivity.FirebaseCallback firebaseCallback) {
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    if (ds != null) {
+                        if (userId.equals(ds.child("id").getValue())) {
+                            String email = (String) ds.child("email").getValue();
+                            String password = (String) ds.child("password").getValue();
+                            currentUser = new User(userId, email, password);
+                        }
+                    }
+                }
+                firebaseCallback.onCallback(currentUser);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        };
+        usersRef.addListenerForSingleValueEvent(valueEventListener);
     }
 }

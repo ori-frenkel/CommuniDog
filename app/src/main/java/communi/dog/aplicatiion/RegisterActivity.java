@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -56,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
         this.IdsRef = iDsRef;
         DatabaseReference usersRef = database.getReference("Users");
         this.usersRef = usersRef;
+        register.setEnabled(false);
 
 
         readDataIds(new FirebaseCallback() {
@@ -80,6 +83,43 @@ public class RegisterActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(id.getWindowToken(), 0);
             id.clearFocus();
         });
+
+        id.addTextChangedListener(new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void afterTextChanged(Editable s) {
+                register.setEnabled(checkButtonRegisterEnable());
+            }
+        });
+
+        emailAddress.addTextChangedListener(new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void afterTextChanged(Editable s) {
+                register.setEnabled(checkButtonRegisterEnable());
+            }
+        });
+
+        pass1.addTextChangedListener(new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void afterTextChanged(Editable s) {
+                register.setEnabled(checkButtonRegisterEnable());
+            }
+        });
+
+        pass2.addTextChangedListener(new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void afterTextChanged(Editable s) {
+                register.setEnabled(checkButtonRegisterEnable());
+            }
+        });
+    }
+
+    boolean checkButtonRegisterEnable(){
+        return !id.getText().toString().equals("") && !emailAddress.getText().toString().equals("")
+                && !pass1.getText().toString().equals("") && !pass2.getText().toString().equals("");
     }
 
 

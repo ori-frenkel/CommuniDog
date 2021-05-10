@@ -2,10 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/addMarkerActivityConstraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
 
     <TextView
         android:id="@+id/textViewAddMarkerPageTitle"
@@ -18,41 +16,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/editTextMarkerDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:hint="@string/add_marker_textView_hint"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewAddMarkerPageTitle" />
-
-    <ImageView
-        android:id="@+id/buttonSaveMarker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_baseline_add_circle_48"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/buttonCancelMarker" />
-
-    <ImageView
-        android:id="@+id/buttonCancelMarker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_baseline_cancel_48"
-        app:layout_constraintBottom_toBottomOf="@id/buttonSaveMarker"
-        app:layout_constraintEnd_toStartOf="@id/buttonSaveMarker"
-        app:layout_constraintStart_toStartOf="parent" />
+    <!--    <EditText-->
+    <!--        android:id="@+id/editTextMarkerDescription"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="48dp"-->
+    <!--        android:hint="@string/add_marker_textView_hint"-->
+    <!--        android:textAlignment="center"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/textViewAddMarkerPageTitle" />-->
 
     <TextView
         android:id="@+id/textViewMarkerType"
@@ -63,7 +36,7 @@
         android:text="Choose the marker type"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextMarkerDescription" />
+        app:layout_constraintTop_toBottomOf="@id/textViewAddMarkerPageTitle" />
 
     <RadioGroup
         android:id="@+id/radioMarkerType"
@@ -92,8 +65,32 @@
             android:layout_height="wrap_content"
             android:checked="false"
             android:text="@string/marker_type_medicine_radio_btn_text" />
-
     </RadioGroup>
+
+    <ImageView
+        android:id="@+id/buttonSaveMarker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_baseline_add_circle_48"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/buttonCancelMarker" />
+
+    <ImageView
+        android:id="@+id/buttonCancelMarker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_baseline_cancel_48"
+        app:layout_constraintBottom_toBottomOf="@id/buttonSaveMarker"
+        app:layout_constraintEnd_toStartOf="@id/buttonSaveMarker"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

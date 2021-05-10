@@ -87,17 +87,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_full" />
 
-    <ImageView
-        android:id="@+id/buttonTempGoToMap"
-        android:contentDescription="@string/to_map_button_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_baseline_map_48"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+<!--    <ImageView-->
+<!--        android:id="@+id/buttonTempGoToMap"-->
+<!--        android:contentDescription="@string/to_map_button_description"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="8dp"-->
+<!--        android:layout_marginBottom="8dp"-->
+<!--        android:background="?android:attr/selectableItemBackground"-->
+<!--        android:clickable="true"-->
+<!--        android:focusable="true"-->
+<!--        android:src="@drawable/ic_baseline_map_48"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

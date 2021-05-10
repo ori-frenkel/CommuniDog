@@ -24,34 +24,26 @@ public class AddMarkerActivity extends AppCompatActivity {
         final double longitude = activityIntent.getDoubleExtra("marker_longitude", 0);
 
 
-        final EditText markerText = findViewById(R.id.editTextMarkerDescription);
-        markerText.setText("");
         ImageView buttonSaveMarker = findViewById(R.id.buttonSaveMarker);
         buttonSaveMarker.setOnClickListener(view -> {
-            Intent newIntent = new Intent(this, MapScreenActivity.class);
-
-            newIntent.putExtra("add_marker", true);
-            newIntent.putExtra("marker_latitude", latitude);
-            newIntent.putExtra("marker_longitude", longitude);
-            newIntent.putExtra("marker_title", markerText.getText().toString());
-            newIntent.putExtra("map_old_state", activityIntent.getSerializableExtra("map_old_state"));
-            newIntent.putExtra("marker_logo_res", getMarkerLogoBySelectedRadio());
-            startActivity(newIntent);
-        });
-
-        findViewById(R.id.addMarkerActivityConstraint).setOnClickListener(v -> {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            markerText.requestFocus();
-            imm.hideSoftInputFromWindow(markerText.getWindowToken(), 0);
-            markerText.clearFocus();
+            Intent saveAdditionIntent = new Intent(this, MapScreenActivity.class);
+            saveAdditionIntent.putExtra("add_marker", true);
+            saveAdditionIntent.putExtra("marker_latitude", latitude);
+            saveAdditionIntent.putExtra("marker_longitude", longitude);
+            saveAdditionIntent.putExtra("marker_title", getMarkerTitle());
+            saveAdditionIntent.putExtra("map_old_state", activityIntent.getSerializableExtra("map_old_state"));
+            saveAdditionIntent.putExtra("marker_logo_res", getMarkerLogoBySelectedRadio());
+            saveAdditionIntent.putExtra("userId", activityIntent.getStringExtra("userId"));
+            startActivity(saveAdditionIntent);
         });
 
         ImageView buttonCancel = findViewById(R.id.buttonCancelMarker);
         buttonCancel.setOnClickListener(view -> {
-            Intent newIntent = new Intent(this, MapScreenActivity.class);
-            newIntent.putExtra("add_marker", false);
-            newIntent.putExtra("map_old_state", activityIntent.getSerializableExtra("map_old_state"));
-            startActivity(newIntent);
+            Intent cancelAdditionIntent = new Intent(this, MapScreenActivity.class);
+            cancelAdditionIntent.putExtra("add_marker", false);
+            cancelAdditionIntent.putExtra("map_old_state", activityIntent.getSerializableExtra("map_old_state"));
+            cancelAdditionIntent.putExtra("userId", activityIntent.getStringExtra("userId"));
+            startActivity(cancelAdditionIntent);
         });
     }
 
@@ -71,7 +63,24 @@ public class AddMarkerActivity extends AppCompatActivity {
             default:
                 return 0;
         }
+    }
 
+    private String getMarkerTitle() {
+        String userId = getIntent().getStringExtra("userId");
+        final RadioGroup typeRadioGroup = findViewById(R.id.radioMarkerType);
+        switch (typeRadioGroup.getCheckedRadioButtonId()) {
+            case R.id.radioBtnMarkerTypeDogisiter: {
+                return "User " + userId + " is free for dogisiter";
+            }
+            case R.id.radioBtnMarkerTypeFood: {
+                return "User " + userId + " has extra food to share";
+            }
+            case R.id.radioBtnMarkerTypeMedicine: {
+                return "User " + userId + " has extra medicines to share";
+            }
+            default:
+                return "";
+        }
     }
 
 }
