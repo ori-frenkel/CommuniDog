@@ -1,15 +1,9 @@
 package communi.dog.aplicatiion;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,14 +45,14 @@ public class AddMarkerActivity extends AppCompatActivity {
     private int getMarkerLogoBySelectedRadio() {
         final RadioGroup typeRadioGroup = findViewById(R.id.radioMarkerType);
         switch (typeRadioGroup.getCheckedRadioButtonId()) {
-            case R.id.radioBtnMarkerTypeDogisiter: {
-                return R.drawable.man_carrying_dog_with_belt;
+            case R.id.radioBtnMarkerTypeDogsitter: {
+                return R.drawable.dogsitter_marker_icon;
             }
             case R.id.radioBtnMarkerTypeFood: {
-                return R.drawable.dog_smelling_a_bone;
+                return R.drawable.share_food_marker_icon;
             }
             case R.id.radioBtnMarkerTypeMedicine: {
-                return R.drawable.dog_with_first_aid_kit_bag;
+                return R.drawable.share_madicine_marker_icon;
             }
             default:
                 // the default icon value
@@ -70,8 +64,8 @@ public class AddMarkerActivity extends AppCompatActivity {
         String userId = getIntent().getStringExtra("userId");
         final RadioGroup typeRadioGroup = findViewById(R.id.radioMarkerType);
         switch (typeRadioGroup.getCheckedRadioButtonId()) {
-            case R.id.radioBtnMarkerTypeDogisiter: {
-                return "User " + userId + " is free for dogisiter";
+            case R.id.radioBtnMarkerTypeDogsitter: {
+                return "User " + userId + " is available as a dogsitter";
             }
             case R.id.radioBtnMarkerTypeFood: {
                 return "User " + userId + " has extra food to share";

@@ -16,7 +16,7 @@
     <string name="login_password">password</string>
     <string name="login_id">id</string>
     <string name="login_title">Login</string>
-    <string name="marker_type_digisiter_radio_btn_text">Dogisiter</string>
+    <string name="marker_type_digsitter_radio_btn_text">Dogsitter</string>
     <string name="marker_type_food_radio_btn_text">Food</string>
     <string name="marker_type_medicine_radio_btn_text">Medicine</string>
     <string name="choose_marker_type_title">Choose the marker type</string>
