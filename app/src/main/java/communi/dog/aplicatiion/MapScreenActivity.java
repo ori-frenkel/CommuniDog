@@ -193,6 +193,7 @@ public class MapScreenActivity extends AppCompatActivity {
         mLocationOverlay.enableMyLocation();
         mLocationOverlay.enableFollowLocation();
         mLocationOverlay.setOptionsMenuEnabled(true);
+        // todo: make the purple circle disappear
 
         // add to map
         mMapView.getOverlays().add(mLocationOverlay);
