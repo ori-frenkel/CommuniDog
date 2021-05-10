@@ -19,6 +19,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.events.MapEventsReceiver;
@@ -43,6 +49,8 @@ public class MapScreenActivity extends AppCompatActivity {
     private final ArrayList<Marker> mapMarkers = new ArrayList<>();
     private Location currentLocation = null;
     private String userId;
+    private User currentUser;
+    private DatabaseReference usersRef;
 
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
@@ -87,8 +95,14 @@ public class MapScreenActivity extends AppCompatActivity {
         btCenterMap.setOnClickListener(v -> mapToCurrentLocation());
 
         ImageView btnMyProfile = findViewById(R.id.buttonMyProfileInMapActivity);
-        btnMyProfile.setOnClickListener(v ->
-                Toast.makeText(this, "link to my profile screen", Toast.LENGTH_SHORT).show());
+        btnMyProfile.setOnClickListener(v -> {
+            Toast.makeText(this, "link to my profile screen", Toast.LENGTH_SHORT).show();
+            Intent myProfileIntent = new Intent(this, MyProfileActivity.class);
+            myProfileIntent.putExtra("id", currentUser.getId());
+            myProfileIntent.putExtra("password", currentUser.getPassword());
+            myProfileIntent.putExtra("email", currentUser.getEmail());
+            startActivity(myProfileIntent);
+        });
 
         ImageView btnMoreInfo = findViewById(R.id.buttonMoreInfoMapActivity);
         btnMoreInfo.setOnClickListener(v ->
@@ -119,8 +133,19 @@ public class MapScreenActivity extends AppCompatActivity {
 //            mapToLocation(mapMarkers.get(mapMarkers.size() - 1).getPosition());
         }
 
+        // DB
         Intent intent = getIntent();
         userId = intent.getStringExtra("userId");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersRef = database.getReference("Users");
+        this.usersRef = usersRef;
+        currentUser = new User();
+
+        readDataUsers(new MapScreenActivity.FirebaseCallback() {
+            @Override
+            public void onCallback(User user) {
+            }
+        });
     }
 
     private void initializeMap() {
@@ -293,5 +318,33 @@ public class MapScreenActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         goBackToLoginScreen();
+    }
+
+    // DB
+    private interface FirebaseCallback{
+        void onCallback(User user);
+    }
+
+    private void readDataUsers(MapScreenActivity.FirebaseCallback firebaseCallback){
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds: snapshot.getChildren()){
+                    if (ds != null) {
+                        if (userId.equals(ds.child("id").getValue())){
+                            String email = (String) ds.child("email").getValue();
+                            String password = (String) ds.child("password").getValue();
+                            currentUser = new User(userId, email, password);
+                        }
+                    }
+                }
+                firebaseCallback.onCallback(currentUser);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        };
+        usersRef.addListenerForSingleValueEvent(valueEventListener);
     }
 }

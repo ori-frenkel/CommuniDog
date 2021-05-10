@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
         findViewById(R.id.login_button).setOnClickListener(v -> { //todo: check
             if (isUserExists(idEditText, userPassword)){
-                Intent successIntent = new Intent(this, MainActivity.class);
+                Intent successIntent = new Intent(this, MapScreenActivity.class);
                 successIntent.putExtra("userId", idEditText.getText().toString());
                 startActivity(successIntent);
                 // todo: Move to other activity?
