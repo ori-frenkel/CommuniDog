@@ -138,4 +138,10 @@ public class LoginActivity extends AppCompatActivity {
         };
         usersRef.addListenerForSingleValueEvent(valueEventListener);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //todo: exit app - maybe ask if sure?
+    }
 }
