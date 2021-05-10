@@ -11,7 +11,7 @@
         android:id="@+id/login_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:text="@string/login_title"
         android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -30,8 +30,10 @@
         android:drawableLeft="@drawable/ic_baseline"
         android:drawablePadding="10dp"
         android:ems="10"
-        android:hint="id"
-        android:inputType="textPersonName"
+        android:hint="@string/login_id"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:digits="0123456789"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_logo" />
@@ -44,8 +46,9 @@
         android:drawableLeft="@drawable/ic_baseline_lock_24"
         android:drawablePadding="10dp"
         android:ems="10"
-        android:hint="password"
-        android:inputType="textPersonName"
+        android:hint="@string/login_password"
+        android:importantForAutofill="no"
+        android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="@+id/input_id_login"
         app:layout_constraintStart_toStartOf="@+id/input_id_login"
         app:layout_constraintTop_toBottomOf="@+id/input_id_login" />
@@ -55,7 +58,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:text="login"
+        android:text="@string/login_button"
         app:backgroundTint="#FF9800"
         app:layout_constraintEnd_toEndOf="@+id/user_password"
         app:layout_constraintStart_toStartOf="@+id/user_password"
@@ -68,7 +71,7 @@
         android:layout_marginStart="65dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="65dp"
-        android:text="register now"
+        android:text="@string/from_login_to_register"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/login_button"
         app:layout_constraintStart_toStartOf="@+id/login_button"
@@ -76,6 +79,7 @@
 
     <ImageView
         android:id="@+id/logo_image"
+        android:contentDescription="@string/logo_description"
         android:layout_width="184dp"
         android:layout_height="163dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -85,6 +89,7 @@
 
     <ImageView
         android:id="@+id/buttonTempGoToMap"
+        android:contentDescription="@string/to_map_button_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
