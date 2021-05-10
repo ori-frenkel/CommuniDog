@@ -85,39 +85,55 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         id.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             public void afterTextChanged(Editable s) {
                 register.setEnabled(checkButtonRegisterEnable());
             }
         });
 
         emailAddress.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             public void afterTextChanged(Editable s) {
                 register.setEnabled(checkButtonRegisterEnable());
             }
         });
 
         pass1.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             public void afterTextChanged(Editable s) {
                 register.setEnabled(checkButtonRegisterEnable());
             }
         });
 
         pass2.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             public void afterTextChanged(Editable s) {
                 register.setEnabled(checkButtonRegisterEnable());
             }
         });
     }
 
-    boolean checkButtonRegisterEnable(){
+    boolean checkButtonRegisterEnable() {
         return !id.getText().toString().equals("") && !emailAddress.getText().toString().equals("")
                 && !pass1.getText().toString().equals("") && !pass2.getText().toString().equals("");
     }
@@ -182,7 +198,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean idDoubleUser(EditText id) {
-        for (String item: allInUseIDs){
+        for (String item : allInUseIDs) {
             if (item.equals(id.getText().toString())) {
                 return true;
             }
@@ -190,8 +206,8 @@ public class RegisterActivity extends AppCompatActivity {
         return false;
     }
 
-    private boolean idExistsInDB(EditText id){
-        for (String item: allIDs){
+    private boolean idExistsInDB(EditText id) {
+        for (String item : allIDs) {
             if (item.equals(id.getText().toString())) {
                 return true;
             }
@@ -199,17 +215,17 @@ public class RegisterActivity extends AppCompatActivity {
         return false;
     }
 
-    private interface FirebaseCallback{
+    private interface FirebaseCallback {
         void onCallback(List<String> list);
     }
 
-    private void readDataIds(FirebaseCallback firebaseCallback){
+    private void readDataIds(FirebaseCallback firebaseCallback) {
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds: snapshot.getChildren()){
+                for (DataSnapshot ds : snapshot.getChildren()) {
                     if (ds != null) {
-                        allIDs.add((String)ds.getValue());
+                        allIDs.add((String) ds.getValue());
                     }
                 }
                 firebaseCallback.onCallback(allIDs);
@@ -222,11 +238,11 @@ public class RegisterActivity extends AppCompatActivity {
         IdsRef.addListenerForSingleValueEvent(valueEventListener);
     }
 
-    private void readDataIdsInUse(FirebaseCallback firebaseCallback){
+    private void readDataIdsInUse(FirebaseCallback firebaseCallback) {
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds: snapshot.getChildren()){
+                for (DataSnapshot ds : snapshot.getChildren()) {
                     if (ds != null) {
                         String id = ds.child("id").getValue(String.class);
                         allInUseIDs.add(id);

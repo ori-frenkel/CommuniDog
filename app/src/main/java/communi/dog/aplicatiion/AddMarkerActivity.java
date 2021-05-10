@@ -31,8 +31,8 @@ public class AddMarkerActivity extends AppCompatActivity {
             saveAdditionIntent.putExtra("marker_latitude", latitude);
             saveAdditionIntent.putExtra("marker_longitude", longitude);
             saveAdditionIntent.putExtra("marker_title", getMarkerTitle());
-            saveAdditionIntent.putExtra("map_old_state", activityIntent.getSerializableExtra("map_old_state"));
             saveAdditionIntent.putExtra("marker_logo_res", getMarkerLogoBySelectedRadio());
+            saveAdditionIntent.putExtra("map_old_state", activityIntent.getSerializableExtra("map_old_state"));
             saveAdditionIntent.putExtra("userId", activityIntent.getStringExtra("userId"));
             startActivity(saveAdditionIntent);
         });

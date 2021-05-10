@@ -51,16 +51,6 @@ public class LoginActivity extends AppCompatActivity {
         TextView to_register_btn = findViewById(R.id.register_now);
         to_register_btn.setOnClickListener(v -> startActivity(new Intent(this, RegisterActivity.class)));
 
-        // todo: delete
-//        ImageView btnGoToMap = findViewById(R.id.buttonTempGoToMap);
-//        btnGoToMap.setOnClickListener((v) -> {
-//            Intent intent = new Intent(this, MapScreenActivity.class);
-//            if (activityIntent.hasExtra("map_old_state")) {
-//                intent.putExtra("map_old_state", activityIntent.getSerializableExtra("map_old_state"));
-//            }
-//            startActivity(intent);
-//        });
-
         findViewById(R.id.loginConstraintLayout).setOnClickListener(v -> {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             idEditText.requestFocus();

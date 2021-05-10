@@ -103,11 +103,10 @@ public class MapScreenActivity extends AppCompatActivity {
         btnMyProfile.setOnClickListener(v -> {
             Toast.makeText(this, "link to my profile screen", Toast.LENGTH_SHORT).show();
             Intent myProfileIntent = new Intent(this, MyProfileActivity.class);
-            myProfileIntent.putExtra("id", currentUser.getId());
+            myProfileIntent.putExtra("userId", currentUser.getId());
             myProfileIntent.putExtra("password", currentUser.getPassword());
             myProfileIntent.putExtra("email", currentUser.getEmail());
             myProfileIntent.putExtra("map_old_state", currMapState());
-            //todo: add map old state
             startActivity(myProfileIntent);
         });
 
@@ -135,6 +134,7 @@ public class MapScreenActivity extends AppCompatActivity {
 
         // DB
         userId = activityIntent.getStringExtra("userId");
+        //todo: why not save only the id and pass in to MyProfile screen? why do we need here all the rest?
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         this.usersRef = database.getReference("Users");
         currentUser = new User();
@@ -310,6 +310,7 @@ public class MapScreenActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        // todo: exit the app or logout?
         Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra("map_old_state", currMapState());
         startActivity(intent);

@@ -19,4 +19,5 @@
     <string name="marker_type_digisiter_radio_btn_text">Dogisiter</string>
     <string name="marker_type_food_radio_btn_text">Food</string>
     <string name="marker_type_medicine_radio_btn_text">Medicine</string>
+    <string name="choose_marker_type_title">Choose the marker type</string>
 </resources>

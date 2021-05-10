@@ -28,7 +28,7 @@ public class MyProfileActivity extends AppCompatActivity {
         TextView id = findViewById(R.id.textView);
 
         Intent intent = getIntent();
-        String gotId = intent.getStringExtra("id");
+        String gotId = intent.getStringExtra("userId");
         String gotEmail = intent.getStringExtra("email");
         String gotPassword = intent.getStringExtra("password");
 
@@ -50,7 +50,7 @@ public class MyProfileActivity extends AppCompatActivity {
         if (oldIntent.hasExtra("map_old_state")) {
             openMapIntent.putExtra("map_old_state", oldIntent.getSerializableExtra("map_old_state"));
         }
-        openMapIntent.putExtra("userId", oldIntent.getStringExtra("id"));
+        openMapIntent.putExtra("userId", oldIntent.getStringExtra("userId"));
         startActivity(openMapIntent);
     }
 }
