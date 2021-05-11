@@ -4,13 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.DisplayMetrics;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -19,20 +14,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
-import org.osmdroid.events.MapEventsReceiver;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.CustomZoomButtonsController;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.MapEventsOverlay;
-import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.ScaleBarOverlay;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,40 +29,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import communi.dog.aplicatiion.MapHandler.MapState;
+
+import static communi.dog.aplicatiion.MapHandler.DEFAULT_MARKER_ICON_ID;
+
 public class MapScreenActivity extends AppCompatActivity {
-    private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
-    private final double MAP_ZOOM = 18.0;
-    private final double MAP_MAX_ZOOM = 20.0;
-    private final double MAP_MIN_ZOOM = 9.0;
-    private final int DEFAULT_MARKER_ICON_ID = 0;
-    private MapView mMapView = null;
-    private final ArrayList<MapState.MarkerDescriptor> mapMarkers = new ArrayList<>();
-    private Location currentLocation = null;
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
+    private MapHandler mMapHandler;
 
     // user info
     private String userId;
     private User currentUser;
     private DatabaseReference usersRef;
-
-    private final LocationListener mLocationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(final Location location) {
-            currentLocation = location;
-        }
-
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-        }
-
-        @Override
-        public void onProviderEnabled(String s) {
-        }
-
-        @Override
-        public void onProviderDisabled(String s) {
-        }
-    };
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,6 +51,8 @@ public class MapScreenActivity extends AppCompatActivity {
         Context ctx = this.getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
+        mMapHandler = new MapHandler(findViewById(R.id.mapView), this);
+
         requestPermissionsIfNecessary(new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -96,10 +61,10 @@ public class MapScreenActivity extends AppCompatActivity {
                 Manifest.permission.INTERNET
         });
 
-        initializeMap();
+        mMapHandler.initMap();
 
         ImageView btCenterMap = findViewById(R.id.buttonCenterMap);
-        btCenterMap.setOnClickListener(v -> mapToCurrentLocation());
+        btCenterMap.setOnClickListener(v -> mMapHandler.mapToCurrentLocation());
 
         ImageView btnMyProfile = findViewById(R.id.buttonMyProfileInMapActivity);
         btnMyProfile.setOnClickListener(v -> {
@@ -108,7 +73,7 @@ public class MapScreenActivity extends AppCompatActivity {
             myProfileIntent.putExtra("userId", currentUser.getId());
             myProfileIntent.putExtra("password", currentUser.getPassword());
             myProfileIntent.putExtra("email", currentUser.getEmail());
-            myProfileIntent.putExtra("map_old_state", currMapState());
+            myProfileIntent.putExtra("map_old_state", mMapHandler.currState());
             startActivity(myProfileIntent);
         });
 
@@ -117,18 +82,18 @@ public class MapScreenActivity extends AppCompatActivity {
                 Toast.makeText(this, "link to more info screen", Toast.LENGTH_SHORT).show());
 
         if (activityIntent.hasExtra("map_old_state")) {
-            restoreMapState((MapState) activityIntent.getSerializableExtra("map_old_state"));
+            mMapHandler.restoreState((MapState) activityIntent.getSerializableExtra("map_old_state"));
         } else if (savedInstanceState == null) {
             // new map
-            if (!mapToCurrentLocation()) {
+            if (!mMapHandler.mapToCurrentLocation()) {
                 // todo: set initial coordinates using database?
                 IGeoPoint initialLocation = new GeoPoint(32.1007, 34.8070);
-                centerMap(initialLocation, false);
+                mMapHandler.centerMap(initialLocation, false);
             }
         }
 
         if (activityIntent.getBooleanExtra("add_marker", false)) {
-            addMarker(activityIntent.getStringExtra("marker_title"),
+            mMapHandler.addMarker(activityIntent.getStringExtra("marker_title"),
                     activityIntent.getDoubleExtra("marker_latitude", 0),
                     activityIntent.getDoubleExtra("marker_longitude", 0),
                     activityIntent.getIntExtra("marker_icon_res", DEFAULT_MARKER_ICON_ID));
@@ -146,123 +111,6 @@ public class MapScreenActivity extends AppCompatActivity {
             public void onCallback(User user) {
             }
         });
-    }
-
-    private void initializeMap() {
-        // initialize the map
-        mMapView = findViewById(R.id.mapview);
-        mMapView.setTileSource(TileSourceFactory.MAPNIK);
-        mMapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.ALWAYS);
-        mMapView.setMultiTouchControls(true);
-        mMapView.getController().setZoom(MAP_ZOOM);
-        mMapView.setMaxZoomLevel(MAP_MAX_ZOOM);
-        mMapView.setMinZoomLevel(MAP_MIN_ZOOM);
-
-        // enable user location
-        LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, mLocationListener);
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, mLocationListener);
-
-        final MapEventsReceiver mReceive = new MapEventsReceiver() {
-            @Override
-            public boolean singleTapConfirmedHelper(GeoPoint p) {
-                return false;
-            }
-
-            @Override
-            public boolean longPressHelper(GeoPoint p) {
-                Intent intent = new Intent(MapScreenActivity.this, AddMarkerActivity.class);
-                intent.putExtra("marker_latitude", p.getLatitude());
-                intent.putExtra("marker_longitude", p.getLongitude());
-                intent.putExtra("map_old_state", currMapState());
-                intent.putExtra("userId", getIntent().getStringExtra("userId"));
-
-                startActivity(intent);
-                return false;
-            }
-        };
-        mMapView.getOverlays().add(new MapEventsOverlay(mReceive));
-
-        addMyLocationIconOnMap();
-        addScaleBarOnMap();
-    }
-
-    private void addMyLocationIconOnMap() {
-        // set my location on the map
-        MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mMapView);
-        mLocationOverlay.enableMyLocation();
-        mLocationOverlay.enableFollowLocation();
-        mLocationOverlay.setOptionsMenuEnabled(true);
-        // todo: make the purple circle disappear
-
-        // add to map
-        mMapView.getOverlays().add(mLocationOverlay);
-    }
-
-    private void addScaleBarOnMap() {
-        final DisplayMetrics dm = this.getResources().getDisplayMetrics();
-        // set scale bar
-        ScaleBarOverlay mScaleBarOverlay = new ScaleBarOverlay(mMapView);
-        mScaleBarOverlay.setCentred(true);
-        mScaleBarOverlay.setScaleBarOffset(dm.widthPixels / 2, 10);
-
-        // add to map
-        mMapView.getOverlays().add(mScaleBarOverlay);
-    }
-
-    private boolean mapToCurrentLocation() {
-        if (currentLocation == null) return false;
-        GeoPoint myPosition = new GeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude());
-        centerMap(myPosition, true);
-        return true;
-    }
-
-    private void centerMap(IGeoPoint newCenter, boolean animate) {
-        if (animate) {
-            mMapView.getController().animateTo(newCenter);
-        } else {
-            mMapView.setExpectedCenter(newCenter);
-        }
-        mMapView.getController().setZoom(MAP_ZOOM);
-    }
-
-    private void addMarker(String title, double latitude, double longitude, int iconId) {
-        MapState.MarkerDescriptor descriptor = new MapState.MarkerDescriptor(latitude, longitude,
-                title, iconId);
-        addMarker(descriptor);
-    }
-
-    private void addMarker(MapState.MarkerDescriptor descriptor) {
-        GeoPoint point = new GeoPoint(descriptor.latitude, descriptor.longitude);
-        Marker myMarker = new Marker(mMapView);
-        Drawable icon = descriptor.iconId == DEFAULT_MARKER_ICON_ID ?
-                mMapView.getRepository().getDefaultMarkerIcon() :
-                ResourcesCompat.getDrawable(getResources(), descriptor.iconId, getTheme());
-
-        myMarker.setPosition(point);
-        myMarker.setTitle(descriptor.title);
-        myMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
-        myMarker.setIcon(icon);
-        // todo: make marker's icon smaller when zooming out
-
-        mapMarkers.add(descriptor);
-        mMapView.getOverlays().add(myMarker);
-    }
-
-    private void restoreMapState(MapState oldState) {
-        if (oldState == null) {
-            return;
-        }
-        for (MapState.MarkerDescriptor descriptor : oldState.markersDescriptors) {
-            addMarker(descriptor);
-        }
-        GeoPoint mapCenter = new GeoPoint(oldState.mapCenterLatitude, oldState.mapCenterLongitude);
-        centerMap(mapCenter, false);
-        mMapView.getController().setZoom(oldState.zoom);
-    }
-
-    private MapState currMapState() {
-        return new MapState(mapMarkers, mMapView.getMapCenter(), mMapView.getZoomLevelDouble());
     }
 
     private void requestPermissionsIfNecessary(String[] permissions) {
@@ -297,7 +145,7 @@ public class MapScreenActivity extends AppCompatActivity {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         System.out.println("MainActivity.onSaveInstanceState");
         super.onSaveInstanceState(outState);
-        outState.putSerializable("map_old_state", currMapState());
+        outState.putSerializable("map_old_state", mMapHandler.currState());
     }
 
     @Override
@@ -308,7 +156,7 @@ public class MapScreenActivity extends AppCompatActivity {
         if (!(oldState instanceof MapState)) {
             return; // ignore
         }
-        restoreMapState((MapState) oldState);
+        mMapHandler.restoreState((MapState) oldState);
     }
 
     @Override
@@ -316,45 +164,15 @@ public class MapScreenActivity extends AppCompatActivity {
         super.onBackPressed();
         // todo: exit the app or logout?
         Intent intent = new Intent(this, LoginActivity.class);
-        intent.putExtra("map_old_state", currMapState());
+        intent.putExtra("map_old_state", mMapHandler.currState());
         startActivity(intent);
     }
 
-    /**
-     * class that stores the information of a marker
-     */
-    private static class MapState implements Serializable {
-        ArrayList<MarkerDescriptor> markersDescriptors;
-        double mapCenterLatitude;
-        double mapCenterLongitude;
-        double zoom;
-
-        public MapState(ArrayList<MarkerDescriptor> markers, IGeoPoint mapCenter, double zoom) {
-            this.mapCenterLatitude = mapCenter.getLatitude();
-            this.mapCenterLongitude = mapCenter.getLongitude();
-            this.zoom = zoom;
-            this.markersDescriptors = new ArrayList<>();
-            this.markersDescriptors = markers;
-        }
-
-        public static class MarkerDescriptor implements Serializable {
-            final double latitude;
-            final double longitude;
-            final int iconId;
-            final String title;
-
-            MarkerDescriptor(double latitude, double longitude, String title, int iconId) {
-                this.latitude = latitude;
-                this.longitude = longitude;
-                this.title = title;
-                this.iconId = iconId;
-            }
-        }
-    }
 
     // DB
     private interface FirebaseCallback {
         void onCallback(User user);
+
     }
 
     private void readDataUsers(MapScreenActivity.FirebaseCallback firebaseCallback) {

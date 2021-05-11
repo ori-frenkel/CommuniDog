@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <org.osmdroid.views.MapView
-        android:id="@+id/mapview"
+        android:id="@+id/mapView"
         tilesource="Mapnik"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
