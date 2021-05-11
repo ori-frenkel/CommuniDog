@@ -23,6 +23,7 @@ import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -41,6 +42,7 @@ public class MapHandler {
     private final MapView mMapView;
     private final Activity mCalledActivity;
     private final ArrayList<MarkerDescriptor> mapMarkers = new ArrayList<>();
+    // todo: hashTable: markerId->marker
     private Location currentLocation = null;
 
     /**
@@ -150,8 +152,7 @@ public class MapHandler {
     }
 
     void addMarker(String title, double latitude, double longitude, int iconId) {
-        MarkerDescriptor descriptor = new MarkerDescriptor(latitude, longitude,
-                title, iconId);
+        MarkerDescriptor descriptor = new MarkerDescriptor(latitude, longitude, title, iconId);
         addMarker(descriptor);
     }
 
@@ -170,6 +171,22 @@ public class MapHandler {
 
         mapMarkers.add(descriptor);
         mMapView.getOverlays().add(myMarker);
+    }
+
+    boolean removeMarker(MarkerDescriptor descriptor) {
+        if (!mapMarkers.remove(descriptor)) {
+            return false;
+        }
+
+        for (Overlay overlay : mMapView.getOverlays()) {
+            if (overlay instanceof Marker) {
+                if (((Marker) overlay).getId().equals(descriptor.id)) {
+                    mMapView.getOverlays().remove(overlay);
+                    break;
+                }
+            }
+        }
+        return true;
     }
 
     void restoreState(MapState oldState) {
@@ -214,12 +231,14 @@ public class MapHandler {
         final double longitude;
         final int iconId;
         final String title;
+        final String id;
 
         MarkerDescriptor(double latitude, double longitude, String title, int iconId) {
             this.latitude = latitude;
             this.longitude = longitude;
             this.title = title;
             this.iconId = iconId;
+            this.id = "0";
         }
     }
 }
