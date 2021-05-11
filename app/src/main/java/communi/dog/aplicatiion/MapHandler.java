@@ -1,7 +1,10 @@
 package communi.dog.aplicatiion;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -9,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import org.osmdroid.api.IGeoPoint;
@@ -67,6 +71,7 @@ public class MapHandler {
         }
     };
 
+    @SuppressLint("MissingPermission")
     public void initMap() {
         // initialize the map
         mMapView.setTileSource(TileSourceFactory.MAPNIK);
