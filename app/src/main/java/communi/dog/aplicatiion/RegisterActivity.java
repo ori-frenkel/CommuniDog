@@ -25,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.*;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -141,8 +142,8 @@ public class RegisterActivity extends AppCompatActivity {
     void checkDataEntered() {
         boolean valid_input = true;
         boolean id_known = true;
-        if (isEmpty(id) || id.getText().toString().length() != 9) {
-            id.setError("id is required!");
+        if (!isId(id)) {
+            id.setError("id is invalid!");
             valid_input = false;
         }
         if (!isEmail(emailAddress)) {
@@ -180,6 +181,15 @@ public class RegisterActivity extends AppCompatActivity {
             successIntent.putExtra("userId", id.getText().toString());
             startActivity(successIntent);
         }
+    }
+
+    boolean isId(EditText text)
+    {
+        String input = text.getText().toString();
+        String regex = "[0-9]+";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(input);
+        return m.matches() && input.length() == 9;
     }
 
     boolean isEmail(EditText text) {

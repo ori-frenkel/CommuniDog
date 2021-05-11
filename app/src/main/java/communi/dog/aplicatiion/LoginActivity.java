@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,6 +22,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.widget.Button;
 import android.text.Editable;
@@ -30,6 +33,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private HashMap<String, String> allUsers;
     private DatabaseReference usersRef;
+    EditText idEditText;
+    EditText userPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +49,8 @@ public class LoginActivity extends AppCompatActivity {
 
         Intent activityIntent = getIntent();
 
-        EditText idEditText = findViewById(R.id.input_id_login);
-        EditText userPassword = findViewById(R.id.user_password);
+        idEditText = findViewById(R.id.input_id_login);
+        userPassword = findViewById(R.id.user_password);
 
         TextView to_register_btn = findViewById(R.id.register_now);
         to_register_btn.setOnClickListener(v -> startActivity(new Intent(this, RegisterActivity.class)));
@@ -141,5 +146,39 @@ public class LoginActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         //todo: exit app - maybe ask if the user is sure
+    }
+
+
+    void checkDataEntered() {
+        boolean valid_input = true;
+        if (!isId(idEditText))
+        {
+            idEditText.setError("id is invalid!");
+            valid_input = false;
+        }
+        if (isEmpty(userPassword))
+        {
+            userPassword.setError("password is missing");
+            valid_input = false;
+        }
+
+        if (valid_input)
+        {
+            // todo: check in DB
+        }
+
+    }
+
+    boolean isId(EditText text)
+    {
+        String input = text.getText().toString();
+        String regex = "[0-9]+";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(input);
+        return m.matches() && input.length() == 9;
+    }
+    boolean isEmpty(EditText text) {
+        CharSequence str = text.getText().toString();
+        return TextUtils.isEmpty(str);
     }
 }

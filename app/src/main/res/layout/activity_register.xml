@@ -9,7 +9,6 @@
     tools:context=".RegisterActivity">
 
 
-
     <ImageView
         android:id="@+id/app_logo"
         android:contentDescription="@string/logo_description"
