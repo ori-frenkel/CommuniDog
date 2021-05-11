@@ -95,10 +95,12 @@ public class MapScreenActivity extends AppCompatActivity {
         }
 
         if (activityIntent.getBooleanExtra("add_marker", false)) {
-            mMapHandler.addMarker(activityIntent.getStringExtra("marker_title"),
+            mMapHandler.addMarker(activityIntent.getStringExtra("marker_text"),
                     activityIntent.getDoubleExtra("marker_latitude", 0),
                     activityIntent.getDoubleExtra("marker_longitude", 0),
-                    activityIntent.getIntExtra("marker_icon_res", DEFAULT_MARKER_ICON_ID));
+                    activityIntent.getBooleanExtra("marker_is_dogsitter", false),
+                    activityIntent.getBooleanExtra("marker_is_food", false),
+                    activityIntent.getBooleanExtra("marker_is_medicine", false));
         }
 
         // DB
@@ -147,6 +149,7 @@ public class MapScreenActivity extends AppCompatActivity {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         System.out.println("MainActivity.onSaveInstanceState");
         super.onSaveInstanceState(outState);
+        // todo: save to db?
         outState.putSerializable("map_old_state", mMapHandler.currentState());
     }
 
@@ -154,6 +157,7 @@ public class MapScreenActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         System.out.println("MainActivity.onRestoreInstanceState");
         super.onRestoreInstanceState(savedInstanceState);
+        // todo: restore from db?
         Serializable oldState = savedInstanceState.getSerializable("map_old_state");
         if (!(oldState instanceof MapState)) {
             return; // ignore
@@ -165,8 +169,7 @@ public class MapScreenActivity extends AppCompatActivity {
     public void onBackPressed() {
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                {
+                case DialogInterface.BUTTON_POSITIVE: {
                     Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
                     intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent1.putExtra("LOGOUT", true);

@@ -2,8 +2,10 @@ package communi.dog.aplicatiion;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,12 +22,23 @@ public class AddMarkerActivity extends AppCompatActivity {
 
         ImageView buttonSaveMarker = findViewById(R.id.buttonSaveMarker);
         buttonSaveMarker.setOnClickListener(view -> {
+            boolean isDogsitter = ((CheckBox) findViewById(R.id.checkboxDogsitter)).isChecked();
+            boolean isFood = ((CheckBox) findViewById(R.id.checkboxFood)).isChecked();
+            boolean isMedicine = ((CheckBox) findViewById(R.id.checkboxMedicine)).isChecked();
+
+            if (!(isDogsitter || isFood || isMedicine)) {
+                Toast.makeText(this, "check at least one option", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             Intent saveAdditionIntent = new Intent(this, MapScreenActivity.class);
             saveAdditionIntent.putExtra("add_marker", true);
             saveAdditionIntent.putExtra("marker_latitude", latitude);
             saveAdditionIntent.putExtra("marker_longitude", longitude);
-            saveAdditionIntent.putExtra("marker_title", getMarkerTitle());
-            saveAdditionIntent.putExtra("marker_icon_res", getMarkerLogoBySelectedRadio());
+            saveAdditionIntent.putExtra("marker_text", getMarkerTitle(isDogsitter, isFood, isMedicine));
+            saveAdditionIntent.putExtra("marker_is_dogsitter", isDogsitter);
+            saveAdditionIntent.putExtra("marker_is_food", isFood);
+            saveAdditionIntent.putExtra("marker_is_medicine", isMedicine);
             saveAdditionIntent.putExtra("map_old_state", activityIntent.getSerializableExtra("map_old_state"));
             saveAdditionIntent.putExtra("userId", activityIntent.getStringExtra("userId"));
             startActivity(saveAdditionIntent);
@@ -41,41 +54,14 @@ public class AddMarkerActivity extends AppCompatActivity {
         });
     }
 
-
-    private int getMarkerLogoBySelectedRadio() {
-        final RadioGroup typeRadioGroup = findViewById(R.id.radioMarkerType);
-        switch (typeRadioGroup.getCheckedRadioButtonId()) {
-            case R.id.radioBtnMarkerTypeDogsitter: {
-                return R.drawable.dogsitter_marker_icon;
-            }
-            case R.id.radioBtnMarkerTypeFood: {
-                return R.drawable.share_food_marker_icon;
-            }
-            case R.id.radioBtnMarkerTypeMedicine: {
-                return R.drawable.share_madicine_marker_icon;
-            }
-            default:
-                // the default icon value
-                return 0;
-        }
-    }
-
-    private String getMarkerTitle() {
+    private String getMarkerTitle(boolean isDogsitter, boolean isFood, boolean isMedicine) {
         String userId = getIntent().getStringExtra("userId");
-        final RadioGroup typeRadioGroup = findViewById(R.id.radioMarkerType);
-        switch (typeRadioGroup.getCheckedRadioButtonId()) {
-            case R.id.radioBtnMarkerTypeDogsitter: {
-                return "User " + userId + " is available as a dogsitter";
-            }
-            case R.id.radioBtnMarkerTypeFood: {
-                return "User " + userId + " has extra food to share";
-            }
-            case R.id.radioBtnMarkerTypeMedicine: {
-                return "User " + userId + " has extra medicines to share";
-            }
-            default:
-                return "";
-        }
+        String msg = "User " + userId + " offers:\n";
+        if (isDogsitter) msg += "Dogsitter services\n";
+        if (isFood) msg += "Extra food\n";
+        if (isMedicine) msg += "Extra medicine\n";
+        msg += "In order to contact him ........";
+        return msg;
     }
 
 }

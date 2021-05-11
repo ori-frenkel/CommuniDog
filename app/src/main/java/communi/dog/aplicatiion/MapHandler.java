@@ -9,6 +9,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.widget.Toast;
 
 import androidx.core.content.res.ResourcesCompat;
 
@@ -39,7 +40,6 @@ public class MapHandler {
     private final MapView mMapView;
     private final Activity mCalledActivity;
     private final HashMap<String, MarkerDescriptor> mapMarkers = new HashMap<>();
-    // todo: hashTable: markerId->marker
     private Location currentLocation = null;
 
     /**
@@ -94,6 +94,11 @@ public class MapHandler {
 
             @Override
             public boolean longPressHelper(GeoPoint p) {
+                if (mapMarkers.containsKey(mCalledActivity.getIntent().getStringExtra("userId"))) {
+                    // todo: open the edit marker screen, and change the markers location to the new one
+                    Toast.makeText(mCalledActivity, "one marker per user", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
                 Intent intent = new Intent(mCalledActivity, AddMarkerActivity.class);
                 intent.putExtra("marker_latitude", p.getLatitude());
                 intent.putExtra("marker_longitude", p.getLongitude());
@@ -149,9 +154,9 @@ public class MapHandler {
         mMapView.getController().setZoom(MAP_DEFAULT_ZOOM);
     }
 
-    void addMarker(String title, double latitude, double longitude, int iconId) {
-        MarkerDescriptor descriptor = new MarkerDescriptor(latitude, longitude, title, iconId,
-                mCalledActivity.getIntent().getStringExtra("userId"));
+    void addMarker(String text, double latitude, double longitude, boolean isDogsitter, boolean isFood, boolean isMedicine) {
+        MarkerDescriptor descriptor = new MarkerDescriptor(text, latitude, longitude, isDogsitter,
+                isFood, isMedicine, mCalledActivity.getIntent().getStringExtra("userId"));
         addMarker(descriptor);
     }
 
@@ -160,14 +165,11 @@ public class MapHandler {
 
         GeoPoint point = new GeoPoint(descriptor.latitude, descriptor.longitude);
         Marker myMarker = new Marker(mMapView);
-        Drawable icon = descriptor.iconId == DEFAULT_MARKER_ICON_ID ?
-                mMapView.getRepository().getDefaultMarkerIcon() :
-                ResourcesCompat.getDrawable(mCalledActivity.getResources(), descriptor.iconId, mCalledActivity.getTheme());
 
         myMarker.setPosition(point);
-        myMarker.setTitle(descriptor.title);
+        myMarker.setTitle(descriptor.text);
         myMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
-        myMarker.setIcon(icon);
+        myMarker.setIcon(ResourcesCompat.getDrawable(mCalledActivity.getResources(), R.drawable.paw, mCalledActivity.getTheme()));
         myMarker.setId(descriptor.id);
         // todo: make marker's icon smaller when zooming out
 
@@ -230,16 +232,28 @@ public class MapHandler {
     public static class MarkerDescriptor implements Serializable {
         final double latitude;
         final double longitude;
-        final int iconId;
-        final String title;
+        final String text;
         final String id;
+        final String userId;
+        boolean isDogsitter;
+        boolean isFood;
+        boolean isMedicine;
 
-        MarkerDescriptor(double latitude, double longitude, String title, int iconId, String markerId) {
+        // todo: match arguments order to the addMarker method
+        MarkerDescriptor(String text, double latitude, double longitude, boolean isDogsitter, boolean isFood, boolean isMedicine, String creatorUserId) {
             this.latitude = latitude;
             this.longitude = longitude;
-            this.title = title;
-            this.iconId = iconId;
-            this.id = markerId;
+            this.text = text;
+            this.userId = creatorUserId;
+            this.id = generateMarkerId(creatorUserId);
+            this.isDogsitter = isDogsitter;
+            this.isFood = isFood;
+            this.isMedicine = isMedicine;
+        }
+
+        private String generateMarkerId(String userId) {
+            // todo: maybe not just the user id? if not than this field is redundant
+            return userId;
         }
     }
 }

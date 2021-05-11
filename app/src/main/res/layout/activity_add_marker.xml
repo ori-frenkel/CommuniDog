@@ -10,51 +10,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:text="@string/add_marker_description_title"
+        android:text="@string/add_marker_page_title"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textViewMarkerType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/choose_marker_type_title"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewAddMarkerPageTitle" />
-
-    <RadioGroup
-        android:id="@+id/radioMarkerType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/textViewMarkerType"
-        app:layout_constraintTop_toBottomOf="@id/textViewMarkerType">
-
-        <RadioButton
-            android:id="@+id/radioBtnMarkerTypeDogsitter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/marker_type_digsitter_radio_btn_text" />
-
-        <RadioButton
-            android:id="@+id/radioBtnMarkerTypeFood"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:text="@string/marker_type_food_radio_btn_text" />
-
-        <RadioButton
-            android:id="@+id/radioBtnMarkerTypeMedicine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:text="@string/marker_type_medicine_radio_btn_text" />
-    </RadioGroup>
 
     <ImageView
         android:id="@+id/buttonSaveMarker"
@@ -80,6 +40,43 @@
         app:layout_constraintBottom_toBottomOf="@id/buttonSaveMarker"
         app:layout_constraintEnd_toStartOf="@id/buttonSaveMarker"
         app:layout_constraintStart_toStartOf="parent" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewAddMarkerPageTitle"
+        app:layout_goneMarginStart="8dp">
+
+        <TextView
+            android:id="@+id/textViewMarkerTypeCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/choose_marker_type_title"
+            android:textSize="18sp" />
+
+        <CheckBox
+            android:id="@+id/checkboxDogsitter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/check_box_dogsitter_marker_type" />
+
+        <CheckBox
+            android:id="@+id/checkboxFood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/check_box_food_marker_type" />
+
+        <CheckBox
+            android:id="@+id/checkboxMedicine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/check_box_medicine_marker_type" />
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
