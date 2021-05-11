@@ -60,6 +60,7 @@ public class AddMarkerActivity extends AppCompatActivity {
         if (isDogsitter) msg += "Dogsitter services\n";
         if (isFood) msg += "Extra food\n";
         if (isMedicine) msg += "Extra medicine\n";
+        // todo: add user contacts to the marker's message
         msg += "In order to contact him ........";
         return msg;
     }
