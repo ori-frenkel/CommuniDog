@@ -100,7 +100,14 @@ public class MapScreenActivity extends AppCompatActivity {
                     activityIntent.getDoubleExtra("marker_longitude", 0),
                     activityIntent.getBooleanExtra("marker_is_dogsitter", false),
                     activityIntent.getBooleanExtra("marker_is_food", false),
-                    activityIntent.getBooleanExtra("marker_is_medicine", false));
+                    activityIntent.getBooleanExtra("marker_is_medication", false));
+        } else if (activityIntent.getBooleanExtra("edit_marker", false)) {
+            mMapHandler.editMarker(activityIntent.getStringExtra("marker_text"),
+                    activityIntent.getDoubleExtra("marker_latitude", 0),
+                    activityIntent.getDoubleExtra("marker_longitude", 0),
+                    activityIntent.getBooleanExtra("marker_is_dogsitter", false),
+                    activityIntent.getBooleanExtra("marker_is_food", false),
+                    activityIntent.getBooleanExtra("marker_is_medication", false));
         }
 
         // DB

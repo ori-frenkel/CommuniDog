@@ -3,12 +3,12 @@ package communi.dog.aplicatiion;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -94,17 +94,17 @@ public class MapHandler {
 
             @Override
             public boolean longPressHelper(GeoPoint p) {
-                if (mapMarkers.containsKey(mCalledActivity.getIntent().getStringExtra("userId"))) {
-                    // todo: open the edit marker screen, and change the markers location to the new one
-                    Toast.makeText(mCalledActivity, "one marker per user", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
                 Intent intent = new Intent(mCalledActivity, AddMarkerActivity.class);
-                intent.putExtra("marker_latitude", p.getLatitude());
-                intent.putExtra("marker_longitude", p.getLongitude());
                 intent.putExtra("map_old_state", currentState());
                 intent.putExtra("userId", mCalledActivity.getIntent().getStringExtra("userId"));
-
+                intent.putExtra("marker_latitude", p.getLatitude());
+                intent.putExtra("marker_longitude", p.getLongitude());
+                if (mapMarkers.containsKey(mCalledActivity.getIntent().getStringExtra("userId"))) {
+                    Log.i(MapHandler.class.getSimpleName(), "edit existing marker");
+                    intent.putExtra("old_marker_description", mapMarkers.get(mCalledActivity.getIntent().getStringExtra("userId")));
+                } else {
+                    Log.i(MapHandler.class.getSimpleName(), "create new marker");
+                }
                 mCalledActivity.startActivity(intent);
                 return false;
             }
@@ -114,6 +114,7 @@ public class MapHandler {
         addMyLocationIconOnMap();
         addScaleBarOnMap();
     }
+
 
     private void addMyLocationIconOnMap() {
         // set my location on the map
@@ -154,9 +155,9 @@ public class MapHandler {
         mMapView.getController().setZoom(MAP_DEFAULT_ZOOM);
     }
 
-    void addMarker(String text, double latitude, double longitude, boolean isDogsitter, boolean isFood, boolean isMedicine) {
+    void addMarker(String text, double latitude, double longitude, boolean isDogsitter, boolean isFood, boolean isMedication) {
         MarkerDescriptor descriptor = new MarkerDescriptor(text, latitude, longitude, isDogsitter,
-                isFood, isMedicine, mCalledActivity.getIntent().getStringExtra("userId"));
+                isFood, isMedication, mCalledActivity.getIntent().getStringExtra("userId"));
         addMarker(descriptor);
     }
 
@@ -177,20 +178,25 @@ public class MapHandler {
         mMapView.getOverlays().add(myMarker);
     }
 
-    boolean removeMarker(MarkerDescriptor descriptor) {
-        if (!mapMarkers.containsKey(descriptor.id)) {
-            return false;
-        }
+    void editMarker(String text, double latitude, double longitude, boolean isDogsitter, boolean isFood, boolean isMedication) {
+        String id = mCalledActivity.getIntent().getStringExtra("userId");
+        if (!mapMarkers.containsKey(id)) return;
+        MarkerDescriptor newDescriptor = new MarkerDescriptor(text, latitude, longitude, isDogsitter,
+                isFood, isMedication, mCalledActivity.getIntent().getStringExtra("userId"));
+
+        removeMarker(mapMarkers.get(id));
+        addMarker(newDescriptor);
+    }
+
+    void removeMarker(MarkerDescriptor descriptor) {
+        if (mapMarkers.remove(descriptor.id) == null) return;
 
         for (Overlay overlay : mMapView.getOverlays()) {
-            if (overlay instanceof Marker) {
-                if (((Marker) overlay).getId().equals(descriptor.id)) {
-                    mMapView.getOverlays().remove(overlay);
-                    break;
-                }
+            if (overlay instanceof Marker && ((Marker) overlay).getId().equals(descriptor.id)) {
+                mMapView.getOverlays().remove(overlay);
+                return;
             }
         }
-        return true;
     }
 
     void restoreState(MapState oldState) {
@@ -235,12 +241,12 @@ public class MapHandler {
         final String text;
         final String id;
         final String userId;
-        boolean isDogsitter;
-        boolean isFood;
-        boolean isMedicine;
+        final boolean isDogsitter;
+        final boolean isFood;
+        final boolean isMedication;
 
         // todo: match arguments order to the addMarker method
-        MarkerDescriptor(String text, double latitude, double longitude, boolean isDogsitter, boolean isFood, boolean isMedicine, String creatorUserId) {
+        MarkerDescriptor(String text, double latitude, double longitude, boolean isDogsitter, boolean isFood, boolean isMedication, String creatorUserId) {
             this.latitude = latitude;
             this.longitude = longitude;
             this.text = text;
@@ -248,7 +254,7 @@ public class MapHandler {
             this.id = generateMarkerId(creatorUserId);
             this.isDogsitter = isDogsitter;
             this.isFood = isFood;
-            this.isMedicine = isMedicine;
+            this.isMedication = isMedication;
         }
 
         private String generateMarkerId(String userId) {

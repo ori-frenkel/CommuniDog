@@ -17,9 +17,10 @@
 
     <!--    Strings for Add Marker layout-->
     <string name="add_marker_page_title">Add Marker</string>
+    <string name="edit_marker_page_title">Edit Marker</string>
     <string name="check_box_dogsitter_marker_type">Dogsitter</string>
     <string name="check_box_food_marker_type">Food</string>
-    <string name="check_box_medicine_marker_type">Medicine</string>
+    <string name="check_box_medication_marker_type">Medication</string>
     <string name="choose_marker_type_title">My offered services</string>
 
     <string name="title_activity_profile">profile</string>
