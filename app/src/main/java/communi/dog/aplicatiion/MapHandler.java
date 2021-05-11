@@ -1,10 +1,8 @@
 package communi.dog.aplicatiion;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -12,7 +10,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import org.osmdroid.api.IGeoPoint;
@@ -29,7 +26,7 @@ import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -41,7 +38,7 @@ public class MapHandler {
     static final int DEFAULT_MARKER_ICON_ID = 0;
     private final MapView mMapView;
     private final Activity mCalledActivity;
-    private final ArrayList<MarkerDescriptor> mapMarkers = new ArrayList<>();
+    private final HashMap<String, MarkerDescriptor> mapMarkers = new HashMap<>();
     // todo: hashTable: markerId->marker
     private Location currentLocation = null;
 
@@ -87,6 +84,7 @@ public class MapHandler {
         LocationManager mLocationManager = (LocationManager) mCalledActivity.getSystemService(LOCATION_SERVICE);
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, mLocationListener);
         mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, mLocationListener);
+
 
         final MapEventsReceiver mReceive = new MapEventsReceiver() {
             @Override
@@ -152,11 +150,14 @@ public class MapHandler {
     }
 
     void addMarker(String title, double latitude, double longitude, int iconId) {
-        MarkerDescriptor descriptor = new MarkerDescriptor(latitude, longitude, title, iconId);
+        MarkerDescriptor descriptor = new MarkerDescriptor(latitude, longitude, title, iconId,
+                mCalledActivity.getIntent().getStringExtra("userId"));
         addMarker(descriptor);
     }
 
     private void addMarker(MarkerDescriptor descriptor) {
+        if (mapMarkers.containsKey(descriptor.id)) return;
+
         GeoPoint point = new GeoPoint(descriptor.latitude, descriptor.longitude);
         Marker myMarker = new Marker(mMapView);
         Drawable icon = descriptor.iconId == DEFAULT_MARKER_ICON_ID ?
@@ -167,14 +168,15 @@ public class MapHandler {
         myMarker.setTitle(descriptor.title);
         myMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
         myMarker.setIcon(icon);
+        myMarker.setId(descriptor.id);
         // todo: make marker's icon smaller when zooming out
 
-        mapMarkers.add(descriptor);
+        mapMarkers.put(descriptor.id, descriptor);
         mMapView.getOverlays().add(myMarker);
     }
 
     boolean removeMarker(MarkerDescriptor descriptor) {
-        if (!mapMarkers.remove(descriptor)) {
+        if (!mapMarkers.containsKey(descriptor.id)) {
             return false;
         }
 
@@ -193,7 +195,7 @@ public class MapHandler {
         if (oldState == null) {
             return;
         }
-        for (MarkerDescriptor descriptor : oldState.markersDescriptors) {
+        for (MarkerDescriptor descriptor : oldState.markersDescriptors.values()) {
             addMarker(descriptor);
         }
         GeoPoint mapCenter = new GeoPoint(oldState.mapCenterLatitude, oldState.mapCenterLongitude);
@@ -209,16 +211,15 @@ public class MapHandler {
      * class that stores the information of a map
      */
     public static class MapState implements Serializable {
-        ArrayList<MarkerDescriptor> markersDescriptors;
+        HashMap<String, MarkerDescriptor> markersDescriptors;
         double mapCenterLatitude;
         double mapCenterLongitude;
         double zoom;
 
-        public MapState(ArrayList<MarkerDescriptor> markers, IGeoPoint mapCenter, double zoom) {
+        public MapState(HashMap<String, MarkerDescriptor> markers, IGeoPoint mapCenter, double zoom) {
             this.mapCenterLatitude = mapCenter.getLatitude();
             this.mapCenterLongitude = mapCenter.getLongitude();
             this.zoom = zoom;
-            this.markersDescriptors = new ArrayList<>();
             this.markersDescriptors = markers;
         }
     }
@@ -233,12 +234,12 @@ public class MapHandler {
         final String title;
         final String id;
 
-        MarkerDescriptor(double latitude, double longitude, String title, int iconId) {
+        MarkerDescriptor(double latitude, double longitude, String title, int iconId, String markerId) {
             this.latitude = latitude;
             this.longitude = longitude;
             this.title = title;
             this.iconId = iconId;
-            this.id = "0";
+            this.id = markerId;
         }
     }
 }
