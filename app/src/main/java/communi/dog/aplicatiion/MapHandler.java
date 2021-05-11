@@ -92,7 +92,7 @@ public class MapHandler {
                 Intent intent = new Intent(mCalledActivity, AddMarkerActivity.class);
                 intent.putExtra("marker_latitude", p.getLatitude());
                 intent.putExtra("marker_longitude", p.getLongitude());
-                intent.putExtra("map_old_state", currState());
+                intent.putExtra("map_old_state", currentState());
                 intent.putExtra("userId", mCalledActivity.getIntent().getStringExtra("userId"));
 
                 mCalledActivity.startActivity(intent);
@@ -179,7 +179,7 @@ public class MapHandler {
         mMapView.getController().setZoom(oldState.zoom);
     }
 
-    MapState currState() {
+    MapState currentState() {
         return new MapState(mapMarkers, mMapView.getMapCenter(), mMapView.getZoomLevelDouble());
     }
 

@@ -73,7 +73,7 @@ public class MapScreenActivity extends AppCompatActivity {
             myProfileIntent.putExtra("userId", currentUser.getId());
             myProfileIntent.putExtra("password", currentUser.getPassword());
             myProfileIntent.putExtra("email", currentUser.getEmail());
-            myProfileIntent.putExtra("map_old_state", mMapHandler.currState());
+            myProfileIntent.putExtra("map_old_state", mMapHandler.currentState());
             startActivity(myProfileIntent);
         });
 
@@ -145,7 +145,7 @@ public class MapScreenActivity extends AppCompatActivity {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         System.out.println("MainActivity.onSaveInstanceState");
         super.onSaveInstanceState(outState);
-        outState.putSerializable("map_old_state", mMapHandler.currState());
+        outState.putSerializable("map_old_state", mMapHandler.currentState());
     }
 
     @Override
@@ -164,7 +164,7 @@ public class MapScreenActivity extends AppCompatActivity {
         super.onBackPressed();
         // todo: exit the app or logout?
         Intent intent = new Intent(this, LoginActivity.class);
-        intent.putExtra("map_old_state", mMapHandler.currState());
+        intent.putExtra("map_old_state", mMapHandler.currentState());
         startActivity(intent);
     }
 
