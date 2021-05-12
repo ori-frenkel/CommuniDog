@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,25 +17,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.HashMap;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.widget.Button;
 import android.text.Editable;
 import android.text.TextWatcher;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private HashMap<String, String> allUsers;
-    private DatabaseReference usersRef;
+    private DB appDB;
     EditText idEditText;
     EditText userPassword;
 
@@ -43,11 +36,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
-        allUsers = new HashMap<>();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference iDsRef = database.getReference("Users");
-        this.usersRef = iDsRef;
+        this.appDB = new DB();
+        this.appDB.refreshDataUsers();
 
         Intent activityIntent = getIntent();
 
@@ -55,7 +45,11 @@ public class LoginActivity extends AppCompatActivity {
         userPassword = findViewById(R.id.user_password);
 
         TextView to_register_btn = findViewById(R.id.register_now);
-        to_register_btn.setOnClickListener(v -> startActivity(new Intent(this, RegisterActivity.class)));
+        to_register_btn.setOnClickListener(v ->{
+            Intent newIntent = new Intent(this, RegisterActivity.class);
+            newIntent.putExtra("DB", this.appDB.currentState());
+            startActivity(newIntent);
+        });
 
         findViewById(R.id.loginConstraintLayout).setOnClickListener(v -> {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -65,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.login_button).setOnClickListener(v -> { //todo: check
-            if (isUserExists(idEditText, userPassword)) {
+            if (this.appDB.isUserExists(idEditText.getText().toString(), userPassword.getText().toString())) {
                 Intent successIntent = new Intent(this, MapScreenActivity.class);
                 successIntent.putExtra("userId", idEditText.getText().toString());
                 if (activityIntent.hasExtra("map_old_state")) {
@@ -78,70 +72,26 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        readDataIdsInUse(new FirebaseCallback() {
-            @Override
-            public void onCallback(HashMap<String, String> allUsers) {
-            }
-        });
-
         Button loginButton = findViewById(R.id.login_button);
         loginButton.setEnabled(false);
 
         idEditText.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
             public void afterTextChanged(Editable s) {
-                loginButton.setEnabled(!idEditText.getText().toString().equals("") && !userPassword.getText().toString().equals(""));
+                loginButton.setEnabled(!isEmpty(idEditText) && !isEmpty(userPassword));
             }
         });
 
         userPassword.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
             public void afterTextChanged(Editable s) {
-                loginButton.setEnabled(!idEditText.getText().toString().equals("") && !userPassword.getText().toString().equals(""));
+                loginButton.setEnabled(!isEmpty(idEditText) && !isEmpty(userPassword));
             }
         });
-    }
 
-    private boolean isUserExists(EditText id, EditText password) {
-        String inputId = id.getText().toString();
-        String inputPassword = password.getText().toString();
-        return allUsers.get(inputId) != null &&
-                Objects.equals(allUsers.get(inputId), inputPassword);
-    }
 
-    private interface FirebaseCallback {
-        void onCallback(HashMap<String, String> allUsers);
-    }
-
-    private void readDataIdsInUse(LoginActivity.FirebaseCallback firebaseCallback) {
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    if (ds != null) {
-                        String id = ds.child("id").getValue(String.class);
-                        String password = ds.child("password").getValue(String.class);
-                        allUsers.put(id, password);
-                    }
-                }
-                firebaseCallback.onCallback(allUsers);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        };
-        usersRef.addListenerForSingleValueEvent(valueEventListener);
     }
 
     @Override
@@ -198,5 +148,19 @@ public class LoginActivity extends AppCompatActivity {
     boolean isEmpty(EditText text) {
         CharSequence str = text.getText().toString();
         return TextUtils.isEmpty(str);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("userID", idEditText.getText().toString());
+        outState.putString("userPassword", userPassword.getText().toString());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        idEditText.setText(savedInstanceState.getString("userID"));
+        userPassword.setText(savedInstanceState.getString("userPassword"));
     }
 }

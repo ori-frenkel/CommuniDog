@@ -35,10 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText pass2;
     Button register;
     TextView to_register_btn;
-    private ArrayList<String> allIDs;
-    private ArrayList<String> allInUseIDs;
-    private DatabaseReference IdsRef;
-    private DatabaseReference usersRef;
+    private DB appDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,25 +49,12 @@ public class RegisterActivity extends AppCompatActivity {
         register = findViewById(R.id.register_bt);
         to_register_btn = findViewById(R.id.back_to_login);
 
-        allIDs = new ArrayList<>();
-        allInUseIDs = new ArrayList<>();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        this.IdsRef = database.getReference("ID's");
-        this.usersRef = database.getReference("Users");
         register.setEnabled(false);
 
-
-        readDataIds(new FirebaseCallback() {
-            @Override
-            public void onCallback(List<String> list) {
-            }
-        });
-
-        readDataIdsInUse(new FirebaseCallback() {
-            @Override
-            public void onCallback(List<String> list) {
-            }
-        });
+        Intent intent = getIntent();
+        this.appDB = new DB();
+        this.appDB.restoreState((DB.DBState) intent.getSerializableExtra("DB"));
+        this.appDB.refreshDataUsers();
 
         register.setOnClickListener(v -> checkDataEntered());
         to_register_btn.setOnClickListener(v ->
@@ -84,48 +68,32 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         id.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
             public void afterTextChanged(Editable s) {
                 register.setEnabled(checkButtonRegisterEnable());
             }
         });
 
         emailAddress.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
             public void afterTextChanged(Editable s) {
                 register.setEnabled(checkButtonRegisterEnable());
             }
         });
 
         pass1.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
             public void afterTextChanged(Editable s) {
                 register.setEnabled(checkButtonRegisterEnable());
             }
         });
 
         pass2.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
             public void afterTextChanged(Editable s) {
                 register.setEnabled(checkButtonRegisterEnable());
             }
@@ -133,8 +101,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     boolean checkButtonRegisterEnable() {
-//        return !id.getText().toString().equals("") && !emailAddress.getText().toString().equals("")
-//                && !pass1.getText().toString().equals("") && !pass2.getText().toString().equals("");
         return !isEmpty(id) && !isEmpty(emailAddress) && !isEmpty(pass1) && !isEmpty(pass2);
     }
 
@@ -163,11 +129,11 @@ public class RegisterActivity extends AppCompatActivity {
         //todo: don't check the db if the user failed before?
 
         // DB validation
-        if (!idExistsInDB(id)) {
+        if (!this.appDB.idExistsInDB(id.getText().toString())) {
             Toast.makeText(this, "id is unknown", Toast.LENGTH_SHORT).show();
             valid_input = false;
         } else {
-            if (idDoubleUser(id)) {
+            if (this.appDB.idDoubleUser(id.getText().toString())) {
                 Toast.makeText(this, "id is already register", Toast.LENGTH_SHORT).show();
                 valid_input = false;
             }
@@ -175,10 +141,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (valid_input) {
             Toast.makeText(this, "input is valid", Toast.LENGTH_SHORT).show();
-            addUser();
-
+            this.appDB.addUser(this.id.getText().toString(), this.emailAddress.getText().toString(),
+                    this.pass1.getText().toString());
             Intent successIntent = new Intent(this, MapScreenActivity.class); //todo: Maybe to MapScreenActivity?
             successIntent.putExtra("userId", id.getText().toString());
+            successIntent.putExtra("DB", this.appDB.currentState());
             startActivity(successIntent);
         }
     }
@@ -198,80 +165,33 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     boolean isEmpty(EditText text) {
-//        CharSequence str = text.getText().toString();
-//        return TextUtils.isEmpty(str);
         return text.getText().toString().isEmpty();
     }
 
+    /*
     private boolean idDoubleUser(EditText id) {
-//        for (String item : allInUseIDs) {
-//            if (item.equals(id.getText().toString())) {
-//                return true;
-//            }
-//        }
-//        return false;
         // todo: is there a better way to check that? do we really need to hold all id's in memory? why not a simple DB query??
         //  also, why don't we have a class for all the db queries? e.g. getPassword(id), isRegistered(id) etc.
         return allInUseIDs.contains(id.getText().toString());
     }
 
-    private boolean idExistsInDB(EditText id) {
-//        for (String item : allIDs) {
-//            if (item.equals(id.getText().toString())) {
-//                return true;
-//            }
-//        }
-//        return false;
-        return allIDs.contains(id.getText().toString());
+     */
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("userID", id.getText().toString());
+        outState.putString("userEmail", emailAddress.getText().toString());
+        outState.putString("userPass1", pass1.getText().toString());
+        outState.putString("userPass2", pass2.getText().toString());
     }
 
-    private interface FirebaseCallback {
-        void onCallback(List<String> list);
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        id.setText(savedInstanceState.getString("userID"));
+        id.setText(savedInstanceState.getString("userEmail"));
+        id.setText(savedInstanceState.getString("userPass1"));
+        id.setText(savedInstanceState.getString("userPass2"));
     }
-
-    private void readDataIds(FirebaseCallback firebaseCallback) {
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    if (ds != null) {
-                        allIDs.add((String) ds.getValue());
-                    }
-                }
-                firebaseCallback.onCallback(allIDs);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        };
-        IdsRef.addListenerForSingleValueEvent(valueEventListener);
-    }
-
-    private void readDataIdsInUse(FirebaseCallback firebaseCallback) {
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    if (ds != null) {
-                        String id = ds.child("id").getValue(String.class);
-                        allInUseIDs.add(id);
-                    }
-                }
-                firebaseCallback.onCallback(allInUseIDs);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        };
-        usersRef.addListenerForSingleValueEvent(valueEventListener);
-    }
-
-    void addUser() {
-        User newUser = new User(this.id.getText().toString(),
-                this.emailAddress.getText().toString(), this.pass1.getText().toString());
-        this.usersRef.push().setValue(newUser);
-    }
-
 }

@@ -42,7 +42,7 @@ public class MapScreenActivity extends AppCompatActivity {
     // user info
     private String userId;
     private User currentUser;
-    private DatabaseReference usersRef;
+    private DB appDB;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,12 +70,14 @@ public class MapScreenActivity extends AppCompatActivity {
 
         ImageView btnMyProfile = findViewById(R.id.buttonMyProfileInMapActivity);
         btnMyProfile.setOnClickListener(v -> {
+            currentUser = this.appDB.getUser();
             Toast.makeText(this, "link to my profile screen", Toast.LENGTH_SHORT).show();
             Intent myProfileIntent = new Intent(this, MyProfileActivity.class);
             myProfileIntent.putExtra("userId", currentUser.getId());
             myProfileIntent.putExtra("password", currentUser.getPassword());
             myProfileIntent.putExtra("email", currentUser.getEmail());
             myProfileIntent.putExtra("map_old_state", mMapHandler.currentState());
+            myProfileIntent.putExtra("DB", this.appDB.currentState());
             startActivity(myProfileIntent);
         });
 
@@ -113,15 +115,14 @@ public class MapScreenActivity extends AppCompatActivity {
         // DB
         userId = activityIntent.getStringExtra("userId");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        this.usersRef = database.getReference("Users");
         //todo: why not save only the id and pass in to MyProfile screen? why do we need here all the rest?
         currentUser = new User();
 
-        readDataUsers(new MapScreenActivity.FirebaseCallback() {
-            @Override
-            public void onCallback(User user) {
-            }
-        });
+        Intent intent = getIntent();
+        this.appDB = new DB();
+        this.appDB.restoreState((DB.DBState) intent.getSerializableExtra("DB"));
+        this.appDB.refreshDataUsers();
+        this.appDB.refreshDataGetUser(userId);
     }
 
     private void requestPermissionsIfNecessary(String[] permissions) {
@@ -191,35 +192,5 @@ public class MapScreenActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Close the app?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
-    }
-
-
-    // DB
-    private interface FirebaseCallback {
-        void onCallback(User user);
-
-    }
-
-    private void readDataUsers(MapScreenActivity.FirebaseCallback firebaseCallback) {
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    if (ds != null) {
-                        if (userId.equals(ds.child("id").getValue())) {
-                            String email = (String) ds.child("email").getValue();
-                            String password = (String) ds.child("password").getValue();
-                            currentUser = new User(userId, email, password);
-                        }
-                    }
-                }
-                firebaseCallback.onCallback(currentUser);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        };
-        usersRef.addListenerForSingleValueEvent(valueEventListener);
     }
 }
