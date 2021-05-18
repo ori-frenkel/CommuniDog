@@ -36,6 +36,7 @@ public class MapHandler {
     private static final double MAP_DEFAULT_ZOOM = 18.0;
     private static final double MAP_MAX_ZOOM = 20.0;
     private static final double MAP_MIN_ZOOM = 9.0;
+    private static final double MARKERS_MIN_DISPLAY_ZOOM = 15;
     static final int DEFAULT_MARKER_ICON_ID = 0;
     private final MapView mMapView;
     private final Activity mCalledActivity;
@@ -54,6 +55,11 @@ public class MapHandler {
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(final Location location) {
+            if (currentLocation == null) {
+                // on the first update -> animate to current location
+                currentLocation = location;
+                mapToCurrentLocation();
+            }
             currentLocation = location;
         }
 
@@ -85,7 +91,6 @@ public class MapHandler {
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, mLocationListener);
         mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, mLocationListener);
 
-
         final MapEventsReceiver mReceive = new MapEventsReceiver() {
             @Override
             public boolean singleTapConfirmedHelper(GeoPoint p) {
@@ -111,6 +116,7 @@ public class MapHandler {
         };
         mMapView.getOverlays().add(new MapEventsOverlay(mReceive));
 
+
         addMyLocationIconOnMap();
         addScaleBarOnMap();
     }
@@ -120,7 +126,7 @@ public class MapHandler {
         // set my location on the map
         MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(mCalledActivity), mMapView);
         mLocationOverlay.enableMyLocation();
-        mLocationOverlay.enableFollowLocation();
+//        mLocationOverlay.enableFollowLocation();
         mLocationOverlay.setOptionsMenuEnabled(true);
         // todo: make the purple circle disappear
 
@@ -172,6 +178,11 @@ public class MapHandler {
         myMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
         myMarker.setIcon(ResourcesCompat.getDrawable(mCalledActivity.getResources(), R.drawable.paw, mCalledActivity.getTheme()));
         myMarker.setId(descriptor.id);
+        myMarker.setOnMarkerClickListener((marker, mapView) -> {
+            centerMap(marker.getPosition(), false);
+            marker.showInfoWindow();
+            return false;
+        });
         // todo: make marker's icon smaller when zooming out
 
         mapMarkers.put(descriptor.id, descriptor);
