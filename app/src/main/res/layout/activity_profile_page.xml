@@ -7,35 +7,29 @@
     android:background="@drawable/profile_bg2"
     tools:context=".ProfilePage">
 
-    <ImageView
-        android:id="@+id/profile_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <TextView
+    <EditText
         android:id="@+id/profile_user_name"
         android:layout_width="235dp"
-        android:layout_height="38dp"
+        android:layout_height="50dp"
         android:layout_marginTop="16dp"
-        android:text="profile_user_name"
+        android:background="@null"
+        android:text="user name"
         android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_edit" />
 
-    <TextView
+    <EditText
         android:id="@+id/profile_dog_name"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="16dp"
-        android:text="profile_dog_name"
+        android:background="@null"
+        android:textColor="@color/black"
+        android:text="dog name"
         android:textAlignment="center"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="@+id/profile_user_name"
@@ -43,51 +37,59 @@
         app:layout_constraintStart_toStartOf="@+id/profile_user_name"
         app:layout_constraintTop_toBottomOf="@+id/profile_user_name" />
 
-    <Switch
-        android:id="@+id/dogisiter_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="dogisiter?"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.099"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.063" />
-
-    <TextView
+    <EditText
         android:id="@+id/profile_location"
-        android:layout_width="266dp"
-        android:layout_height="32dp"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
         android:layout_marginTop="36dp"
+        android:background="@null"
+        android:textColor="@color/black"
         android:drawableLeft="@drawable/ic_house"
         android:drawablePadding="10dp"
-        android:text="profile_location"
+        android:text="my location"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/profile_bio"
         app:layout_constraintStart_toStartOf="@+id/profile_bio"
         app:layout_constraintTop_toBottomOf="@+id/profile_bio" />
 
-    <TextView
+    <ImageView
+        android:id="@+id/logo_image"
+        android:layout_width="159dp"
+        android:layout_height="119dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/logo_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_full"
+        android:background="@null"
+        android:cursorVisible="false"/>
+
+    <EditText
         android:id="@+id/profile_contact"
         android:layout_width="0dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="36dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:background="@null"
+        android:textColor="@color/black"
         android:drawableLeft="@drawable/ic_contact_mail"
         android:drawablePadding="10dp"
-        android:text="profile_contact"
+        android:text="contact info"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/profile_location"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="@+id/profile_location"
         app:layout_constraintTop_toBottomOf="@+id/profile_location" />
 
-    <TextView
+    <EditText
         android:id="@+id/profile_bio"
         android:layout_width="336dp"
-        android:layout_height="61dp"
+        android:layout_height="100dp"
         android:layout_marginTop="28dp"
-        android:text="profile_bio"
+        android:background="@null"
+        android:textColor="@color/black"
+        android:text="add bio..."
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="@+id/profile_dog_name"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="@+id/profile_dog_name"
@@ -111,10 +113,24 @@
         android:id="@+id/profile_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="#FFEB3B"
+        android:layout_marginTop="8dp"
         android:text="edit profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+        app:layout_constraintTop_toBottomOf="@+id/logo_image" />
+
+    <ImageButton
+        android:id="@+id/backToMapFromProfil"
+        android:layout_width="40dp"
+        android:layout_height="35dp"
+        android:background="#F8DABF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.044"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.025"
+        app:srcCompat="@drawable/arrow_back"
+        tools:ignore="VectorDrawableCompat" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

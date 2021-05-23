@@ -72,7 +72,7 @@ public class MapScreenActivity extends AppCompatActivity {
         btnMyProfile.setOnClickListener(v -> {
             currentUser = this.appDB.getUser();
             Toast.makeText(this, "link to my profile screen", Toast.LENGTH_SHORT).show();
-            Intent myProfileIntent = new Intent(this, MyProfileActivity.class);
+            Intent myProfileIntent = new Intent(this, ProfilePage.class);
             myProfileIntent.putExtra("userId", currentUser.getId());
             myProfileIntent.putExtra("password", currentUser.getPassword());
             myProfileIntent.putExtra("email", currentUser.getEmail());
