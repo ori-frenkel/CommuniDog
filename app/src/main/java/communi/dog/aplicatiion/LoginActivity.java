@@ -5,7 +5,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +21,6 @@ import java.util.regex.Pattern;
 import android.widget.Button;
 import android.text.Editable;
 import android.text.TextWatcher;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -45,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         userPassword = findViewById(R.id.user_password);
 
         TextView to_register_btn = findViewById(R.id.register_now);
-        to_register_btn.setOnClickListener(v ->{
+        to_register_btn.setOnClickListener(v -> {
             Intent newIntent = new Intent(this, RegisterActivity.class);
             newIntent.putExtra("DB", this.appDB.currentState());
             startActivity(newIntent);
@@ -76,16 +73,24 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setEnabled(false);
 
         idEditText.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             public void afterTextChanged(Editable s) {
                 loginButton.setEnabled(!isEmpty(idEditText) && !isEmpty(userPassword));
             }
         });
 
         userPassword.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             public void afterTextChanged(Editable s) {
                 loginButton.setEnabled(!isEmpty(idEditText) && !isEmpty(userPassword));
             }
@@ -98,8 +103,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onBackPressed() {
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                {
+                case DialogInterface.BUTTON_POSITIVE: {
                     Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
                     intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent1.putExtra("LOGOUT", true);
@@ -119,32 +123,29 @@ public class LoginActivity extends AppCompatActivity {
 
     void checkDataEntered() {
         boolean valid_input = true;
-        if (!isId(idEditText))
-        {
+        if (!isId(idEditText)) {
             idEditText.setError("id is invalid!");
             valid_input = false;
         }
-        if (isEmpty(userPassword))
-        {
+        if (isEmpty(userPassword)) {
             userPassword.setError("password is missing");
             valid_input = false;
         }
 
-        if (valid_input)
-        {
+        if (valid_input) {
             // todo: check in DB
         }
 
     }
 
-    boolean isId(EditText text)
-    {
+    boolean isId(EditText text) {
         String input = text.getText().toString();
         String regex = "[0-9]+";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(input);
         return m.matches() && input.length() == 9;
     }
+
     boolean isEmpty(EditText text) {
         CharSequence str = text.getText().toString();
         return TextUtils.isEmpty(str);
