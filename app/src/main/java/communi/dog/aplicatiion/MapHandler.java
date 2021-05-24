@@ -168,16 +168,16 @@ public class MapHandler {
     }
 
     private void addMarker(MarkerDescriptor descriptor) {
-        if (mapMarkers.containsKey(descriptor.id)) return;
+        if (mapMarkers.containsKey(descriptor.getId())) return;
 
-        GeoPoint point = new GeoPoint(descriptor.latitude, descriptor.longitude);
+        GeoPoint point = new GeoPoint(descriptor.getLatitude(), descriptor.getLongitude());
         Marker myMarker = new Marker(mMapView);
 
         myMarker.setPosition(point);
-        myMarker.setTitle(descriptor.text);
+        myMarker.setTitle(descriptor.getText());
         myMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
         myMarker.setIcon(ResourcesCompat.getDrawable(mCalledActivity.getResources(), R.drawable.paw, mCalledActivity.getTheme()));
-        myMarker.setId(descriptor.id);
+        myMarker.setId(descriptor.getId());
         myMarker.setOnMarkerClickListener((marker, mapView) -> {
             centerMap(marker.getPosition(), false);
             marker.showInfoWindow();
@@ -185,7 +185,7 @@ public class MapHandler {
         });
         // todo: make marker's icon smaller when zooming out
 
-        mapMarkers.put(descriptor.id, descriptor);
+        mapMarkers.put(descriptor.getId(), descriptor);
         mMapView.getOverlays().add(myMarker);
     }
 
@@ -200,10 +200,10 @@ public class MapHandler {
     }
 
     void removeMarker(MarkerDescriptor descriptor) {
-        if (mapMarkers.remove(descriptor.id) == null) return;
+        if (mapMarkers.remove(descriptor.getId()) == null) return;
 
         for (Overlay overlay : mMapView.getOverlays()) {
-            if (overlay instanceof Marker && ((Marker) overlay).getId().equals(descriptor.id)) {
+            if (overlay instanceof Marker && ((Marker) overlay).getId().equals(descriptor.getId())) {
                 mMapView.getOverlays().remove(overlay);
                 return;
             }
@@ -224,53 +224,5 @@ public class MapHandler {
 
     MapState currentState() {
         return new MapState(mapMarkers, mMapView.getMapCenter(), mMapView.getZoomLevelDouble());
-    }
-
-    /**
-     * class that stores the information of a map
-     */
-    public static class MapState implements Serializable {
-        HashMap<String, MarkerDescriptor> markersDescriptors;
-        double mapCenterLatitude;
-        double mapCenterLongitude;
-        double zoom;
-
-        public MapState(HashMap<String, MarkerDescriptor> markers, IGeoPoint mapCenter, double zoom) {
-            this.mapCenterLatitude = mapCenter.getLatitude();
-            this.mapCenterLongitude = mapCenter.getLongitude();
-            this.zoom = zoom;
-            this.markersDescriptors = markers;
-        }
-    }
-
-    /**
-     * class that stores the information of a marker
-     */
-    public static class MarkerDescriptor implements Serializable {
-        final double latitude;
-        final double longitude;
-        final String text;
-        final String id;
-        final String userId;
-        final boolean isDogsitter;
-        final boolean isFood;
-        final boolean isMedication;
-
-        // todo: match arguments order to the addMarker method
-        MarkerDescriptor(String text, double latitude, double longitude, boolean isDogsitter, boolean isFood, boolean isMedication, String creatorUserId) {
-            this.latitude = latitude;
-            this.longitude = longitude;
-            this.text = text;
-            this.userId = creatorUserId;
-            this.id = generateMarkerId(creatorUserId);
-            this.isDogsitter = isDogsitter;
-            this.isFood = isFood;
-            this.isMedication = isMedication;
-        }
-
-        private String generateMarkerId(String userId) {
-            // todo: maybe not just the user id? if not than this field is redundant
-            return userId;
-        }
     }
 }

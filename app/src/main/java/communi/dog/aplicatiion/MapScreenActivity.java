@@ -21,19 +21,12 @@ import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import communi.dog.aplicatiion.MapHandler.MapState;
-
-import static communi.dog.aplicatiion.MapHandler.DEFAULT_MARKER_ICON_ID;
 
 public class MapScreenActivity extends AppCompatActivity {
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;

@@ -24,12 +24,12 @@ public class AddMarkerActivity extends AppCompatActivity {
         final double longitude = intent.getDoubleExtra("marker_longitude", 0);
 
         if (isEdit) {
-            final MapHandler.MarkerDescriptor oldDesc = (MapHandler.MarkerDescriptor) intent.getSerializableExtra("old_marker_description");
+            final MarkerDescriptor oldDesc = (MarkerDescriptor) intent.getSerializableExtra("old_marker_description");
 
             ((TextView) findViewById(R.id.textViewAddMarkerPageTitle)).setText(getText(R.string.edit_marker_page_title));
-            ((CheckBox) findViewById(R.id.checkboxDogsitter)).setChecked(oldDesc.isDogsitter);
-            ((CheckBox) findViewById(R.id.checkboxFood)).setChecked(oldDesc.isFood);
-            ((CheckBox) findViewById(R.id.checkboxMedication)).setChecked(oldDesc.isMedication);
+            ((CheckBox) findViewById(R.id.checkboxDogsitter)).setChecked(oldDesc.isDogsitter());
+            ((CheckBox) findViewById(R.id.checkboxFood)).setChecked(oldDesc.isFood());
+            ((CheckBox) findViewById(R.id.checkboxMedication)).setChecked(oldDesc.isMedication());
         } else {
             ((TextView) findViewById(R.id.textViewAddMarkerPageTitle)).setText(getText(R.string.add_marker_page_title));
         }
