@@ -25,7 +25,6 @@ public class AddMarkerActivity extends AppCompatActivity {
 
         if (isEdit) {
             final MarkerDescriptor oldDesc = (MarkerDescriptor) intent.getSerializableExtra("old_marker_description");
-
             ((TextView) findViewById(R.id.textViewAddMarkerPageTitle)).setText(getText(R.string.edit_marker_page_title));
             ((CheckBox) findViewById(R.id.checkboxDogsitter)).setChecked(oldDesc.isDogsitter());
             ((CheckBox) findViewById(R.id.checkboxFood)).setChecked(oldDesc.isFood());
