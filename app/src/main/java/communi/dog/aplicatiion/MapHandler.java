@@ -171,7 +171,7 @@ public class MapHandler {
         myMarker.setPosition(location);
         myMarker.setTitle(descriptor.getText());
         myMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
-        myMarker.setIcon(ResourcesCompat.getDrawable(mCalledActivity.getResources(), R.drawable.paw, mCalledActivity.getTheme()));
+        myMarker.setIcon(ResourcesCompat.getDrawable(mCalledActivity.getResources(), R.drawable.ic_dog_paw, mCalledActivity.getTheme()));
         myMarker.setId(descriptor.getId());
         myMarker.setOnMarkerClickListener((marker, mapView) -> {
             centerMap(marker.getPosition(), false);
