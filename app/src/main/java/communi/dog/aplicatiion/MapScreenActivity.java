@@ -1,9 +1,11 @@
 package communi.dog.aplicatiion;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -46,8 +48,6 @@ public class MapScreenActivity extends AppCompatActivity {
         Context ctx = this.getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
-        mMapHandler = new MapHandler(findViewById(R.id.mapView), this);
-
         requestPermissionsIfNecessary(new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -56,7 +56,7 @@ public class MapScreenActivity extends AppCompatActivity {
                 Manifest.permission.INTERNET
         });
 
-        mMapHandler.initMap();
+        mMapHandler = new MapHandler(findViewById(R.id.mapView), CommuniDogApp.getInstance().getMapState(), this);
 
         ImageView btCenterMap = findViewById(R.id.buttonCenterMap);
         btCenterMap.setOnClickListener(v -> mMapHandler.mapToCurrentLocation());
@@ -69,7 +69,6 @@ public class MapScreenActivity extends AppCompatActivity {
             myProfileIntent.putExtra("userId", currentUser.getId());
             myProfileIntent.putExtra("password", currentUser.getPassword());
             myProfileIntent.putExtra("email", currentUser.getEmail());
-            myProfileIntent.putExtra("map_old_state", mMapHandler.currentState());
             myProfileIntent.putExtra("DB", this.appDB.currentState());
             startActivity(myProfileIntent);
         });
@@ -77,33 +76,6 @@ public class MapScreenActivity extends AppCompatActivity {
         ImageView btnMoreInfo = findViewById(R.id.buttonMoreInfoMapActivity);
         btnMoreInfo.setOnClickListener(v ->
                 Toast.makeText(this, "link to more info screen", Toast.LENGTH_SHORT).show());
-
-        if (activityIntent.hasExtra("map_old_state")) {
-            mMapHandler.restoreState((MapState) activityIntent.getSerializableExtra("map_old_state"));
-        } else if (savedInstanceState == null) {
-            // new map
-            if (!mMapHandler.mapToCurrentLocation()) {
-                // todo: set initial coordinates using database?
-                IGeoPoint initialLocation = new GeoPoint(32.1007, 34.8070);
-                mMapHandler.centerMap(initialLocation, false);
-            }
-        }
-
-        if (activityIntent.getBooleanExtra("add_marker", false)) {
-            mMapHandler.addMarker(activityIntent.getStringExtra("marker_text"),
-                    activityIntent.getDoubleExtra("marker_latitude", 0),
-                    activityIntent.getDoubleExtra("marker_longitude", 0),
-                    activityIntent.getBooleanExtra("marker_is_dogsitter", false),
-                    activityIntent.getBooleanExtra("marker_is_food", false),
-                    activityIntent.getBooleanExtra("marker_is_medication", false));
-        } else if (activityIntent.getBooleanExtra("edit_marker", false)) {
-            mMapHandler.editMarker(activityIntent.getStringExtra("marker_text"),
-                    activityIntent.getDoubleExtra("marker_latitude", 0),
-                    activityIntent.getDoubleExtra("marker_longitude", 0),
-                    activityIntent.getBooleanExtra("marker_is_dogsitter", false),
-                    activityIntent.getBooleanExtra("marker_is_food", false),
-                    activityIntent.getBooleanExtra("marker_is_medication", false));
-        }
 
         // DB
         userId = activityIntent.getStringExtra("userId");
@@ -144,26 +116,6 @@ public class MapScreenActivity extends AppCompatActivity {
                     permissionsToRequest.toArray(new String[0]),
                     REQUEST_PERMISSIONS_REQUEST_CODE);
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        System.out.println("MainActivity.onSaveInstanceState");
-        super.onSaveInstanceState(outState);
-        // todo: save to db?
-        outState.putSerializable("map_old_state", mMapHandler.currentState());
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        System.out.println("MainActivity.onRestoreInstanceState");
-        super.onRestoreInstanceState(savedInstanceState);
-        // todo: restore from db?
-        Serializable oldState = savedInstanceState.getSerializable("map_old_state");
-        if (!(oldState instanceof MapState)) {
-            return; // ignore
-        }
-        mMapHandler.restoreState((MapState) oldState);
     }
 
     @Override

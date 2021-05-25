@@ -20,12 +20,9 @@ import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-
-import java.util.HashMap;
 
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -35,19 +32,22 @@ public class MapHandler {
     private static final double MAP_MAX_ZOOM = 20.0;
     private static final double MAP_MIN_ZOOM = 9.0;
     private static final double MARKERS_MIN_DISPLAY_ZOOM = 15;
-    static final int DEFAULT_MARKER_ICON_ID = 0;
     private final MapView mMapView;
     private final Activity mCalledActivity;
-    private final HashMap<String, MarkerDescriptor> mapMarkers = new HashMap<>();
-    private Location currentLocation = null;
+    private GeoPoint currentLocation = null;
+
+    private final MapState mapState;
 
     /**
      * @param mapView        the founded mapView
      * @param calledActivity the activity that holds the mapView as context
      */
-    public MapHandler(MapView mapView, Activity calledActivity) {
+    public MapHandler(MapView mapView, MapState initialState, Activity calledActivity) {
         this.mMapView = mapView;
         this.mCalledActivity = calledActivity;
+        this.mapState = initialState;
+        initMap();
+        restoreState();
     }
 
     private final LocationListener mLocationListener = new LocationListener() {
@@ -55,10 +55,10 @@ public class MapHandler {
         public void onLocationChanged(final Location location) {
             if (currentLocation == null) {
                 // on the first update -> animate to current location
-                currentLocation = location;
+                currentLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
                 mapToCurrentLocation();
             }
-            currentLocation = location;
+            currentLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
         }
 
         @Override
@@ -77,6 +77,7 @@ public class MapHandler {
     @SuppressLint("MissingPermission")
     public void initMap() {
         // initialize the map
+        mMapView.getOverlay().clear();
         mMapView.setTileSource(TileSourceFactory.MAPNIK);
         mMapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.ALWAYS);
         mMapView.setMultiTouchControls(true);
@@ -98,13 +99,14 @@ public class MapHandler {
             @Override
             public boolean longPressHelper(GeoPoint p) {
                 Intent intent = new Intent(mCalledActivity, AddMarkerActivity.class);
-                intent.putExtra("map_old_state", currentState());
                 intent.putExtra("userId", mCalledActivity.getIntent().getStringExtra("userId"));
                 intent.putExtra("marker_latitude", p.getLatitude());
                 intent.putExtra("marker_longitude", p.getLongitude());
-                if (mapMarkers.containsKey(mCalledActivity.getIntent().getStringExtra("userId"))) {
+                String userId = mCalledActivity.getIntent().getStringExtra("userId");
+                MarkerDescriptor markerDescriptor = mapState.getMarker(userId);
+                if (markerDescriptor != null) {
                     Log.i(MapHandler.class.getSimpleName(), "edit existing marker");
-                    intent.putExtra("old_marker_description", mapMarkers.get(mCalledActivity.getIntent().getStringExtra("userId")));
+                    intent.putExtra("old_marker_description", markerDescriptor);
                 } else {
                     Log.i(MapHandler.class.getSimpleName(), "create new marker");
                 }
@@ -113,7 +115,6 @@ public class MapHandler {
             }
         };
         mMapView.getOverlays().add(new MapEventsOverlay(mReceive));
-
 
         addMyLocationIconOnMap();
         addScaleBarOnMap();
@@ -124,7 +125,6 @@ public class MapHandler {
         // set my location on the map
         MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(mCalledActivity), mMapView);
         mLocationOverlay.enableMyLocation();
-//        mLocationOverlay.enableFollowLocation();
         mLocationOverlay.setOptionsMenuEnabled(true);
         // todo: make the purple circle disappear
 
@@ -143,14 +143,13 @@ public class MapHandler {
         mMapView.getOverlays().add(mScaleBarOverlay);
     }
 
-    boolean mapToCurrentLocation() {
-        if (currentLocation == null) return false;
-        GeoPoint myPosition = new GeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude());
-        centerMap(myPosition, true);
-        return true;
+    void mapToCurrentLocation() {
+        if (currentLocation != null) centerMap(currentLocation, true);
     }
 
     void centerMap(IGeoPoint newCenter, boolean animate) {
+        mapState.setCenter(newCenter);
+        mapState.setZoom(MAP_DEFAULT_ZOOM);
         if (animate) {
             mMapView.getController().animateTo(newCenter);
         } else {
@@ -159,19 +158,17 @@ public class MapHandler {
         mMapView.getController().setZoom(MAP_DEFAULT_ZOOM);
     }
 
-    void addMarker(String text, double latitude, double longitude, boolean isDogsitter, boolean isFood, boolean isMedication) {
-        MarkerDescriptor descriptor = new MarkerDescriptor(text, latitude, longitude, isDogsitter,
-                isFood, isMedication, mCalledActivity.getIntent().getStringExtra("userId"));
-        addMarker(descriptor);
-    }
+//    public void addMarker(MarkerDescriptor descriptor) {
+//        if (mapState.hasMarker(descriptor)) deleteMarker(descriptor);
+//        showMarkerOnMap(descriptor);
+//        mapState.addMarker(descriptor);
+//    }
 
-    private void addMarker(MarkerDescriptor descriptor) {
-        if (mapMarkers.containsKey(descriptor.getId())) return;
+    private void showMarkerOnMap(MarkerDescriptor descriptor) {
+        GeoPoint location = new GeoPoint(descriptor.getLatitude(), descriptor.getLongitude());
 
-        GeoPoint point = new GeoPoint(descriptor.getLatitude(), descriptor.getLongitude());
         Marker myMarker = new Marker(mMapView);
-
-        myMarker.setPosition(point);
+        myMarker.setPosition(location);
         myMarker.setTitle(descriptor.getText());
         myMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
         myMarker.setIcon(ResourcesCompat.getDrawable(mCalledActivity.getResources(), R.drawable.paw, mCalledActivity.getTheme()));
@@ -182,45 +179,35 @@ public class MapHandler {
             return false;
         });
         // todo: make marker's icon smaller when zooming out
-
-        mapMarkers.put(descriptor.getId(), descriptor);
         mMapView.getOverlays().add(myMarker);
     }
 
-    void editMarker(String text, double latitude, double longitude, boolean isDogsitter, boolean isFood, boolean isMedication) {
-        String id = mCalledActivity.getIntent().getStringExtra("userId");
-        if (!mapMarkers.containsKey(id)) return;
-        MarkerDescriptor newDescriptor = new MarkerDescriptor(text, latitude, longitude, isDogsitter,
-                isFood, isMedication, mCalledActivity.getIntent().getStringExtra("userId"));
+//    void deleteMarker(MarkerDescriptor toDelete) {
+//        if (mapState.removeMarker(toDelete) == null) return;
+//        removeMarkerFromMap(toDelete);
+//    }
+//
+//    private void removeMarkerFromMap(MarkerDescriptor toRemove) {
+//        for (Overlay overlay : mMapView.getOverlays()) {
+//            if (overlay instanceof Marker && ((Marker) overlay).getId().equals(toRemove.getId())) {
+//                mMapView.getOverlays().remove(overlay);
+//                return;
+//            }
+//        }
+//    }
 
-        removeMarker(mapMarkers.get(id));
-        addMarker(newDescriptor);
-    }
-
-    void removeMarker(MarkerDescriptor descriptor) {
-        if (mapMarkers.remove(descriptor.getId()) == null) return;
-
-        for (Overlay overlay : mMapView.getOverlays()) {
-            if (overlay instanceof Marker && ((Marker) overlay).getId().equals(descriptor.getId())) {
-                mMapView.getOverlays().remove(overlay);
-                return;
-            }
+    void restoreState() {
+        for (MarkerDescriptor descriptor : mapState.getMarkersDescriptors().values()) {
+            showMarkerOnMap(descriptor);
         }
-    }
 
-    void restoreState(MapState oldState) {
-        if (oldState == null) {
-            return;
-        }
-        for (MarkerDescriptor descriptor : oldState.markersDescriptors.values()) {
-            addMarker(descriptor);
-        }
-        GeoPoint mapCenter = new GeoPoint(oldState.mapCenterLatitude, oldState.mapCenterLongitude);
-        centerMap(mapCenter, false);
-        mMapView.getController().setZoom(oldState.zoom);
+        centerMap(mapState.getCenter(), false);
+        mMapView.getController().setZoom(mapState.getZoom());
     }
 
     MapState currentState() {
-        return new MapState(mapMarkers, mMapView.getMapCenter(), mMapView.getZoomLevelDouble());
+        mapState.setCenter(mMapView.getMapCenter());
+        mapState.setZoom(mMapView.getZoomLevelDouble());
+        return mapState;
     }
 }

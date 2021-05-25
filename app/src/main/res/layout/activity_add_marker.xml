@@ -15,32 +15,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/buttonSaveMarker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_baseline_add_circle_48"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/buttonCancelMarker" />
+    <!--    <ImageView-->
+    <!--        android:id="@+id/buttonSaveMarker"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginBottom="48dp"-->
+    <!--        android:background="?android:attr/selectableItemBackground"-->
+    <!--        android:clickable="true"-->
+    <!--        android:focusable="true"-->
+    <!--        android:src="@drawable/ic_baseline_add_circle_48"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toEndOf="@id/buttonCancelMarker" />-->
 
-    <ImageView
-        android:id="@+id/buttonCancelMarker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_baseline_cancel_48"
-        app:layout_constraintBottom_toBottomOf="@id/buttonSaveMarker"
-        app:layout_constraintEnd_toStartOf="@id/buttonSaveMarker"
-        app:layout_constraintStart_toStartOf="parent" />
+    <!--    <ImageView-->
+    <!--        android:id="@+id/buttonCancelMarker"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:background="?android:attr/selectableItemBackground"-->
+    <!--        android:clickable="true"-->
+    <!--        android:focusable="true"-->
+    <!--        android:src="@drawable/ic_baseline_cancel_48"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/buttonSaveMarker"-->
+    <!--        app:layout_constraintEnd_toStartOf="@id/buttonSaveMarker"-->
+    <!--        app:layout_constraintStart_toStartOf="parent" />-->
 
-
+    <!-- offered services -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -75,6 +75,50 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/check_box_medication_marker_type" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/buttonCancelMarker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_baseline_cancel_48" />
+
+        <ImageView
+            android:id="@+id/buttonSaveMarker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginBottom="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_baseline_add_circle_48" />
+
+        <ImageView
+            android:id="@+id/buttonDeleteMarker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginBottom="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_delete_marker"
+            android:visibility="gone" />
+
+
     </LinearLayout>
 
 
