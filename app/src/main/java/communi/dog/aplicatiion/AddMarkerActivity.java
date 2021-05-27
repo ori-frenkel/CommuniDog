@@ -32,6 +32,7 @@ public class AddMarkerActivity extends AppCompatActivity {
         if (markerToEdit != null) {
             buttonDeleteMarker.setVisibility(View.VISIBLE);
             buttonDeleteMarker.setClickable(true);
+            buttonSaveMarker.setImageResource(R.drawable.ic_save_marker);
             ((TextView) findViewById(R.id.textViewAddMarkerPageTitle)).setText(getText(R.string.edit_marker_page_title));
             ((CheckBox) findViewById(R.id.checkboxDogsitter)).setChecked(markerToEdit.isDogsitter());
             ((CheckBox) findViewById(R.id.checkboxFood)).setChecked(markerToEdit.isFood());
@@ -39,6 +40,7 @@ public class AddMarkerActivity extends AppCompatActivity {
         } else {
             buttonDeleteMarker.setVisibility(View.GONE);
             buttonDeleteMarker.setClickable(false);
+            buttonSaveMarker.setImageResource(R.drawable.ic_add_marker);
             ((TextView) findViewById(R.id.textViewAddMarkerPageTitle)).setText(getText(R.string.add_marker_page_title));
         }
 
