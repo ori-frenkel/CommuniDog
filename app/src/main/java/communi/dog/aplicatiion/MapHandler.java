@@ -100,13 +100,12 @@ public class MapHandler {
             public boolean longPressHelper(GeoPoint p) {
                 Intent intent = new Intent(mCalledActivity, AddMarkerActivity.class);
                 intent.putExtra("userId", mCalledActivity.getIntent().getStringExtra("userId"));
-                intent.putExtra("marker_latitude", p.getLatitude());
-                intent.putExtra("marker_longitude", p.getLongitude());
+                intent.putExtra("new_latitude", p.getLatitude());
+                intent.putExtra("new_longitude", p.getLongitude());
                 String userId = mCalledActivity.getIntent().getStringExtra("userId");
-                MarkerDescriptor markerDescriptor = mapState.getMarker(userId);
-                if (markerDescriptor != null) {
+                if (mapState.hasMarker(userId)) {
                     Log.i(MapHandler.class.getSimpleName(), "edit existing marker");
-                    intent.putExtra("old_marker_description", markerDescriptor);
+                    intent.putExtra("marker_id_to_edit", userId);
                 } else {
                     Log.i(MapHandler.class.getSimpleName(), "create new marker");
                 }

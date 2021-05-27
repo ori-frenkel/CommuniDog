@@ -25,21 +25,17 @@ public class AddMarkerActivity extends AppCompatActivity {
         ImageView buttonDeleteMarker = findViewById(R.id.buttonDeleteMarker);
 
         mapState = CommuniDogApp.getInstance().getMapState();
+        final MarkerDescriptor markerToEdit = mapState.getMarker(incomingIntent.getStringExtra("marker_id_to_edit"));
 
-
-        boolean isEdit = incomingIntent.hasExtra("old_marker_description");
         userId = incomingIntent.getStringExtra("userId");
-        final double latitude = incomingIntent.getDoubleExtra("marker_latitude", 0);
-        final double longitude = incomingIntent.getDoubleExtra("marker_longitude", 0);
 
-        if (isEdit) {
+        if (markerToEdit != null) {
             buttonDeleteMarker.setVisibility(View.VISIBLE);
             buttonDeleteMarker.setClickable(true);
-            final MarkerDescriptor oldMarker = (MarkerDescriptor) incomingIntent.getSerializableExtra("old_marker_description");
             ((TextView) findViewById(R.id.textViewAddMarkerPageTitle)).setText(getText(R.string.edit_marker_page_title));
-            ((CheckBox) findViewById(R.id.checkboxDogsitter)).setChecked(oldMarker.isDogsitter());
-            ((CheckBox) findViewById(R.id.checkboxFood)).setChecked(oldMarker.isFood());
-            ((CheckBox) findViewById(R.id.checkboxMedication)).setChecked(oldMarker.isMedication());
+            ((CheckBox) findViewById(R.id.checkboxDogsitter)).setChecked(markerToEdit.isDogsitter());
+            ((CheckBox) findViewById(R.id.checkboxFood)).setChecked(markerToEdit.isFood());
+            ((CheckBox) findViewById(R.id.checkboxMedication)).setChecked(markerToEdit.isMedication());
         } else {
             buttonDeleteMarker.setVisibility(View.GONE);
             buttonDeleteMarker.setClickable(false);
@@ -50,23 +46,35 @@ public class AddMarkerActivity extends AppCompatActivity {
             boolean isDogsitter = ((CheckBox) findViewById(R.id.checkboxDogsitter)).isChecked();
             boolean isFood = ((CheckBox) findViewById(R.id.checkboxFood)).isChecked();
             boolean isMedication = ((CheckBox) findViewById(R.id.checkboxMedication)).isChecked();
-
             if (!(isDogsitter || isFood || isMedication)) {
-                Toast.makeText(this, "check at least one option", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "check at least one service", Toast.LENGTH_SHORT).show();
                 return;
             }
-            MarkerDescriptor newMarker = new MarkerDescriptor(
-                    getMarkerTitle(isDogsitter, isFood, isMedication), latitude, longitude,
-                    isDogsitter, isFood, isMedication, userId);
 
-            mapState.addMarker(newMarker);
+            final double latitude = incomingIntent.getDoubleExtra("new_latitude", -1);
+            final double longitude = incomingIntent.getDoubleExtra("new_longitude", -1);
+            String newText = getMarkerTitle(isDogsitter, isFood, isMedication);
+
+            if (markerToEdit != null) {
+                // edit existing marker
+                if (latitude * longitude >= 0) {
+                    markerToEdit.setNewLocation(latitude, longitude);
+                }
+                markerToEdit.setServices(isDogsitter, isFood, isMedication);
+                markerToEdit.setText(newText);
+
+            } else {
+                // add new marker
+                MarkerDescriptor newMarker = new MarkerDescriptor(
+                        newText, latitude, longitude, isDogsitter, isFood, isMedication, userId);
+                mapState.addMarker(newMarker);
+            }
             backToMap();
         });
 
         buttonDeleteMarker.setOnClickListener(v -> {
-            if (!isEdit) return;
-            final MarkerDescriptor oldMarker = (MarkerDescriptor) incomingIntent.getSerializableExtra("old_marker_description");
-            mapState.removeMarker(oldMarker);
+            if (markerToEdit == null) return;
+            mapState.removeMarker(markerToEdit.getId());
             backToMap();
         });
 

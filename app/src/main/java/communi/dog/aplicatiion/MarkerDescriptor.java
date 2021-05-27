@@ -6,14 +6,14 @@ import java.io.Serializable;
  * class that stores the information of a marker
  */
 public class MarkerDescriptor implements Serializable {
-    private final double latitude;
-    private final double longitude;
-    private final String text;
+    private double latitude;
+    private double longitude;
+    private String text;
     private final String id;
     private final String userId;
-    private final boolean isDogsitter;
-    private final boolean isFood;
-    private final boolean isMedication;
+    private boolean isDogsitter;
+    private boolean isFood;
+    private boolean isMedication;
 
     // todo: match arguments order to the addMarker method
     MarkerDescriptor(String text, double latitude, double longitude, boolean isDogsitter, boolean isFood, boolean isMedication, String creatorUserId) {
@@ -30,6 +30,21 @@ public class MarkerDescriptor implements Serializable {
     private String generateMarkerId(String userId) {
         // todo: maybe not just the user id? if not than this field is redundant
         return userId;
+    }
+
+    public void setNewLocation(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public void setServices(boolean isDogsitter, boolean isFood, boolean isMedication) {
+        this.isDogsitter = isDogsitter;
+        this.isFood = isFood;
+        this.isMedication = isMedication;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public boolean isDogsitter() {

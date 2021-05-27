@@ -54,12 +54,12 @@ public class MapState implements Serializable {
         markersDescriptors.put(toAdd.getId(), toAdd);
     }
 
-    public boolean hasMarker(MarkerDescriptor descriptor) {
-        return markersDescriptors.containsKey(descriptor.getId());
+    public boolean hasMarker(String idToSearch) {
+        return markersDescriptors.containsKey(idToSearch);
     }
 
-    public MarkerDescriptor removeMarker(MarkerDescriptor toRemove) {
-        return markersDescriptors.remove(toRemove.getId());
+    public MarkerDescriptor removeMarker(String idToRemove) {
+        return markersDescriptors.remove(idToRemove);
     }
 
     public HashMap<String, MarkerDescriptor> getMarkersDescriptors() {
