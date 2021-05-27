@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -23,7 +22,7 @@ public class ProfilePage extends AppCompatActivity {
     EditText bio;
     EditText my_location;
     EditText contact;
-    private ImageButton backToMap;
+    private ImageButton btnBackToMap;
     private TextView editProfile;
 
 
@@ -34,9 +33,11 @@ public class ProfilePage extends AppCompatActivity {
 
         // get data from the previous page
         Intent intent = getIntent();
-        String gotId = intent.getStringExtra("userId");
-        String gotEmail = intent.getStringExtra("email");
-        String gotPassword = intent.getStringExtra("password");
+        String userId = intent.getStringExtra("userId");
+
+        // todo: get from DB and don't pass with intent
+        String userEmail = intent.getStringExtra("email");
+        String userPassword = intent.getStringExtra("password");
 
         // todo: get the info from DB and
 
@@ -46,7 +47,7 @@ public class ProfilePage extends AppCompatActivity {
         my_location = findViewById(R.id.profile_location);
         contact = findViewById(R.id.profile_contact);
 
-        backToMap = findViewById(R.id.backToMapFromProfil);
+        btnBackToMap = findViewById(R.id.backToMapFromProfil);
         editProfile = findViewById(R.id.profile_edit);
 
         editProfile.setText("Edit");
@@ -57,52 +58,56 @@ public class ProfilePage extends AppCompatActivity {
         contact.setEnabled(false);
 
 
-        editProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (contact.isEnabled()) {
-                    username.setTextColor(Color.BLACK);
-                    dog_name.setTextColor(Color.BLACK);
-                    bio.setTextColor(Color.BLACK);
-                    my_location.setTextColor(Color.BLACK);
-                    contact.setTextColor(Color.BLACK);
+        editProfile.setOnClickListener(v -> {
+            if (contact.isEnabled()) {
+                username.setTextColor(Color.BLACK);
+                dog_name.setTextColor(Color.BLACK);
+                bio.setTextColor(Color.BLACK);
+                my_location.setTextColor(Color.BLACK);
+                contact.setTextColor(Color.BLACK);
 
-                    username.setEnabled(false);
-                    dog_name.setEnabled(false);
-                    bio.setEnabled(false);
-                    my_location.setEnabled(false);
-                    contact.setEnabled(false);
-                    editProfile.setText("Edit");
-                    editProfile.setBackgroundColor(Color.TRANSPARENT);
-                    editProfile.setTypeface(null, Typeface.NORMAL);
+                username.setEnabled(false);
+                dog_name.setEnabled(false);
+                bio.setEnabled(false);
+                my_location.setEnabled(false);
+                contact.setEnabled(false);
+                editProfile.setText("Edit");
+                editProfile.setBackgroundColor(Color.TRANSPARENT);
+                editProfile.setTypeface(null, Typeface.NORMAL);
 
+                // todo: save the changes into DB
+            } else {
+                username.setTextColor(Color.WHITE);
+                dog_name.setTextColor(Color.WHITE);
+                bio.setTextColor(Color.WHITE);
+                my_location.setTextColor(Color.WHITE);
+                contact.setTextColor(Color.WHITE);
 
-                    // todo: save the changes into DB
-                } else {
-                    username.setTextColor(Color.WHITE);
-                    dog_name.setTextColor(Color.WHITE);
-                    bio.setTextColor(Color.WHITE);
-                    my_location.setTextColor(Color.WHITE);
-                    contact.setTextColor(Color.WHITE);
-
-                    username.setEnabled(true);
-                    dog_name.setEnabled(true);
-                    bio.setEnabled(true);
-                    my_location.setEnabled(true);
-                    contact.setEnabled(true);
-                    editProfile.setText("Done");
-                    editProfile.setBackgroundColor(Color.WHITE);
-                    editProfile.setTypeface(null, Typeface.BOLD);
-                }
+                username.setEnabled(true);
+                dog_name.setEnabled(true);
+                bio.setEnabled(true);
+                my_location.setEnabled(true);
+                contact.setEnabled(true);
+                editProfile.setText("Done");
+                editProfile.setBackgroundColor(Color.WHITE);
+                editProfile.setTypeface(null, Typeface.BOLD);
             }
         });
 
-        backToMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfilePage.this, MapScreenActivity.class);
-                startActivity(intent);
-            }
+        btnBackToMap.setOnClickListener(v -> {
+            backToMap();
         });
+    }
+
+    private void backToMap() {
+        Intent toMapIntent = new Intent(ProfilePage.this, MapScreenActivity.class);
+        toMapIntent.putExtra("userId", getIntent().getStringExtra("userId"));
+        startActivity(toMapIntent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        backToMap();
     }
 }
