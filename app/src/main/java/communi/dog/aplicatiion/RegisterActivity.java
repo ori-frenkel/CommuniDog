@@ -135,7 +135,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         }
 
-        //todo: don't check the db if the user failed before?
+        if (!valid_input) return;
 
         // DB validation
         if (!this.appDB.idExistsInDB(id.getText().toString())) {
