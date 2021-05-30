@@ -153,7 +153,7 @@ public class RegisterActivity extends AppCompatActivity {
             this.appDB.addUser(this.id.getText().toString(), this.emailAddress.getText().toString(),
                     this.pass1.getText().toString(), this.userName.getText().toString());
             this.appDB.setCurrentUser(this.id.getText().toString());
-            Intent successIntent = new Intent(this, MapScreenActivity.class); //todo: Maybe to MapScreenActivity?
+            Intent successIntent = new Intent(this, MapScreenActivity.class);
             successIntent.putExtra("userId", id.getText().toString());
             successIntent.putExtra("DB", this.appDB.currentState());
             startActivity(successIntent);
