@@ -7,130 +7,132 @@
     android:background="@drawable/profile_bg2"
     tools:context=".ProfilePage">
 
-    <EditText
-        android:id="@+id/profile_user_name"
-        android:layout_width="235dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="16dp"
-        android:background="@null"
-        android:text="user name"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textColorHint="@color/black"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_edit" />
-
-    <EditText
-        android:id="@+id/profile_dog_name"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="16dp"
-        android:background="@null"
-        android:textColor="@color/black"
-        android:text="dog name"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/profile_user_name"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="@+id/profile_user_name"
-        app:layout_constraintTop_toBottomOf="@+id/profile_user_name" />
-
-    <EditText
-        android:id="@+id/profile_location"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="36dp"
-        android:background="@null"
-        android:textColor="@color/black"
-        android:drawableLeft="@drawable/ic_house"
-        android:drawablePadding="10dp"
-        android:text="my location"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/profile_bio"
-        app:layout_constraintStart_toStartOf="@+id/profile_bio"
-        app:layout_constraintTop_toBottomOf="@+id/profile_bio" />
-
     <ImageView
         android:id="@+id/logo_image"
         android:layout_width="159dp"
         android:layout_height="119dp"
         android:layout_marginTop="20dp"
+        android:background="@null"
         android:contentDescription="@string/logo_description"
+        android:cursorVisible="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_full"
-        android:background="@null"
-        android:cursorVisible="false"/>
+        app:srcCompat="@drawable/logo_full" />
 
-    <EditText
-        android:id="@+id/profile_contact"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="16dp"
-        android:background="@null"
-        android:textColor="@color/black"
-        android:drawableLeft="@drawable/ic_contact_mail"
-        android:drawablePadding="10dp"
-        android:text="contact info"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/profile_location"
-        app:layout_constraintHorizontal_bias="0.25"
-        app:layout_constraintStart_toStartOf="@+id/profile_location"
-        app:layout_constraintTop_toBottomOf="@+id/profile_location" />
+    <LinearLayout
+        android:id="@+id/linearLayoutUserInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logo_image">
 
-    <EditText
-        android:id="@+id/profile_bio"
-        android:layout_width="336dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="28dp"
-        android:background="@null"
-        android:textColor="@color/black"
-        android:text="add bio..."
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/profile_dog_name"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="@+id/profile_dog_name"
-        app:layout_constraintTop_toBottomOf="@+id/profile_dog_name" />
+        <TextView
+            android:id="@+id/profile_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_my_profile_small"
+            android:drawablePadding="10dp"
+            android:maxLines="1"
+            android:textSize="24sp"
+            tools:text="the user name" />
+
+        <EditText
+            android:id="@+id/profile_dog_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            android:drawableStart="@drawable/ic_dog_face"
+            android:drawablePadding="10dp"
+            android:hint="dog name"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/profile_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            android:drawableStart="@drawable/ic_house"
+            android:drawablePadding="10dp"
+            android:hint="my location"
+            android:maxLines="1"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/profile_contact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            android:drawableStart="@drawable/ic_contact_mail"
+            android:drawablePadding="10dp"
+            android:hint="contact info"
+            android:maxLines="1"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/profile_bio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            android:hint="add bio..."
+            android:maxLines="3"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/profile_to_my_markers"
         android:layout_width="159dp"
         android:layout_height="28dp"
+        android:layout_marginBottom="24dp"
         android:background="#FFEB3B"
-        android:text="my markers"
+        android:text="my marker"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/profile_contact"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="@+id/profile_contact"
-        app:layout_constraintTop_toBottomOf="@+id/profile_contact"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_bias="0.618" />
 
-    <TextView
+    <!--    <TextView-->
+    <!--        android:id="@+id/profile_edit"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="8dp"-->
+    <!--        android:text="edit profile"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/logo_image" />-->
+
+    <ImageView
         android:id="@+id/profile_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="edit profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo_image" />
+        android:layout_marginEnd="24dp"
+        android:src="@drawable/ic_edit_profile"
+        app:layout_constraintBottom_toTopOf="@id/linearLayoutUserInfo"
+        app:layout_constraintEnd_toEndOf="@id/linearLayoutUserInfo" />
 
     <ImageButton
-        android:id="@+id/backToMapFromProfil"
-        android:layout_width="40dp"
-        android:layout_height="35dp"
-        android:background="#F8DABF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.044"
+        android:id="@+id/backToMapFromProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/arrow_back"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.025"
-        app:srcCompat="@drawable/arrow_back"
-        tools:ignore="VectorDrawableCompat" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

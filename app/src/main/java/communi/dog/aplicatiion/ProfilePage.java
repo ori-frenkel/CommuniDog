@@ -8,7 +8,9 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ProfilePage extends AppCompatActivity {
 
@@ -17,13 +19,13 @@ public class ProfilePage extends AppCompatActivity {
     EditText password;
     EditText email;
 
-    EditText username;
+    TextView username;
     EditText dog_name;
     EditText bio;
     EditText my_location;
     EditText contact;
-    private ImageButton btnBackToMap;
-    private TextView editProfile;
+    private ImageView editProfile;
+    private boolean isEdit = false;
 
 
     @Override
@@ -47,50 +49,41 @@ public class ProfilePage extends AppCompatActivity {
         my_location = findViewById(R.id.profile_location);
         contact = findViewById(R.id.profile_contact);
 
-        btnBackToMap = findViewById(R.id.backToMapFromProfil);
+        ImageButton btnBackToMap = findViewById(R.id.backToMapFromProfile);
         editProfile = findViewById(R.id.profile_edit);
 
-        editProfile.setText("Edit");
-        username.setEnabled(false);
         dog_name.setEnabled(false);
         bio.setEnabled(false);
         my_location.setEnabled(false);
         contact.setEnabled(false);
 
+        // todo: insert the data about the user from the db in the create
+
+        editProfile.setOnLongClickListener(v -> {
+            if (isEdit) {
+                Toast.makeText(this, "click to save changes", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "click to edit", Toast.LENGTH_SHORT).show();
+            }
+            return false;
+        });
 
         editProfile.setOnClickListener(v -> {
-            if (contact.isEnabled()) {
-                username.setTextColor(Color.BLACK);
-                dog_name.setTextColor(Color.BLACK);
-                bio.setTextColor(Color.BLACK);
-                my_location.setTextColor(Color.BLACK);
-                contact.setTextColor(Color.BLACK);
-
-                username.setEnabled(false);
+            if (isEdit) {
+                isEdit = false;
                 dog_name.setEnabled(false);
                 bio.setEnabled(false);
                 my_location.setEnabled(false);
                 contact.setEnabled(false);
-                editProfile.setText("Edit");
-                editProfile.setBackgroundColor(Color.TRANSPARENT);
-                editProfile.setTypeface(null, Typeface.NORMAL);
-
+                editProfile.setImageResource(R.drawable.ic_edit_profile);
                 // todo: save the changes into DB
             } else {
-                username.setTextColor(Color.WHITE);
-                dog_name.setTextColor(Color.WHITE);
-                bio.setTextColor(Color.WHITE);
-                my_location.setTextColor(Color.WHITE);
-                contact.setTextColor(Color.WHITE);
-
-                username.setEnabled(true);
+                isEdit = true;
                 dog_name.setEnabled(true);
                 bio.setEnabled(true);
                 my_location.setEnabled(true);
                 contact.setEnabled(true);
-                editProfile.setText("Done");
-                editProfile.setBackgroundColor(Color.WHITE);
-                editProfile.setTypeface(null, Typeface.BOLD);
+                editProfile.setImageResource(R.drawable.ic_save_profile);
             }
         });
 
