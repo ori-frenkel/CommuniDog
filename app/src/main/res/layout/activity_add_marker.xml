@@ -77,27 +77,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- save marker button        -->
+        <!-- delete marker button        -->
         <ImageView
-            android:id="@+id/buttonSaveMarker"
+            android:id="@+id/buttonDeleteMarker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:src="@drawable/ic_add_marker" />
+            android:src="@drawable/ic_delete_marker"
+            android:visibility="gone" />
 
-        <!-- delete marker button        -->
+        <!-- save marker button        -->
         <ImageView
-            android:id="@+id/buttonDeleteMarker"
+            android:id="@+id/buttonSaveMarker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:src="@drawable/ic_delete_marker"
-            android:visibility="gone" />
+            android:src="@drawable/ic_add_marker" />
 
     </LinearLayout>
 
