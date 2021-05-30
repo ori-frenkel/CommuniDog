@@ -82,9 +82,7 @@ public class ProfilePage extends AppCompatActivity {
             editProfile.setImageResource(edit_ic);
         });
 
-        btnBackToMap.setOnClickListener(v -> {
-            backToMap();
-        });
+        btnBackToMap.setOnClickListener(v -> backToMap());
     }
 
     private void backToMap() {
@@ -107,11 +105,9 @@ public class ProfilePage extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState.getBoolean("is_edit")) {
-            editProfile.setImageResource(R.drawable.ic_save_profile);
-        } else {
-            editProfile.setImageResource(R.drawable.ic_edit_profile);
-        }
+        isEdit = savedInstanceState.getBoolean("is_edit");
+        int edit_ic = isEdit ? R.drawable.ic_save_profile : R.drawable.ic_edit_profile;
+        editProfile.setImageResource(edit_ic);
         username.setText(savedInstanceState.getString("user_name"));
         dog_name.setText(savedInstanceState.getString("dog_name"));
         my_location.setText(savedInstanceState.getString("location"));
