@@ -51,7 +51,7 @@ public class ProfilePage extends AppCompatActivity {
         contact = findViewById(R.id.profile_contact);
 
         ImageButton btnBackToMap = findViewById(R.id.backToMapFromProfile);
-        ImageView editProfile = findViewById(R.id.profile_edit);
+        editProfile = findViewById(R.id.profile_edit);
 
         dog_name.setEnabled(false);
         bio.setEnabled(false);
@@ -71,21 +71,15 @@ public class ProfilePage extends AppCompatActivity {
 
         editProfile.setOnClickListener(v -> {
             if (isEdit) {
-                isEdit = false;
-                dog_name.setEnabled(false);
-                bio.setEnabled(false);
-                my_location.setEnabled(false);
-                contact.setEnabled(false);
-                editProfile.setImageResource(R.drawable.ic_edit_profile);
-                // todo: save the changes into DB
-            } else {
-                isEdit = true;
-                dog_name.setEnabled(true);
-                bio.setEnabled(true);
-                my_location.setEnabled(true);
-                contact.setEnabled(true);
-                editProfile.setImageResource(R.drawable.ic_save_profile);
+                //todo: save changes to DB
             }
+            isEdit = !isEdit;
+            dog_name.setEnabled(isEdit);
+            bio.setEnabled(isEdit);
+            my_location.setEnabled(isEdit);
+            contact.setEnabled(isEdit);
+            int edit_ic = isEdit ? R.drawable.ic_save_profile : R.drawable.ic_edit_profile;
+            editProfile.setImageResource(edit_ic);
         });
 
         btnBackToMap.setOnClickListener(v -> {
