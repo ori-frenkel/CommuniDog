@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        this.appDB = new DB();
+        this.appDB = CommuniDogApp.getInstance().getDb();
         this.appDB.refreshDataUsers();
 
         Intent activityIntent = getIntent();

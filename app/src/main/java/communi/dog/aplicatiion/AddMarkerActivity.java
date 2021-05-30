@@ -89,11 +89,15 @@ public class AddMarkerActivity extends AppCompatActivity {
 
     private String getMarkerTitle(boolean isDogsitter, boolean isFood, boolean isMedication) {
         String msg = "User " + userId + " offers:\n";
+        User user = CommuniDogApp.getInstance().getDb().getUser();
         if (isDogsitter) msg += "Dogsitter services\n";
         if (isFood) msg += "Extra food\n";
         if (isMedication) msg += "Extra medication\n";
         // todo: add user contacts to the marker's message
-        msg += "In order to contact him ........";
+//        String contacts = "";
+//        if (!user.getEmail().isEmpty()) contacts += "Email - " + user.getEmail() + "\n";
+//        if (!user.getPhoneNumber().isEmpty()) contacts += "Phone - " + user.getPhoneNumber() + "\n";
+//        if (!contacts.isEmpty()) msg += "In order to contact him:\n" + contacts;
         return msg;
     }
 

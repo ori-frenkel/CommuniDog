@@ -11,9 +11,9 @@ public class CommuniDogApp extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        localDdb = new DB(); // todo: need context? maybe for sp?
         // todo: load from db
         this.mapState = new MapState();
-        localDdb = new DB(); // todo: need context? maybe for sp?
     }
 
     public static CommuniDogApp getInstance() {
