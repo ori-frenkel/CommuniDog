@@ -22,6 +22,7 @@ public class ProfilePage extends AppCompatActivity {
     EditText bioEditText;
     private ImageView btnEditProfile;
     private boolean isEdit = false;
+    private DB appDB;
 
     private String dogNameBeforeEdit;
     private String emailBeforeEdit;
@@ -33,7 +34,8 @@ public class ProfilePage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
-        currentUser = CommuniDogApp.getInstance().getDb().getUser();
+        this.appDB = CommuniDogApp.getInstance().getDb();
+        currentUser = this.appDB.getUser();
 
         usernameEditText = findViewById(R.id.profile_user_name);
         dogNameEditText = findViewById(R.id.profile_dog_name);
@@ -69,6 +71,7 @@ public class ProfilePage extends AppCompatActivity {
         btnEditProfile.setOnClickListener(v -> {
             if (isEdit) {
                 btnCancelEdit.setVisibility(View.GONE);
+                // this.appDB.updateUser(userId, email, password, name, phone, dogName, bio); //todo: add
                 //todo: save changes to DB
             } else {
                 btnCancelEdit.setVisibility(View.VISIBLE);

@@ -15,11 +15,13 @@ public class AddMarkerActivity extends AppCompatActivity {
     private Intent incomingIntent = null;
     private MapState mapState;
     private User currentUser;
+    DB appDB;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_marker);
+        this.appDB = CommuniDogApp.getInstance().getDb();
         incomingIntent = getIntent();
         currentUser = CommuniDogApp.getInstance().getDb().getUser();
         ImageView buttonSaveMarker = findViewById(R.id.buttonSaveMarker);
@@ -63,19 +65,22 @@ public class AddMarkerActivity extends AppCompatActivity {
                 }
                 markerToEdit.setServices(isDogsitter, isFood, isMedication);
                 markerToEdit.setText(newText);
+                this.appDB.setMarker(markerToEdit);
 
             } else {
                 // add new marker
                 MarkerDescriptor newMarker = new MarkerDescriptor(
                         newText, latitude, longitude, isDogsitter, isFood, isMedication, currentUser.getId());
-                mapState.addMarker(newMarker);
+                mapState.addMarker(newMarker); //todo
+                appDB.addMarkerDescriptor(newMarker);
             }
             backToMap();
         });
 
         buttonDeleteMarker.setOnClickListener(v -> {
             if (markerToEdit == null) return;
-            mapState.removeMarker(markerToEdit.getId());
+            mapState.removeMarker(markerToEdit.getId()); //todo
+            this.appDB.removeMarker(markerToEdit.getId());
             backToMap();
         });
 

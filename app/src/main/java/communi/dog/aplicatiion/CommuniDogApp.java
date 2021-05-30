@@ -5,15 +5,14 @@ import android.app.Application;
 public class CommuniDogApp extends Application {
     private static CommuniDogApp instance = null;
     private DB localDdb;
-    private MapState mapState;
+   // private MapState mapState; //todo: In the db
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
         localDdb = new DB(); // todo: need context? maybe for sp?
-        // todo: load from db
-        this.mapState = new MapState();
+      //  this.mapState = localDdb.getMapState(); //todo: In the db
     }
 
     public static CommuniDogApp getInstance() {
@@ -25,6 +24,6 @@ public class CommuniDogApp extends Application {
     }
 
     public MapState getMapState() {
-        return mapState;
+        return localDdb.getMapState();
     }
 }

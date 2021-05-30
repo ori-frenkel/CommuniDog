@@ -19,6 +19,16 @@ public class User {
         this.userDescription = "";
     }
 
+    public User(String id, String email, String password, String userName, String phoneNumber, String dogName, String userDescription) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.userName = userName;
+        this.userDogName = dogName;
+        this.phoneNumber = phoneNumber;
+        this.userDescription = userDescription;
+    }
+
     public User(String id, String email, String password) {
         this.id = id;
         this.email = email;

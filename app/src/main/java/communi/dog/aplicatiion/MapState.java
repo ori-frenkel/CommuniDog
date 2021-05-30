@@ -10,7 +10,7 @@ import java.util.HashMap;
  * class that stores the information of a map
  */
 public class MapState implements Serializable {
-    private final HashMap<String, MarkerDescriptor> markersDescriptors;
+    private HashMap<String, MarkerDescriptor> markersDescriptors; // final?
     private double mapCenterLatitude;
     private double mapCenterLongitude;
     private double zoom;
@@ -60,5 +60,9 @@ public class MapState implements Serializable {
     public MarkerDescriptor getMarker(String markerId) {
         if (markersDescriptors.containsKey(markerId)) return markersDescriptors.get(markerId);
         return null;
+    }
+
+    public void setMarkersDescriptors(HashMap<String, MarkerDescriptor> markersDescriptors) {
+        this.markersDescriptors = markersDescriptors;
     }
 }

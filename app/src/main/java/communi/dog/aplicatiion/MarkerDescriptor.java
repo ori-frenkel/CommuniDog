@@ -9,8 +9,8 @@ public class MarkerDescriptor implements Serializable {
     private double latitude;
     private double longitude;
     private String text;
-    private final String id;
-    private final String userId;
+    private String id; //final
+    private String userId; //final
     private boolean isDogsitter;
     private boolean isFood;
     private boolean isMedication;
@@ -25,6 +25,8 @@ public class MarkerDescriptor implements Serializable {
         this.isFood = isFood;
         this.isMedication = isMedication;
     }
+
+    public MarkerDescriptor(){}
 
     private String generateMarkerId(String userId) {
         // todo: maybe not just the user id? if not than this field is redundant
