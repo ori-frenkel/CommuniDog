@@ -103,7 +103,7 @@ public class AddMarkerActivity extends AppCompatActivity {
 
     private void backToMap() {
         Intent backToMapIntent = new Intent(this, MapScreenActivity.class);
-        backToMapIntent.putExtra("userId", userId);
+        backToMapIntent.putExtra("userId", userId); // todo: no need anymore
         startActivity(backToMapIntent);
     }
 }

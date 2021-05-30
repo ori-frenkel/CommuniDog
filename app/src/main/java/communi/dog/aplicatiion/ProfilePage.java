@@ -37,7 +37,7 @@ public class ProfilePage extends AppCompatActivity {
         phoneEditText = findViewById(R.id.usersPhoneMyProfile);
         bioEditText = findViewById(R.id.profile_bio);
 
-        TextView btnMYMarker = findViewById(R.id.profile_to_my_marker);
+        TextView btnMyMarker = findViewById(R.id.profile_to_my_marker);
         ImageButton btnBackToMap = findViewById(R.id.backToMapFromProfile);
         editProfile = findViewById(R.id.profile_edit);
 
@@ -75,6 +75,17 @@ public class ProfilePage extends AppCompatActivity {
             editProfile.setImageResource(edit_ic);
         });
 
+        btnMyMarker.setOnClickListener(v -> {
+            MapState mapState = CommuniDogApp.getInstance().getMapState();
+            if (mapState.getMarker(currentUser.getId()) == null) {
+                Toast.makeText(this, "no marker found", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent editMarkerIntent = new Intent(this, AddMarkerActivity.class);
+                editMarkerIntent.putExtra("marker_id_to_edit", currentUser.getId());
+                startActivity(editMarkerIntent);
+            }
+        });
+
         btnBackToMap.setOnClickListener(v -> backToMap());
     }
 
@@ -104,8 +115,7 @@ public class ProfilePage extends AppCompatActivity {
 
     private void backToMap() {
         Intent toMapIntent = new Intent(ProfilePage.this, MapScreenActivity.class);
-        // todo: no need to pass userId anymore
-        toMapIntent.putExtra("userId", getIntent().getStringExtra("userId"));
+        toMapIntent.putExtra("userId", getIntent().getStringExtra("userId")); // todo: no need to pass userId anymore
         startActivity(toMapIntent);
     }
 
