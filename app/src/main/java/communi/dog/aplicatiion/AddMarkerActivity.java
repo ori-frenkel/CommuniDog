@@ -58,7 +58,7 @@ public class AddMarkerActivity extends AppCompatActivity {
 
             if (markerToEdit != null) {
                 // edit existing marker
-                if (latitude * longitude >= 0) {
+                if (latitude != -1 && longitude != -1) {
                     markerToEdit.setNewLocation(latitude, longitude);
                 }
                 markerToEdit.setServices(isDogsitter, isFood, isMedication);
