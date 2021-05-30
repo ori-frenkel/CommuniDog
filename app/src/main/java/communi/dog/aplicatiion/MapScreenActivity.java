@@ -1,14 +1,12 @@
 package communi.dog.aplicatiion;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -19,13 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
-import org.osmdroid.util.GeoPoint;
 
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -34,19 +27,12 @@ public class MapScreenActivity extends AppCompatActivity {
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private MapHandler mMapHandler;
 
-    // user info
-    private String userId;
-    private User currentUser;
-    private DB appDB;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         System.out.println("MainActivity.onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_screen);
-        final Intent activityIntent = getIntent();
-        Context ctx = this.getApplicationContext();
-        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+        Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
 
         requestPermissionsIfNecessary(new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -56,37 +42,31 @@ public class MapScreenActivity extends AppCompatActivity {
                 Manifest.permission.INTERNET
         });
 
-        mMapHandler = new MapHandler(findViewById(R.id.mapView), CommuniDogApp.getInstance().getMapState(), this);
+        mMapHandler = new MapHandler(findViewById(R.id.mapView), CommuniDogApp.getInstance().getMapState());
+
+        mMapHandler.setLongPressCallback(p -> {
+            Intent intent = new Intent(this, AddMarkerActivity.class);
+            String userId = CommuniDogApp.getInstance().getDb().getUser().getId();
+            intent.putExtra("new_latitude", p.getLatitude());
+            intent.putExtra("new_longitude", p.getLongitude());
+            if (CommuniDogApp.getInstance().getMapState().hasMarker(userId)) {
+                Log.i(MapHandler.class.getSimpleName(), "edit existing marker");
+                intent.putExtra("marker_id_to_edit", userId);
+            } else {
+                Log.i(MapHandler.class.getSimpleName(), "create new marker");
+            }
+            this.startActivity(intent);
+        });
 
         ImageView btCenterMap = findViewById(R.id.buttonCenterMap);
         btCenterMap.setOnClickListener(v -> mMapHandler.mapToCurrentLocation());
 
         ImageView btnMyProfile = findViewById(R.id.buttonMyProfileInMapActivity);
-        btnMyProfile.setOnClickListener(v -> {
-            currentUser = this.appDB.getUser();
-            Intent myProfileIntent = new Intent(this, ProfilePage.class);
-            myProfileIntent.putExtra("userId", currentUser.getId());
-            myProfileIntent.putExtra("password", currentUser.getPassword());
-            myProfileIntent.putExtra("email", currentUser.getEmail());
-            myProfileIntent.putExtra("DB", this.appDB.currentState());
-            startActivity(myProfileIntent);
-        });
+        btnMyProfile.setOnClickListener(v -> startActivity(new Intent(this, ProfilePage.class)));
 
         ImageView btnMoreInfo = findViewById(R.id.buttonMoreInfoMapActivity);
         btnMoreInfo.setOnClickListener(v ->
                 Toast.makeText(this, "link to more info screen", Toast.LENGTH_SHORT).show());
-
-        // DB
-        userId = activityIntent.getStringExtra("userId");
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        //todo: why not save only the id and pass in to MyProfile screen? why do we need here all the rest?
-        currentUser = new User();
-
-        Intent intent = getIntent();
-        this.appDB = new DB();
-        this.appDB.restoreState((DB.DBState) intent.getSerializableExtra("DB"));
-        this.appDB.refreshDataUsers();
-        this.appDB.refreshDataGetUser(userId);
     }
 
     private void requestPermissionsIfNecessary(String[] permissions) {

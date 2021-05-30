@@ -12,22 +12,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class AddMarkerActivity extends AppCompatActivity {
-    private String userId;
     private Intent incomingIntent = null;
     private MapState mapState;
+    private User currentUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_marker);
         incomingIntent = getIntent();
+        currentUser = CommuniDogApp.getInstance().getDb().getUser();
         ImageView buttonSaveMarker = findViewById(R.id.buttonSaveMarker);
         ImageView buttonDeleteMarker = findViewById(R.id.buttonDeleteMarker);
 
         mapState = CommuniDogApp.getInstance().getMapState();
         final MarkerDescriptor markerToEdit = mapState.getMarker(incomingIntent.getStringExtra("marker_id_to_edit"));
-
-        userId = incomingIntent.getStringExtra("userId");
 
         if (markerToEdit != null) {
             buttonDeleteMarker.setVisibility(View.VISIBLE);
@@ -68,7 +67,7 @@ public class AddMarkerActivity extends AppCompatActivity {
             } else {
                 // add new marker
                 MarkerDescriptor newMarker = new MarkerDescriptor(
-                        newText, latitude, longitude, isDogsitter, isFood, isMedication, userId);
+                        newText, latitude, longitude, isDogsitter, isFood, isMedication, currentUser.getId());
                 mapState.addMarker(newMarker);
             }
             backToMap();
@@ -80,30 +79,26 @@ public class AddMarkerActivity extends AppCompatActivity {
             backToMap();
         });
 
-
         ImageView buttonCancel = findViewById(R.id.buttonCancelMarker);
-        buttonCancel.setOnClickListener(view -> {
-            backToMap();
-        });
+        buttonCancel.setOnClickListener(view -> backToMap());
     }
 
     private String getMarkerTitle(boolean isDogsitter, boolean isFood, boolean isMedication) {
-        String msg = "User " + userId + " offers:\n";
-        User user = CommuniDogApp.getInstance().getDb().getUser();
+        String msg = "User " + currentUser.getUserName() + " offers:\n";
         if (isDogsitter) msg += "Dogsitter services\n";
         if (isFood) msg += "Extra food\n";
         if (isMedication) msg += "Extra medication\n";
-        // todo: add user contacts to the marker's message
-//        String contacts = "";
-//        if (!user.getEmail().isEmpty()) contacts += "Email - " + user.getEmail() + "\n";
-//        if (!user.getPhoneNumber().isEmpty()) contacts += "Phone - " + user.getPhoneNumber() + "\n";
-//        if (!contacts.isEmpty()) msg += "In order to contact him:\n" + contacts;
+        String contacts = "";
+        if (!currentUser.getEmail().isEmpty())
+            contacts += "Email - " + currentUser.getEmail() + "\n";
+        if (!currentUser.getPhoneNumber().isEmpty())
+            contacts += "Phone - " + currentUser.getPhoneNumber() + "\n";
+        if (!contacts.isEmpty()) msg += "In order to contact him:\n" + contacts;
         return msg;
     }
 
     private void backToMap() {
         Intent backToMapIntent = new Intent(this, MapScreenActivity.class);
-        backToMapIntent.putExtra("userId", userId); // todo: no need anymore
         startActivity(backToMapIntent);
     }
 }

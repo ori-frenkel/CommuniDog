@@ -29,8 +29,6 @@ public class ProfilePage extends AppCompatActivity {
         setContentView(R.layout.activity_profile_page);
         currentUser = CommuniDogApp.getInstance().getDb().getUser();
 
-        // todo: get the info from DB and
-
         usernameEditText = findViewById(R.id.profile_user_name);
         dogNameEditText = findViewById(R.id.profile_dog_name);
         emailEditText = findViewById(R.id.usersEmailMyProfile);
@@ -46,12 +44,11 @@ public class ProfilePage extends AppCompatActivity {
         phoneEditText.setEnabled(false);
         bioEditText.setEnabled(false);
 
-        // todo: insert the data about the user from the db in the create
-        usernameEditText.setText(currentUser.getId()); // todo: change to getName
-//        dogNameEditText.setText(currentUser.getDogName()); // todo: update User class + DB
+        usernameEditText.setText(currentUser.getUserName());
+        dogNameEditText.setText(currentUser.getUserDogName());
         emailEditText.setText(currentUser.getEmail());
         phoneEditText.setText(currentUser.getPhoneNumber());
-//        bioEditText.setText(currentUser.getBio()); // todo: update User class + DB
+        bioEditText.setText(currentUser.getUserDescription());
 
         editProfile.setOnLongClickListener(v -> {
             if (isEdit) {
@@ -86,7 +83,7 @@ public class ProfilePage extends AppCompatActivity {
             }
         });
 
-        btnBackToMap.setOnClickListener(v -> backToMap());
+        btnBackToMap.setOnClickListener(v -> startActivity(new Intent(ProfilePage.this, MapScreenActivity.class)));
     }
 
     @Override
@@ -113,15 +110,10 @@ public class ProfilePage extends AppCompatActivity {
         bioEditText.setText(savedInstanceState.getString("bio"));
     }
 
-    private void backToMap() {
-        Intent toMapIntent = new Intent(ProfilePage.this, MapScreenActivity.class);
-        toMapIntent.putExtra("userId", getIntent().getStringExtra("userId")); // todo: no need to pass userId anymore
-        startActivity(toMapIntent);
-    }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        backToMap();
+        startActivity(new Intent(ProfilePage.this, MapScreenActivity.class));
     }
 }
