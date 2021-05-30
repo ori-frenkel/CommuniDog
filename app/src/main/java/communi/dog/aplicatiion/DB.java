@@ -9,6 +9,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
@@ -17,9 +18,10 @@ public class DB implements Serializable {
     private FirebaseDatabase database;
     private DatabaseReference IdsRef;
     private DatabaseReference usersRef;
+    private HashSet<User> users;
     private HashMap<String, String> allUsers;
     private HashSet<String> allIDs;
-    User currentUser;
+    private User currentUser;
 
     public DB() {
         this.database = FirebaseDatabase.getInstance();
@@ -27,13 +29,15 @@ public class DB implements Serializable {
         this.usersRef = database.getReference("Users");
         this.allUsers = new HashMap<>();
         this.allIDs = new HashSet<String>();
+        this.users = new HashSet<>();
         this.currentUser = new User();
+        this.refreshDataUsers();
     }
 
     public void refreshDataUsers() {
         readDataIdsInUse(new DB.FirebaseCallback() {
             @Override
-            public void onCallback(HashMap<String, String> allUsers, HashSet<String> allIDs) {
+            public void onCallback(HashSet<User> users, HashSet<String> allIds) {
             }
         });
     }
@@ -54,10 +58,12 @@ public class DB implements Serializable {
                     if (ds != null) {
                         String id = ds.child("id").getValue(String.class);
                         String password = ds.child("password").getValue(String.class);
-                        allUsers.put(id, password);
+                        String email = ds.child("email").getValue(String.class);
+                        String name = ds.child("email").getValue(String.class);
+                        users.add(new User(id, email, password, name));
                     }
                 }
-                firebaseCallback.onCallback(allUsers, allIDs);
+                firebaseCallback.onCallback(users, allIDs);
             }
 
             @Override
@@ -74,7 +80,7 @@ public class DB implements Serializable {
                         allIDs.add((String) ds.getValue());
                     }
                 }
-                firebaseCallback.onCallback(allUsers, allIDs);
+                firebaseCallback.onCallback(users, allIDs);
             }
 
             @Override
@@ -90,7 +96,8 @@ public class DB implements Serializable {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String email = (String) snapshot.child(userId).child("email").getValue();
                 String pass = (String) snapshot.child(userId).child("password").getValue();
-                currentUser = new User(userId, email, pass);
+                String name = (String) snapshot.child(userId).child("name").getValue();
+                currentUser = new User(userId, email, pass, name);
                 firebaseCallback.onCallbackUser(currentUser);
             }
 
@@ -101,26 +108,26 @@ public class DB implements Serializable {
         usersRef.addListenerForSingleValueEvent(valueEventListenerUsers);
     }
 
-    public User getUser() {
-        return this.currentUser;
-    }
-
     private interface FirebaseCallback {
-        void onCallback(HashMap<String, String> allUsers, HashSet<String> allIDs);
+        void onCallback(HashSet<User> users, HashSet<String> allIds);
     }
 
     private interface FirebaseCallbackUser {
         void onCallbackUser(User currentUser);
     }
 
-    public void addUser(String userId, String userEmail, String userPassword) {
-        User newUser = new User(userId, userEmail, userPassword);
+    public void addUser(String userId, String userEmail, String userPassword, String userName) {
+        User newUser = new User(userId, userEmail, userPassword, userName);
         this.usersRef.child(userId).setValue(newUser);
     }
 
     public boolean isUserExists(String userId, String userPassword) {
-        return allUsers.get(userId) != null &&
-                Objects.equals(allUsers.get(userId), userPassword);
+        for (User user: users){
+            if (user.getId().equals(userId) && user.getPassword().equals(userPassword)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void updateUser(String userId, String userEmail, String userPassword) {
@@ -133,7 +140,12 @@ public class DB implements Serializable {
     }
 
     public boolean idDoubleUser(String id) {
-        return allUsers.get(id) != null;
+        for (User user: users){
+            if (user.getId().equals(id)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean idExistsInDB(String id) {
@@ -160,5 +172,17 @@ public class DB implements Serializable {
             this.allUsers = allUsers;
             this.allIDs = allIDs;
         }
+    }
+
+    public void setCurrentUser(String userId){
+        for (User user: users){
+            if (user.getId().equals(userId)){
+                this.currentUser = user;
+            }
+        }
+    }
+
+    public User getUser(){
+        return this.currentUser;
     }
 }

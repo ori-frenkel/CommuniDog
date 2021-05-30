@@ -34,7 +34,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         this.appDB = CommuniDogApp.getInstance().getDb();
-        this.appDB.refreshDataUsers();
 
         Intent activityIntent = getIntent();
 
@@ -57,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
 
         findViewById(R.id.login_button).setOnClickListener(v -> { //todo: check
             if (this.appDB.isUserExists(idEditText.getText().toString(), userPassword.getText().toString())) {
+                this.appDB.setCurrentUser(idEditText.getText().toString());
                 Intent successIntent = new Intent(this, MapScreenActivity.class);
                 successIntent.putExtra("userId", idEditText.getText().toString());
                 if (activityIntent.hasExtra("map_old_state")) {

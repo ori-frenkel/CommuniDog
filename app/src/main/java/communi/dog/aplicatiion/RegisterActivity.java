@@ -24,6 +24,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText emailAddress;
     EditText pass1;
     EditText pass2;
+    EditText userName;
     Button register;
     TextView to_register_btn;
     private DB appDB;
@@ -39,11 +40,12 @@ public class RegisterActivity extends AppCompatActivity {
         pass2 = findViewById(R.id.input_repass_reg);
         register = findViewById(R.id.register_bt);
         to_register_btn = findViewById(R.id.back_to_login);
+        userName = findViewById(R.id.input_user_name_rergister);
 
         register.setEnabled(false);
 
         Intent intent = getIntent();
-        this.appDB = new DB();
+        this.appDB = CommuniDogApp.getInstance().getDb();
         this.appDB.restoreState((DB.DBState) intent.getSerializableExtra("DB"));
         this.appDB.refreshDataUsers();
 
@@ -149,7 +151,8 @@ public class RegisterActivity extends AppCompatActivity {
         if (valid_input) {
             Toast.makeText(this, "input is valid", Toast.LENGTH_SHORT).show();
             this.appDB.addUser(this.id.getText().toString(), this.emailAddress.getText().toString(),
-                    this.pass1.getText().toString());
+                    this.pass1.getText().toString(), this.userName.getText().toString());
+            this.appDB.setCurrentUser(this.id.getText().toString());
             Intent successIntent = new Intent(this, MapScreenActivity.class); //todo: Maybe to MapScreenActivity?
             successIntent.putExtra("userId", id.getText().toString());
             successIntent.putExtra("DB", this.appDB.currentState());
@@ -190,14 +193,16 @@ public class RegisterActivity extends AppCompatActivity {
         outState.putString("userEmail", emailAddress.getText().toString());
         outState.putString("userPass1", pass1.getText().toString());
         outState.putString("userPass2", pass2.getText().toString());
+        outState.putString("userName", userName.getText().toString());
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         id.setText(savedInstanceState.getString("userID"));
-        id.setText(savedInstanceState.getString("userEmail"));
-        id.setText(savedInstanceState.getString("userPass1"));
-        id.setText(savedInstanceState.getString("userPass2"));
+        emailAddress.setText(savedInstanceState.getString("userEmail"));
+        pass1.setText(savedInstanceState.getString("userPass1"));
+        pass2.setText(savedInstanceState.getString("userPass2"));
+        userName.setText(savedInstanceState.getString("userName"));
     }
 }

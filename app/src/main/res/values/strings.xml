@@ -7,6 +7,7 @@
     <string name="register_password">password</string>
     <string name="register_confirm_password">confirm password</string>
     <string name="register_button">Register</string>
+    <string name="register_name">user name</string>
     <string name="have_an_account">already have an account</string>
     <string name="logo_description">the app logo - a guide dog with the title CommuniDog</string>
     <string name="from_login_to_register">register now</string>
