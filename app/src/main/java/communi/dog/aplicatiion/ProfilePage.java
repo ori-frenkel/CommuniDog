@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -19,8 +20,13 @@ public class ProfilePage extends AppCompatActivity {
     EditText emailEditText;
     EditText phoneEditText;
     EditText bioEditText;
-    private ImageView editProfile;
+    private ImageView btnEditProfile;
     private boolean isEdit = false;
+
+    private String dogNameBeforeEdit;
+    private String emailBeforeEdit;
+    private String phoneBeforeEdit;
+    private String bioBeforeEdit;
 
 
     @Override
@@ -37,7 +43,8 @@ public class ProfilePage extends AppCompatActivity {
 
         TextView btnMyMarker = findViewById(R.id.profile_to_my_marker);
         ImageButton btnBackToMap = findViewById(R.id.backToMapFromProfile);
-        editProfile = findViewById(R.id.profile_edit);
+        ImageView btnCancelEdit = findViewById(R.id.btnCancelEditProfile);
+        btnEditProfile = findViewById(R.id.btnEditProfile);
 
         dogNameEditText.setEnabled(false);
         emailEditText.setEnabled(false);
@@ -50,7 +57,7 @@ public class ProfilePage extends AppCompatActivity {
         phoneEditText.setText(currentUser.getPhoneNumber());
         bioEditText.setText(currentUser.getUserDescription());
 
-        editProfile.setOnLongClickListener(v -> {
+        btnEditProfile.setOnLongClickListener(v -> {
             if (isEdit) {
                 Toast.makeText(this, "click to save changes", Toast.LENGTH_SHORT).show();
             } else {
@@ -59,9 +66,16 @@ public class ProfilePage extends AppCompatActivity {
             return false;
         });
 
-        editProfile.setOnClickListener(v -> {
+        btnEditProfile.setOnClickListener(v -> {
             if (isEdit) {
+                btnCancelEdit.setVisibility(View.GONE);
                 //todo: save changes to DB
+            } else {
+                btnCancelEdit.setVisibility(View.VISIBLE);
+                dogNameBeforeEdit = dogNameEditText.getText().toString();
+                emailBeforeEdit = emailEditText.getText().toString();
+                phoneBeforeEdit = phoneEditText.getText().toString();
+                bioBeforeEdit = bioEditText.getText().toString();
             }
             isEdit = !isEdit;
             dogNameEditText.setEnabled(isEdit);
@@ -69,7 +83,7 @@ public class ProfilePage extends AppCompatActivity {
             emailEditText.setEnabled(isEdit);
             phoneEditText.setEnabled(isEdit);
             int edit_ic = isEdit ? R.drawable.ic_save_profile : R.drawable.ic_edit_profile;
-            editProfile.setImageResource(edit_ic);
+            btnEditProfile.setImageResource(edit_ic);
         });
 
         btnMyMarker.setOnClickListener(v -> {
@@ -82,6 +96,8 @@ public class ProfilePage extends AppCompatActivity {
                 startActivity(editMarkerIntent);
             }
         });
+
+        btnCancelEdit.setOnClickListener(v -> cancelEditing());
 
         btnBackToMap.setOnClickListener(v -> startActivity(new Intent(ProfilePage.this, MapScreenActivity.class)));
     }
@@ -102,7 +118,7 @@ public class ProfilePage extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         isEdit = savedInstanceState.getBoolean("is_edit");
         int edit_ic = isEdit ? R.drawable.ic_save_profile : R.drawable.ic_edit_profile;
-        editProfile.setImageResource(edit_ic);
+        btnEditProfile.setImageResource(edit_ic);
         usernameEditText.setText(savedInstanceState.getString("user_name"));
         dogNameEditText.setText(savedInstanceState.getString("dog_name"));
         emailEditText.setText(savedInstanceState.getString("email"));
@@ -110,10 +126,23 @@ public class ProfilePage extends AppCompatActivity {
         bioEditText.setText(savedInstanceState.getString("bio"));
     }
 
+    private void cancelEditing() {
+        dogNameEditText.setText(dogNameBeforeEdit);
+        emailEditText.setText(emailBeforeEdit);
+        phoneEditText.setText(phoneBeforeEdit);
+        bioEditText.setText(bioBeforeEdit);
+        if (isEdit) {
+            btnEditProfile.callOnClick();
+        }
+    }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(ProfilePage.this, MapScreenActivity.class));
+        if (isEdit) {
+            cancelEditing();
+        } else {
+            super.onBackPressed();
+            startActivity(new Intent(ProfilePage.this, MapScreenActivity.class));
+        }
     }
 }

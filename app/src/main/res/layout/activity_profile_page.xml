@@ -63,6 +63,7 @@
             android:hint="Email address"
             android:maxLines="1"
             android:textSize="24sp" />
+
         <EditText
             android:id="@+id/usersPhoneMyProfile"
             android:layout_width="match_parent"
@@ -102,14 +103,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_bias="0.618" />
 
-    <ImageView
-        android:id="@+id/profile_edit"
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
-        android:src="@drawable/ic_edit_profile"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@id/linearLayoutUserInfo"
-        app:layout_constraintEnd_toEndOf="@id/linearLayoutUserInfo" />
+        app:layout_constraintEnd_toEndOf="@id/linearLayoutUserInfo">
+
+        <ImageView
+            android:id="@+id/btnCancelEditProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_cancel_editing_profile"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/btnEditProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_edit_profile" />
+
+
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/backToMapFromProfile"
