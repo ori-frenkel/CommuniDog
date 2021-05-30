@@ -1,7 +1,5 @@
 package communi.dog.aplicatiion;
 
-import androidx.annotation.Nullable;
-
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.GeoPoint;
 
@@ -12,21 +10,14 @@ import java.util.HashMap;
  * class that stores the information of a map
  */
 public class MapState implements Serializable {
-    private HashMap<String, MarkerDescriptor> markersDescriptors;
+    private final HashMap<String, MarkerDescriptor> markersDescriptors;
     private double mapCenterLatitude;
     private double mapCenterLongitude;
     private double zoom;
 
-    public MapState(HashMap<String, MarkerDescriptor> markers, IGeoPoint mapCenter, double zoom) {
-        this.mapCenterLatitude = mapCenter.getLatitude();
-        this.mapCenterLongitude = mapCenter.getLongitude();
-        this.zoom = zoom;
-        this.markersDescriptors = markers;
-    }
-
     public MapState() {
         this.markersDescriptors = new HashMap<>();
-        // todo: initial values
+        // todo: select initial values
         this.mapCenterLatitude = 32.1007;
         this.mapCenterLongitude = 34.8070;
         this.zoom = 18;
@@ -58,8 +49,8 @@ public class MapState implements Serializable {
         return markersDescriptors.containsKey(idToSearch);
     }
 
-    public MarkerDescriptor removeMarker(String idToRemove) {
-        return markersDescriptors.remove(idToRemove);
+    public void removeMarker(String idToRemove) {
+        markersDescriptors.remove(idToRemove);
     }
 
     public HashMap<String, MarkerDescriptor> getMarkersDescriptors() {

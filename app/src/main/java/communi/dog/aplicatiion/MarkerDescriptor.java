@@ -15,7 +15,6 @@ public class MarkerDescriptor implements Serializable {
     private boolean isFood;
     private boolean isMedication;
 
-    // todo: match arguments order to the addMarker method
     MarkerDescriptor(String text, double latitude, double longitude, boolean isDogsitter, boolean isFood, boolean isMedication, String creatorUserId) {
         this.latitude = latitude;
         this.longitude = longitude;

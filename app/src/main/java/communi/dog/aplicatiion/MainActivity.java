@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
-        // todo: check if already logged in + create the db instance
+        // todo: check if already logged in and open the relevant screen (login or map)
         startActivity(new Intent(this, LoginActivity.class));
     }
 }

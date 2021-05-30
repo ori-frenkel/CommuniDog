@@ -1,15 +1,12 @@
 package communi.dog.aplicatiion;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
 import androidx.core.content.res.ResourcesCompat;
 
@@ -46,7 +43,7 @@ public class MapHandler {
      * @param mapView      the founded mapView
      * @param initialState initial state of the map
      */
-    public MapHandler(MapView mapView, MapState initialState) { // todo: remove calledActivity
+    public MapHandler(MapView mapView, MapState initialState) {
         this.mMapView = mapView;
         this.mapState = initialState;
         this.context = CommuniDogApp.getInstance();
@@ -152,12 +149,6 @@ public class MapHandler {
         mMapView.getController().setZoom(MAP_DEFAULT_ZOOM);
     }
 
-//    public void addMarker(MarkerDescriptor descriptor) {
-//        if (mapState.hasMarker(descriptor)) deleteMarker(descriptor);
-//        showMarkerOnMap(descriptor);
-//        mapState.addMarker(descriptor);
-//    }
-
     private void showMarkerOnMap(MarkerDescriptor descriptor) {
         GeoPoint location = new GeoPoint(descriptor.getLatitude(), descriptor.getLongitude());
 
@@ -172,10 +163,16 @@ public class MapHandler {
             marker.showInfoWindow();
             return false;
         });
-        // todo: make marker's icon smaller when zooming out
+        // todo: make marker's icon smaller when zooming out or disappear
         mMapView.getOverlays().add(myMarker);
     }
 
+//    public void addMarker(MarkerDescriptor descriptor) {
+//        if (mapState.hasMarker(descriptor)) deleteMarker(descriptor);
+//        showMarkerOnMap(descriptor);
+//        mapState.addMarker(descriptor);
+//    }
+//
 //    void deleteMarker(MarkerDescriptor toDelete) {
 //        if (mapState.removeMarker(toDelete) == null) return;
 //        removeMarkerFromMap(toDelete);
