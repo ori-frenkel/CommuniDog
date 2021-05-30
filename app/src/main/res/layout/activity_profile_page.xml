@@ -53,26 +53,25 @@
             android:textSize="24sp" />
 
         <EditText
-            android:id="@+id/profile_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@null"
-            android:drawableStart="@drawable/ic_house"
-            android:drawablePadding="10dp"
-            android:hint="my location"
-            android:maxLines="1"
-            android:textSize="24sp" />
-
-        <EditText
-            android:id="@+id/profile_contact"
+            android:id="@+id/usersEmailMyProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@null"
             android:drawableStart="@drawable/ic_contact_mail"
             android:drawablePadding="10dp"
-            android:hint="contact info"
+            android:hint="Email address"
+            android:maxLines="1"
+            android:textSize="24sp" />
+        <EditText
+            android:id="@+id/usersPhoneMyProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            android:drawableStart="@drawable/ic_phone"
+            android:drawablePadding="10dp"
+            android:hint="Phone number"
             android:maxLines="1"
             android:textSize="24sp" />
 
@@ -91,7 +90,7 @@
 
 
     <TextView
-        android:id="@+id/profile_to_my_markers"
+        android:id="@+id/profile_to_my_marker"
         android:layout_width="159dp"
         android:layout_height="28dp"
         android:layout_marginBottom="24dp"
