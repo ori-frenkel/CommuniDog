@@ -39,7 +39,7 @@
             android:drawablePadding="10dp"
             android:maxLines="1"
             android:textSize="24sp"
-            tools:text="the user name" />
+            tools:text="the user's name" />
 
         <EditText
             android:id="@+id/profile_dog_name"
