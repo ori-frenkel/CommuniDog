@@ -1,5 +1,6 @@
 package communi.dog.aplicatiion;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -50,7 +51,7 @@ public class ProfilePage extends AppCompatActivity {
         contact = findViewById(R.id.profile_contact);
 
         ImageButton btnBackToMap = findViewById(R.id.backToMapFromProfile);
-        editProfile = findViewById(R.id.profile_edit);
+        ImageView editProfile = findViewById(R.id.profile_edit);
 
         dog_name.setEnabled(false);
         bio.setEnabled(false);
@@ -96,6 +97,32 @@ public class ProfilePage extends AppCompatActivity {
         Intent toMapIntent = new Intent(ProfilePage.this, MapScreenActivity.class);
         toMapIntent.putExtra("userId", getIntent().getStringExtra("userId"));
         startActivity(toMapIntent);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("is_edit", isEdit);
+        outState.putString("user_name", username.getText().toString());
+        outState.putString("dog_name", dog_name.getText().toString());
+        outState.putString("location", my_location.getText().toString());
+        outState.putString("contact_info", contact.getText().toString());
+        outState.putString("bio", bio.getText().toString());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState.getBoolean("is_edit")) {
+            editProfile.setImageResource(R.drawable.ic_save_profile);
+        } else {
+            editProfile.setImageResource(R.drawable.ic_edit_profile);
+        }
+        username.setText(savedInstanceState.getString("user_name"));
+        dog_name.setText(savedInstanceState.getString("dog_name"));
+        my_location.setText(savedInstanceState.getString("location"));
+        contact.setText(savedInstanceState.getString("contact_info"));
+        bio.setText(savedInstanceState.getString("bio"));
     }
 
     @Override
