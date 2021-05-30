@@ -40,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
         pass2 = findViewById(R.id.input_repass_reg);
         register = findViewById(R.id.register_bt);
         to_register_btn = findViewById(R.id.back_to_login);
-        userName = findViewById(R.id.input_user_name_rergister);
+        userName = findViewById(R.id.input_user_name_register);
 
         register.setEnabled(false);
 
