@@ -1,5 +1,7 @@
 package communi.dog.aplicatiion;
 
+import androidx.annotation.NonNull;
+
 public class User {
     private String id;
     private String email;
@@ -42,20 +44,24 @@ public class User {
         return id;
     }
 
+    @NonNull
     public String getUserName() {
-        return userName;
+        return noNull(userName);
     }
 
+    @NonNull
     public String getUserDogName() {
-        return userDogName;
+        return noNull(userDogName);
     }
 
+    @NonNull
     public String getEmail() {
-        return email;
+        return noNull(email);
     }
 
+    @NonNull
     public String getPhoneNumber() {
-        return phoneNumber;
+        return noNull(phoneNumber);
     }
 
     public String getPassword() {
@@ -63,7 +69,12 @@ public class User {
     }
 
     public String getUserDescription() {
-        return userDescription;
+        return noNull(userDescription);
+    }
+
+    @NonNull
+    private String noNull(String val) {
+        return val == null ? "" : val;
     }
 
     public void setId(String id) {
