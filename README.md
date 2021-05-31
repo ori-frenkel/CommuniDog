@@ -1,18 +1,28 @@
 # CommuniDog
 
 #### Description:
-CommuniDog is an app that provides services based on location to foster families to dogs.
+CommuniDog is an app that provides services based on location to foster families to guide dogs.
 The app allows to publish a service (sharing food, medicines and dog-sitting) and contact the people offer the services.
 All the users must be approved by the community center for foster dogs.
 
 ## Notes for open-source contributers:
 * This project is under the ???MIT License???
-* The app is written in Android Studio - Supported from API level 16 and more.
+* The app is written in Android Studio using Java - Supported from API level 16 and more.
 * We are using Firebase platform to restore all relevant data about users and app data.
 * The map service is...
 * The tests service...
-* The app requires an internet connection to work properly.
+* The app requires an internet connection to work properly and it is recommended to activate GPS connection as well.
 * every change in the code, requires a proper and well documented pull request.
+
+## improvements and future goals:
+# small extensions-
+* profile pictures
+* photos album in profile pages
+# big extensions-
+* trainings schedule planner
+* finding partners for dog gardens (something like sending notifications for the closest users)
+
+* feel free to add whatever you like, we will be happy to see what you have thought of.
 
 ## instructions for installation the app:
 * Install Android Studio: https://developer.android.com/studio/install.
