@@ -9,13 +9,18 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 
 import org.osmdroid.config.Configuration;
 
@@ -24,6 +29,10 @@ import java.util.Arrays;
 
 
 public class MapScreenActivity extends AppCompatActivity {
+
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private MapHandler mMapHandler;
 
@@ -32,6 +41,16 @@ public class MapScreenActivity extends AppCompatActivity {
         System.out.println("MainActivity.onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_screen);
+
+        // menu bar
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        // menu bar
+
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
 
         requestPermissionsIfNecessary(new String[]{

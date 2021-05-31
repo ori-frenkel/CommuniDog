@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/law"
+            android:title="Non-discrimination law"
+            android:icon="@drawable/law_icon" />
+
+        <item
+            android:id="@+id/dog_site_link"
+            android:title="Israeli Guide Dog Center website"
+            android:icon="@drawable/earth_site_icon" />
+
+        <item
+            android:id="@+id/link_to_drive"
+            android:title="QA drive link"
+            android:icon="@drawable/question_answer"/>
+
+        <item
+            android:id="@+id/emergency_num"
+            android:title="emergency numbers"
+            android:icon="@drawable/ic_phone" />
+
+    </group>
+
+
+</menu>
