@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
@@ -83,8 +84,7 @@ public class MapScreenActivity extends AppCompatActivity {
         btnMyProfile.setOnClickListener(v -> startActivity(new Intent(this, ProfilePage.class)));
 
         ImageView btnMoreInfo = findViewById(R.id.buttonMoreInfoMapActivity);
-        btnMoreInfo.setOnClickListener(v ->
-                Toast.makeText(this, "link to more info screen", Toast.LENGTH_SHORT).show());
+        btnMoreInfo.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
     }
 
     private void requestPermissionsIfNecessary(String[] permissions) {
