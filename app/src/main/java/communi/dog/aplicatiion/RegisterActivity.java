@@ -149,7 +149,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if (valid_input) {
-            Toast.makeText(this, "input is valid", Toast.LENGTH_SHORT).show();
             this.appDB.addUser(this.id.getText().toString(), this.emailAddress.getText().toString(),
                     this.pass1.getText().toString(), this.userName.getText().toString());
             this.appDB.setCurrentUser(this.id.getText().toString());
