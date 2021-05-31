@@ -96,7 +96,7 @@ public class DB implements Serializable {
                         String id = ds.child("id").getValue(String.class);
                         String password = ds.child("password").getValue(String.class);
                         String email = ds.child("email").getValue(String.class);
-                        String name = ds.child("email").getValue(String.class);
+                        String name = ds.child("name").getValue(String.class);
                         users.add(new User(id, email, password, name));
                     }
                 }
@@ -134,6 +134,7 @@ public class DB implements Serializable {
                 String email = (String) snapshot.child(userId).child("email").getValue();
                 String pass = (String) snapshot.child(userId).child("password").getValue();
                 String name = (String) snapshot.child(userId).child("name").getValue();
+                User user = snapshot.child(userId).getValue(User.class);
                 currentUser = new User(userId, email, pass, name);
                 firebaseCallback.onCallbackUser(currentUser);
             }
