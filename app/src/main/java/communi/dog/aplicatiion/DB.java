@@ -98,8 +98,11 @@ public class DB implements Serializable {
                         String email = ds.child("email").getValue(String.class);
                         String name = ds.child("name").getValue(String.class);
                         String dogName = ds.child("dogName").getValue(String.class);
+                        dogName = dogName != null ? dogName : "";
                         String phoneNumber = ds.child("phoneNumber").getValue(String.class);
+                        phoneNumber = phoneNumber != null ? phoneNumber : "";
                         String description = ds.child("description").getValue(String.class);
+                        description = description != null ? description : "";
                         users.add(new User(id, email, password, name, phoneNumber, dogName, description));
                     }
                 }
