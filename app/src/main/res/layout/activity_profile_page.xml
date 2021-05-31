@@ -38,8 +38,9 @@
             android:drawableStart="@drawable/ic_my_profile_small"
             android:drawablePadding="10dp"
             android:maxLines="1"
+            android:textColor="@color/black"
             android:textSize="24sp"
-            tools:text="the user's name" />
+            android:hint="username" />
 
         <EditText
             android:id="@+id/profile_dog_name"
@@ -50,6 +51,7 @@
             android:drawableStart="@drawable/ic_dog_face"
             android:drawablePadding="10dp"
             android:hint="dog name"
+            android:textColor="@color/black"
             android:textSize="24sp" />
 
         <EditText
@@ -61,6 +63,7 @@
             android:drawableStart="@drawable/ic_contact_mail"
             android:drawablePadding="10dp"
             android:hint="Email address"
+            android:textColor="@color/black"
             android:maxLines="1"
             android:textSize="24sp" />
 
@@ -72,6 +75,7 @@
             android:background="@null"
             android:drawableStart="@drawable/ic_phone"
             android:drawablePadding="10dp"
+            android:textColor="@color/black"
             android:hint="Phone number"
             android:maxLines="1"
             android:textSize="24sp" />
@@ -94,15 +98,15 @@
         android:id="@+id/profile_to_my_marker"
         android:layout_width="159dp"
         android:layout_height="28dp"
-        android:layout_marginBottom="24dp"
-        android:background="#FFEB3B"
+        android:layout_marginBottom="56dp"
+        android:background="@color/white"
         android:text="my marker"
         android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.618" />
-
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:layout_width="wrap_content"
