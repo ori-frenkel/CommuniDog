@@ -104,12 +104,12 @@ public class DB implements Serializable {
                         String id = ds.child("id").getValue(String.class);
                         String password = ds.child("password").getValue(String.class);
                         String email = ds.child("email").getValue(String.class);
-                        String name = ds.child("name").getValue(String.class);
-                        String dogName = ds.child("dogName").getValue(String.class);
+                        String name = ds.child("userName").getValue(String.class);
+                        String dogName = ds.child("userDogName").getValue(String.class);
                         dogName = dogName != null ? dogName : "";
                         String phoneNumber = ds.child("phoneNumber").getValue(String.class);
                         phoneNumber = phoneNumber != null ? phoneNumber : "";
-                        String description = ds.child("description").getValue(String.class);
+                        String description = ds.child("userDescription").getValue(String.class);
                         description = description != null ? description : "";
                         users.add(new User(id, email, password, name, phoneNumber, dogName, description));
                     }
@@ -247,6 +247,7 @@ public class DB implements Serializable {
     }
 
     public void addMarkerDescriptor(MarkerDescriptor markerDescriptor){
+       // String idd = this.mapStateRef.child("markersDescriptors").child(markerDescriptor.getId());
         this.mapStateRef.child("markersDescriptors").child(markerDescriptor.getId()).setValue(markerDescriptor);
     }
 
