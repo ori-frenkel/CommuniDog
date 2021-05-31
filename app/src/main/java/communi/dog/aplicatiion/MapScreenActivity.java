@@ -8,12 +8,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -31,7 +28,7 @@ import java.util.Arrays;
 
 public class MapScreenActivity extends AppCompatActivity {
 
-    DrawerLayout drawerLayout;
+    DrawerLayout moreInfoDrawerLayout;
     NavigationView navigationView;
 
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
@@ -45,11 +42,12 @@ public class MapScreenActivity extends AppCompatActivity {
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
 
         // menu bar
-        drawerLayout = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.nav_view);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+        moreInfoDrawerLayout = findViewById(R.id.drawer_layout_more_info);
+//        navigationView = findViewById(R.id.nav_view);
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        drawerLayout.addDrawerListener(toggle);
+//        toggle.syncState();
+        moreInfoDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         // menu bar
 
 
@@ -84,7 +82,7 @@ public class MapScreenActivity extends AppCompatActivity {
         btnMyProfile.setOnClickListener(v -> startActivity(new Intent(this, ProfilePage.class)));
 
         ImageView btnMoreInfo = findViewById(R.id.buttonMoreInfoMapActivity);
-        btnMoreInfo.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+        btnMoreInfo.setOnClickListener(v -> moreInfoDrawerLayout.openDrawer(GravityCompat.START));
     }
 
     private void requestPermissionsIfNecessary(String[] permissions) {
