@@ -99,7 +99,7 @@ public class AddMarkerActivity extends AppCompatActivity {
             contacts += "Email - " + currentUser.getEmail() + "\n";
         if (!currentUser.getPhoneNumber().isEmpty())
             contacts += "Phone - " + currentUser.getPhoneNumber() + "\n";
-        if (!contacts.isEmpty()) msg += "In order to contact him:\n" + contacts;
+        if (!contacts.isEmpty()) msg += "In order to contact:\n" + contacts;
         return msg;
     }
 
