@@ -89,7 +89,7 @@ public class AddMarkerActivity extends AppCompatActivity {
     }
 
     private String getMarkerTitle(boolean isDogsitter, boolean isFood, boolean isMedication) {
-        String msg = "User " + currentUser.getUserName() + " offers:\n";
+        String msg = currentUser.getUserName() + " offers:\n";
         if (isDogsitter) msg += "Dogsitter services\n";
         if (isFood) msg += "Extra food\n";
         if (isMedication) msg += "Extra medication\n";
