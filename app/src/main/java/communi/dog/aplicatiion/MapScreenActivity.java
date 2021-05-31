@@ -119,6 +119,10 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
 
     @Override
     public void onBackPressed() {
+        if(moreInfoDrawerLayout.isDrawerOpen(GravityCompat.START)){
+            moreInfoDrawerLayout.closeDrawer(GravityCompat.START);
+            return;
+        }
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE: {
