@@ -15,10 +15,10 @@ All the users must be approved by the community center for foster dogs.
 * every change in the code, requires a proper and well documented pull request.
 
 ## improvements and future goals:
-# small extensions-
+### small extensions-
 * profile pictures
 * photos album in profile pages
-# big extensions-
+### big extensions-
 * trainings schedule planner
 * finding partners for dog gardens (something like sending notifications for the closest users)
 
