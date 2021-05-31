@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class AddMarkerActivity extends AppCompatActivity {
+    private final static int MISSING_COORD = -1;
     private Intent incomingIntent = null;
     private MapState mapState;
     private User currentUser;
@@ -54,13 +55,13 @@ public class AddMarkerActivity extends AppCompatActivity {
                 return;
             }
 
-            final double latitude = incomingIntent.getDoubleExtra("new_latitude", -1);
-            final double longitude = incomingIntent.getDoubleExtra("new_longitude", -1);
+            final double latitude = incomingIntent.getDoubleExtra("new_latitude", MISSING_COORD);
+            final double longitude = incomingIntent.getDoubleExtra("new_longitude", MISSING_COORD);
             String newText = getMarkerTitle(isDogsitter, isFood, isMedication);
 
             if (markerToEdit != null) {
                 // edit existing marker
-                if (latitude != -1 && longitude != -1) {
+                if (latitude != MISSING_COORD && longitude != MISSING_COORD) {
                     markerToEdit.setNewLocation(latitude, longitude);
                 }
                 markerToEdit.setServices(isDogsitter, isFood, isMedication);
