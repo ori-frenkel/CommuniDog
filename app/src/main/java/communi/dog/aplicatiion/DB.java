@@ -72,7 +72,15 @@ public class DB implements Serializable {
                 HashMap<String, MarkerDescriptor> markersDescriptor = new HashMap<>();
                 for (DataSnapshot ds : snapshot.child("markersDescriptors").getChildren()) {
                     if (ds != null) {
-                        markersDescriptor.put(ds.getKey(), ds.getValue(MarkerDescriptor.class));
+                        Double latitude = ds.child("latitude").getValue(Double.class);
+                        Double longitude = ds.child("longitude").getValue(Double.class);
+                        String text = ds.child("text").getValue(String.class);
+                        String id = ds.child("id").getValue(String.class);
+                        Boolean isDogSitter = ds.child("dogsitter").getValue(Boolean.class);
+                        Boolean isFood = ds.child("food").getValue(Boolean.class);
+                        Boolean isMedication = ds.child("medication").getValue(Boolean.class);
+                        MarkerDescriptor newMarkerDescriptor = new MarkerDescriptor(text, latitude, longitude, isDogSitter, isFood, isMedication, id);
+                        markersDescriptor.put(ds.getKey(), newMarkerDescriptor);
                     }
                 }
                 mapState = new MapState();
