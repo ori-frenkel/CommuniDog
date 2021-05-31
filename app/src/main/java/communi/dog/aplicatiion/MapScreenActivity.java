@@ -10,12 +10,9 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -46,13 +43,12 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
         setContentView(R.layout.activity_map_screen);
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
 
-        // menu bar
+        // more info bar
         moreInfoDrawerLayout = findViewById(R.id.drawer_layout_more_info);
         navigationView = findViewById(R.id.nav_view);
         moreInfoDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-
         navigationView.setNavigationItemSelectedListener(this);
-        // menu bar
+        // more info bar
 
 
         requestPermissionsIfNecessary(new String[]{
@@ -119,7 +115,7 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
 
     @Override
     public void onBackPressed() {
-        if(moreInfoDrawerLayout.isDrawerOpen(GravityCompat.START)){
+        if (moreInfoDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             moreInfoDrawerLayout.closeDrawer(GravityCompat.START);
             return;
         }
@@ -144,8 +140,7 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.law:
                 goToUrl("https://fs.knesset.gov.il/20/law/20_lsr_346609.pdf");
                 break;
