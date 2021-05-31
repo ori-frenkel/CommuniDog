@@ -41,6 +41,7 @@ public class MapScreenActivity extends AppCompatActivity {
         System.out.println("MainActivity.onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_screen);
+        Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
 
         // menu bar
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -48,10 +49,8 @@ public class MapScreenActivity extends AppCompatActivity {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
         // menu bar
 
-        Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
 
         requestPermissionsIfNecessary(new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,

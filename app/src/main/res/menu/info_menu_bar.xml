@@ -5,25 +5,24 @@
 
         <item
             android:id="@+id/law"
-            android:title="Non-discrimination law"
-            android:icon="@drawable/law_icon" />
+            android:icon="@drawable/law_icon"
+            android:title="Non-discrimination law" />
 
         <item
             android:id="@+id/dog_site_link"
-            android:title="Israeli Guide Dog Center website"
-            android:icon="@drawable/earth_site_icon" />
+            android:icon="@drawable/earth_site_icon"
+            android:title="Israeli Guide Dog Center website" />
 
         <item
             android:id="@+id/link_to_drive"
-            android:title="QA drive link"
-            android:icon="@drawable/question_answer"/>
+            android:icon="@drawable/question_answer"
+            android:title="QA drive link" />
 
         <item
             android:id="@+id/emergency_num"
-            android:title="emergency numbers"
-            android:icon="@drawable/ic_phone" />
+            android:icon="@drawable/ic_phone"
+            android:title="emergency numbers" />
 
     </group>
-
 
 </menu>
