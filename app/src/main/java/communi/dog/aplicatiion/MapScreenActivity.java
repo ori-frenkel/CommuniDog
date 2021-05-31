@@ -4,13 +4,18 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -26,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class MapScreenActivity extends AppCompatActivity {
+public class MapScreenActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout moreInfoDrawerLayout;
     NavigationView navigationView;
@@ -43,11 +48,10 @@ public class MapScreenActivity extends AppCompatActivity {
 
         // menu bar
         moreInfoDrawerLayout = findViewById(R.id.drawer_layout_more_info);
-//        navigationView = findViewById(R.id.nav_view);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawerLayout.addDrawerListener(toggle);
-//        toggle.syncState();
+        navigationView = findViewById(R.id.nav_view);
         moreInfoDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
+        navigationView.setNavigationItemSelectedListener(this);
         // menu bar
 
 
@@ -132,5 +136,31 @@ public class MapScreenActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Close the app?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.law:
+                goToUrl("https://fs.knesset.gov.il/20/law/20_lsr_346609.pdf");
+                break;
+            case R.id.dog_site_link:
+                goToUrl("https://israelguidedog.org.il/");
+                break;
+            case R.id.link_to_drive:
+                goToUrl("https://drive.google.com/drive/u/1/folders/1tnP3SC9jdjHN-3QWdvIyb17k71k93hdF");
+                break;
+            case R.id.emergency_num:
+                Intent goToEmergencyPage = new Intent(MapScreenActivity.this, Emergency_numbers.class);
+                startActivity(goToEmergencyPage);
+                break;
+        }
+        return true;
+    }
+
+    private void goToUrl(String s) {
+        Uri url = Uri.parse(s);
+        startActivity(new Intent(Intent.ACTION_VIEW, url));
     }
 }

@@ -20,6 +20,19 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <!--    Strings for emergency   -->
+    <string name="not_em_1">random vomiting - keep track if escalating</string>
+    <string name="not_em_2">ear infection - red and warm ears</string>
+    <string name="not_em_3">eye infection - green sections, treat with tea bags</string>
+    <string name="not_em_4">diarrhea - do not give food for 24 hours, than give rice until recovery</string>
+    <string name="not_em_5">limping - do not run and play with other dogs, keep track if escalating</string>
+    <string name="em_1">car accident</string>
+    <string name="em_2">bitten by a dog</string>
+    <string name="em_3">scratched by a cat in the eyes</string>
+    <string name="em_4">unable to stand on his feet, does not respond to his name</string>
+    <string name="em_5">a lost dog</string>
+    <string name="em_6">frequent vomiting - 2 times in an hour for 3 hours</string>
+
     <!--    Strings for Add Marker layout-->
     <string name="add_marker_page_title">Add Marker</string>
     <string name="edit_marker_page_title">Edit Marker</string>
@@ -38,5 +51,6 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_energency_numbers_activity">energency_numbers_activity</string>
 
 </resources>
