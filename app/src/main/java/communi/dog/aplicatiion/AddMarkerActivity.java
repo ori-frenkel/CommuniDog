@@ -66,6 +66,7 @@ public class AddMarkerActivity extends AppCompatActivity {
                 }
                 markerToEdit.setServices(isDogsitter, isFood, isMedication);
                 markerToEdit.setText(newText);
+                mapState.setCenter(markerToEdit.getLatitude(), markerToEdit.getLongitude());
                 this.appDB.setMarker(markerToEdit);
 
             } else {
@@ -105,6 +106,7 @@ public class AddMarkerActivity extends AppCompatActivity {
 
     private void backToMap() {
         Intent backToMapIntent = new Intent(this, MapScreenActivity.class);
+        backToMapIntent.putExtra("center_to_my_location", false);
         startActivity(backToMapIntent);
     }
 }

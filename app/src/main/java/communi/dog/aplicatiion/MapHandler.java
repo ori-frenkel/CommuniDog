@@ -32,6 +32,7 @@ public class MapHandler {
     private static final double MARKERS_MIN_DISPLAY_ZOOM = 15;
     private final MapView mMapView;
     private GeoPoint currentLocation = null;
+    private final boolean centerToLoc;
 
     private OnMapLongPressCallback longPressCallback = null;
 
@@ -43,10 +44,11 @@ public class MapHandler {
      * @param mapView      the founded mapView
      * @param initialState initial state of the map
      */
-    public MapHandler(MapView mapView, MapState initialState) {
+    public MapHandler(MapView mapView, MapState initialState, boolean centerToLoc) {
         this.mMapView = mapView;
         this.mapState = initialState;
         this.context = CommuniDogApp.getInstance();
+        this.centerToLoc = centerToLoc;
         initMap();
         restoreState();
     }
@@ -54,7 +56,7 @@ public class MapHandler {
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(final Location location) {
-            if (currentLocation == null) {
+            if (currentLocation == null && centerToLoc) {
                 // on the first update -> animate to current location
                 currentLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
                 mapToCurrentLocation();
@@ -139,14 +141,14 @@ public class MapHandler {
     }
 
     void centerMap(IGeoPoint newCenter, boolean animate) {
-        mapState.setCenter(newCenter);
-        mapState.setZoom(MAP_DEFAULT_ZOOM);
         if (animate) {
             mMapView.getController().animateTo(newCenter);
         } else {
             mMapView.setExpectedCenter(newCenter);
         }
         mMapView.getController().setZoom(MAP_DEFAULT_ZOOM);
+
+        updateCenter();
     }
 
     private void showMarkerOnMap(MarkerDescriptor descriptor) {
@@ -158,11 +160,11 @@ public class MapHandler {
         myMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
         myMarker.setIcon(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_dog_paw, context.getTheme()));
         myMarker.setId(descriptor.getId());
-        myMarker.setOnMarkerClickListener((marker, mapView) -> {
-            centerMap(marker.getPosition(), false);
-            marker.showInfoWindow();
-            return false;
-        });
+//        myMarker.setOnMarkerClickListener((marker, mapView) -> {
+//            centerMap(marker.getPosition(), false);
+//            marker.showInfoWindow();
+//            return false;
+//        });
         // todo: make marker's icon smaller when zooming out or disappear
         mMapView.getOverlays().add(myMarker);
     }
@@ -186,6 +188,11 @@ public class MapHandler {
 //            }
 //        }
 //    }
+
+    public void updateCenter() {
+        mapState.setCenter(mMapView.getMapCenter());
+        mapState.setZoom(mMapView.getZoomLevelDouble());
+    }
 
     public void setLongPressCallback(OnMapLongPressCallback longPressCallback) {
         this.longPressCallback = longPressCallback;

@@ -102,7 +102,7 @@ public class ProfilePage extends AppCompatActivity {
 
         btnCancelEdit.setOnClickListener(v -> cancelEditing());
 
-        btnBackToMap.setOnClickListener(v -> startActivity(new Intent(ProfilePage.this, MapScreenActivity.class)));
+        btnBackToMap.setOnClickListener(v -> backToMap());
     }
 
     @Override
@@ -139,13 +139,19 @@ public class ProfilePage extends AppCompatActivity {
         }
     }
 
+    private void backToMap() {
+        Intent backToMapIntent = new Intent(ProfilePage.this, MapScreenActivity.class);
+        backToMapIntent.putExtra("center_to_my_location", false);
+        startActivity(backToMapIntent);
+    }
+
     @Override
     public void onBackPressed() {
         if (isEdit) {
             cancelEditing();
         } else {
             super.onBackPressed();
-            startActivity(new Intent(ProfilePage.this, MapScreenActivity.class));
+            backToMap();
         }
     }
 }

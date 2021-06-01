@@ -58,8 +58,8 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
                 Manifest.permission.ACCESS_WIFI_STATE,
                 Manifest.permission.INTERNET
         });
-
-        mMapHandler = new MapHandler(findViewById(R.id.mapView), CommuniDogApp.getInstance().getMapState());
+        boolean centerToMyLocation = getIntent().getBooleanExtra("center_to_my_location", true);
+        mMapHandler = new MapHandler(findViewById(R.id.mapView), CommuniDogApp.getInstance().getMapState(), centerToMyLocation);
 
         mMapHandler.setLongPressCallback(p -> {
             Intent intent = new Intent(this, AddMarkerActivity.class);
@@ -79,10 +79,16 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
         btCenterMap.setOnClickListener(v -> mMapHandler.mapToCurrentLocation());
 
         ImageView btnMyProfile = findViewById(R.id.buttonMyProfileInMapActivity);
-        btnMyProfile.setOnClickListener(v -> startActivity(new Intent(this, ProfilePage.class)));
+        btnMyProfile.setOnClickListener(v -> {
+            mMapHandler.updateCenter();
+            startActivity(new Intent(this, ProfilePage.class));
+        });
 
         ImageView btnMoreInfo = findViewById(R.id.buttonMoreInfoMapActivity);
-        btnMoreInfo.setOnClickListener(v -> moreInfoDrawerLayout.openDrawer(GravityCompat.START));
+        btnMoreInfo.setOnClickListener(v -> {
+            mMapHandler.updateCenter();
+            moreInfoDrawerLayout.openDrawer(GravityCompat.START);
+        });
     }
 
     private void requestPermissionsIfNecessary(String[] permissions) {
@@ -156,6 +162,12 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mMapHandler.updateCenter();
     }
 
     private void goToUrl(String s) {

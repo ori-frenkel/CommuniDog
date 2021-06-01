@@ -29,6 +29,11 @@ public class MapState implements Serializable {
         mapCenterLongitude = newCenter.getLongitude();
     }
 
+    public void setCenter(double latitude, double longitude) {
+        mapCenterLatitude = latitude;
+        mapCenterLongitude = longitude;
+    }
+
     public IGeoPoint getCenter() {
         return new GeoPoint(mapCenterLatitude, mapCenterLongitude);
     }
@@ -43,6 +48,8 @@ public class MapState implements Serializable {
 
     public void addMarker(MarkerDescriptor toAdd) {
         markersDescriptors.put(toAdd.getId(), toAdd);
+        mapCenterLatitude = toAdd.getLatitude();
+        mapCenterLongitude = toAdd.getLongitude();
     }
 
     public boolean hasMarker(String idToSearch) {
