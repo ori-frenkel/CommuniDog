@@ -22,6 +22,7 @@ All the users must be approved by the community center for foster dogs.
 * direct messages between users
 * finding partners for dog gardens (something like sending notifications for the closest users)
 
+
 * feel free to add whatever you like, we will be happy to see what you have thought of.
 
 ## instructions for installation the app:
