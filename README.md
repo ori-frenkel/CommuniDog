@@ -6,11 +6,10 @@ The app allows to publish a service (sharing food, medicines and dog-sitting) an
 All the users must be approved by the community center for foster dogs.
 
 ## Notes for open-source contributers:
-* This project is under the ???MIT License???
+* This project is under the MIT License
 * The app is written in Android Studio using Java - Supported from API level 16 and more.
 * We are using Firebase platform to restore all relevant data about users and app data.
-* The map service is...
-* The tests service...
+* The map service is Open-Street Map Package
 * The app requires an internet connection to work properly and it is recommended to activate GPS connection as well.
 * every change in the code, requires a proper and well documented pull request.
 
@@ -20,6 +19,7 @@ All the users must be approved by the community center for foster dogs.
 * photos album in profile pages
 ### big extensions-
 * trainings schedule planner
+* direct messages between users
 * finding partners for dog gardens (something like sending notifications for the closest users)
 
 * feel free to add whatever you like, we will be happy to see what you have thought of.
@@ -36,9 +36,3 @@ All the users must be approved by the community center for foster dogs.
 ## instructions for running the app:
 * In your first use you must register. You need to enter a valid Id.
 * Find your dog's service!
-
-
-
-
-
-
