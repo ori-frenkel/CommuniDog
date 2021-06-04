@@ -31,12 +31,6 @@ public class User {
         this.userDescription = userDescription;
     }
 
-    public User(String id, String email, String password) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-    }
-
     public User() {
     }
 

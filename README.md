@@ -25,8 +25,7 @@ All the users must be approved by the community center for foster dogs.
 
 ## instructions for installation the app:
 * Install Android Studio: https://developer.android.com/studio/install.
-* Clone this `github` repository.
-** `git clone https://github.com/IdoSagiv/CommuniDog.git`
+* Clone this `github` repository: `git clone https://github.com/IdoSagiv/CommuniDog.git`
 * Open the project via android studio.
 * Make sure to sync the 'build.gradle' files (in the app folder and in the main folder).
 * You can choose to run the app on your phone or on an emulator that has an android os.

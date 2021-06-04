@@ -21,7 +21,6 @@ public class DB implements Serializable {
     private DatabaseReference usersRef;
     private DatabaseReference mapStateRef;
     private HashSet<User> users;
-    private HashMap<String, String> allUsers;
     private HashSet<String> allIDs;
     private User currentUser;
     private MapState mapState;
@@ -31,8 +30,7 @@ public class DB implements Serializable {
         this.IdsRef = database.getReference("ID's");
         this.usersRef = database.getReference("Users");
         this.mapStateRef = database.getReference("MapState");
-        this.allUsers = new HashMap<>();
-        this.allIDs = new HashSet<String>();
+        this.allIDs = new HashSet<>();
         this.users = new HashSet<>();
         this.currentUser = new User();
         this.refreshDataUsers();
@@ -49,22 +47,15 @@ public class DB implements Serializable {
     }
 
     public void refreshDataMapState() {
-        readDataMaoState(new DB.FirebaseCallbackMapState() {
+        readDataMapState(new DB.FirebaseCallbackMapState() {
             @Override
             public void onCallbackMapState(MapState mapState) {
             }
         });
     }
 
-    public void refreshDataGetUser(String userId) {
-        readDataGetUser(new DB.FirebaseCallbackUser() {
-            @Override
-            public void onCallbackUser(User currentUser) {
-            }
-        }, userId);
-    }
 
-    private void readDataMaoState(DB.FirebaseCallbackMapState firebaseCallback) {
+    private void readDataMapState(DB.FirebaseCallbackMapState firebaseCallback) {
         ValueEventListener valueEventListenerUsers = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -141,34 +132,12 @@ public class DB implements Serializable {
         IdsRef.addListenerForSingleValueEvent(valueEventListenerIds);
     }
 
-    private void readDataGetUser(DB.FirebaseCallbackUser firebaseCallback, String userId) {
-        ValueEventListener valueEventListenerUsers = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String email = (String) snapshot.child(userId).child("email").getValue();
-                String pass = (String) snapshot.child(userId).child("password").getValue();
-                String name = (String) snapshot.child(userId).child("name").getValue();
-                currentUser = new User(userId, email, pass, name);
-                firebaseCallback.onCallbackUser(currentUser);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        };
-        usersRef.addListenerForSingleValueEvent(valueEventListenerUsers);
-    }
-
     private interface FirebaseCallback {
         void onCallback(HashSet<User> users, HashSet<String> allIds);
     }
 
     private interface FirebaseCallbackMapState {
         void onCallbackMapState(MapState mapState);
-    }
-
-    private interface FirebaseCallbackUser {
-        void onCallbackUser(User currentUser);
     }
 
     public void addUser(String userId, String userEmail, String userPassword, String userName) {
@@ -190,10 +159,6 @@ public class DB implements Serializable {
         this.usersRef.child(userId).setValue(newUser);
     }
 
-    public void deleteUser(String userId) {
-        this.usersRef.child(userId).setValue(null);
-        //todo update local db
-    }
 
     public boolean idDoubleUser(String id) {
         for (User user: users){
@@ -206,28 +171,6 @@ public class DB implements Serializable {
 
     public boolean idExistsInDB(String id) {
         return allIDs.contains(id);
-    }
-
-    void restoreState(DBState oldState) {
-        if (oldState == null) {
-            return;
-        }
-        this.allUsers = new HashMap<>(oldState.allUsers);
-        this.allIDs = new HashSet<String>(oldState.allIDs);
-    }
-
-    DBState currentState() {
-        return new DBState(allUsers, allIDs);
-    }
-
-    public static class DBState implements Serializable {
-        HashMap<String, String> allUsers;
-        private HashSet<String> allIDs;
-
-        public DBState(HashMap<String, String> allUsers, HashSet<String> allIDs) {
-            this.allUsers = allUsers;
-            this.allIDs = allIDs;
-        }
     }
 
     public void setCurrentUser(String userId){
@@ -247,7 +190,6 @@ public class DB implements Serializable {
     }
 
     public void addMarkerDescriptor(MarkerDescriptor markerDescriptor){
-       // String idd = this.mapStateRef.child("markersDescriptors").child(markerDescriptor.getId());
         this.mapStateRef.child("markersDescriptors").child(markerDescriptor.getId()).setValue(markerDescriptor);
     }
 
@@ -258,16 +200,4 @@ public class DB implements Serializable {
     public void removeMarker(String markerId){
         this.mapStateRef.child("markersDescriptors").child(markerId).setValue(null);
     }
-
-    //    public void setMapState(MapState mapState){
-//        this.mapState = mapState;
-//        this.mapStateRef.child("mapCenterLatitude").setValue(mapState.getMapCenterLatitude());
-//        this.mapStateRef.child("mapCenterLongitude").setValue(mapState.getMapCenterLongitude());
-//        this.mapStateRef.child("zoom").setValue(mapState.getZoom());
-//        HashMap<String, MarkerDescriptor> markersDescriptors = mapState.getMarkersDescriptors();
-//        for (Map.Entry<String, MarkerDescriptor> entry : markersDescriptors.entrySet()) {
-//            System.out.println(entry.getKey());
-//            this.mapStateRef.child("markersDescriptors").child(entry.getKey()).setValue(entry.getValue());
-//        }
-//    }
 }

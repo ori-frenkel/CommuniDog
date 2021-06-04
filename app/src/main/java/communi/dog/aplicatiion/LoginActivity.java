@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         TextView to_register_btn = findViewById(R.id.register_now);
         to_register_btn.setOnClickListener(v -> {
             Intent newIntent = new Intent(this, RegisterActivity.class);
-            newIntent.putExtra("DB", this.appDB.currentState());
+         //   newIntent.putExtra("DB", this.appDB.currentState());
             startActivity(newIntent);
         });
 
@@ -58,7 +58,6 @@ public class LoginActivity extends AppCompatActivity {
             if (this.appDB.isUserExists(idEditText.getText().toString(), userPassword.getText().toString())) {
                 this.appDB.setCurrentUser(idEditText.getText().toString());
                 Intent successIntent = new Intent(this, MapScreenActivity.class);
-                successIntent.putExtra("userId", idEditText.getText().toString());
                 if (activityIntent.hasExtra("map_old_state")) {
                     successIntent.putExtra("map_old_state", activityIntent.getSerializableExtra("map_old_state"));
                 }

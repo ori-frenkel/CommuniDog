@@ -44,9 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         register.setEnabled(false);
 
-        Intent intent = getIntent();
         this.appDB = CommuniDogApp.getInstance().getDb();
-        this.appDB.restoreState((DB.DBState) intent.getSerializableExtra("DB"));
         this.appDB.refreshDataUsers();
 
         register.setOnClickListener(v -> checkDataEntered());
@@ -153,8 +151,6 @@ public class RegisterActivity extends AppCompatActivity {
                     this.pass1.getText().toString(), this.userName.getText().toString());
             this.appDB.setCurrentUser(this.id.getText().toString());
             Intent successIntent = new Intent(this, MapScreenActivity.class);
-            successIntent.putExtra("userId", id.getText().toString());
-            successIntent.putExtra("DB", this.appDB.currentState());
             startActivity(successIntent);
         }
     }
