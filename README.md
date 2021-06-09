@@ -30,6 +30,7 @@ All the users must be approved by the community center for foster dogs.
 * Make sure to sync the 'build.gradle' files (in the app folder and in the main folder).
 * You can choose to run the app on your phone or on an emulator that has an android os.
 * For best results, we recommend running the app on your own android phone, or if not possible use pixel 3 emulator
+* If you have any problem during the installation, see [Q&A page](https://github.com/IdoSagiv/CommuniDog/wiki/Q&A)
 
 ## instructions for running the app:
 * In your first use you must register. You need to enter a valid Id.
