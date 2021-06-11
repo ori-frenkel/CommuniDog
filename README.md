@@ -1,11 +1,11 @@
 # CommuniDog
 
-#### Description:
+#### Description
 CommuniDog is an app that provides services based on location to foster families to guide dogs.
 The app allows to publish a service (sharing food, medicines and dog-sitting) and contact the people offer the services.
 All the users must be approved by the community center for foster dogs.
 
-## Notes for open-source contributers:
+## Notes for open-source contributers
 * This project is under the MIT License
 * The app is written in Android Studio using Java - Supported from API level 16 and more.
 * We are using Firebase platform to restore all relevant data about users and app data.
@@ -13,7 +13,7 @@ All the users must be approved by the community center for foster dogs.
 * The app requires an internet connection to work properly and it is recommended to activate GPS connection as well.
 * every change in the code, requires a proper and well documented pull request.
 
-## improvements and future goals:
+## Improvements and future goals
 ### small extensions-
 * profile pictures
 * photos album in profile pages
@@ -23,15 +23,27 @@ All the users must be approved by the community center for foster dogs.
 * finding partners for dog gardens (something like sending notifications for the closest users)
 #### feel free to add whatever you like, we will be happy to see what you have thought of.
 
-## instructions for installation the app:
+## Instructions for installation the app
 * Install Android Studio: https://developer.android.com/studio/install.
 * Clone this `github` repository: `git clone https://github.com/IdoSagiv/CommuniDog.git`
 * Open the project via android studio.
+
+* (Optional): Install Android Emulator and Android Virtual Device
+  * Install Android Emulator - follow the instructions in https://developer.android.com/studio/run/emulator 
+  * Install AVD - https://developer.android.com/studio/run/managing-avds
+  * Note: This step is relevant to you if you want to run the widget on a virtual device instead on your real phone.
+
+
+
 * Make sure to sync the 'build.gradle' files (in the app folder and in the main folder).
 * You can choose to run the app on your phone or on an emulator that has an android os.
 * For best results, we recommend running the app on your own android phone, or if not possible use pixel 3 emulator
 * If you have any problem during the installation, see [Q&A page](https://github.com/IdoSagiv/CommuniDog/wiki/Q&A)
 
-## instructions for running the app:
-* In your first use you must register. You need to enter a valid Id.
+## Instructions for running the app
+* In your first use you must register with an approved ID.
+An approved ID can be obtained after registration in the community center for foster dogs.
+Without an approved ID you will not be able to use the app.
+
+
 * Find your dog's service!
