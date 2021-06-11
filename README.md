@@ -18,9 +18,6 @@ All the users must be approved by the community center for foster dogs.
 ### small extensions-
 * profile pictures
 * photos album in profile pages
-* adding a logout from account button
-* option to add bio (with an icon like dog name option)
-* option to add phone number (with an icon like dog name option)
 
 ### big extensions-
 * trainings schedule planner
