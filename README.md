@@ -1,26 +1,25 @@
 # CommuniDog
+CommuniDog for Android connects guide-dog foster families using location-based services.
+With CommuniDog, finding a guide-dog-friendly (and certified) doggy-sitter, sharing special medications or food for your fostered guide-dog is easy! 
 
-#### Description:
-CommuniDog is an app that provides services based on location to foster families to guide dogs.
-The app allows to publish a service (sharing food, medicines and dog-sitting) and contact the people offer the services.
-All the users must be approved by the community center for foster dogs.
+Note: to keep our community safe and secure, only users approved by the community center for foster dogs are allowed.
 
 ## Notes for open-source contributers:
 * This project is under the MIT License
 * The app is written in Android Studio using Java - Supported from API level 16 and more.
 * We are using Firebase platform to restore all relevant data about users and app data.
 * The map service is Open-Street Map Package
-* The app requires an internet connection to work properly and it is recommended to activate GPS connection as well.
-* every change in the code, requires a proper and well documented pull request.
+* The app requires an internet connection to work properly and works best with location services (GPS) enabled.
+* Every change in the code, requires a proper and well documented pull request.
 
-## improvements and future goals:
-### small extensions-
-* profile pictures
-* photos album in profile pages
-### big extensions-
-* trainings schedule planner
-* direct messages between users
-* finding partners for dog gardens (something like sending notifications for the closest users)
+## Improvements and future goals:
+### Low effort
+* Keep and show profile pictures for users.
+* Keep and show photo albums for users, to be shown on the profile page.
+### Big(ger) effort
+* Trainings-schedule planner
+* Direct messages between users
+* Finding partners for dog parks (notifying for the closest users, etc.)
 #### feel free to add whatever you like, we will be happy to see what you have thought of.
 
 ## instructions for installation the app:
@@ -33,5 +32,5 @@ All the users must be approved by the community center for foster dogs.
 * If you have any problem during the installation, see [Q&A page](https://github.com/IdoSagiv/CommuniDog/wiki/Q&A)
 
 ## instructions for running the app:
-* In your first use you must register. You need to enter a valid Id.
+* Sign up, make sure to provide a valid Israeli ID number.
 * Find your dog's service!
