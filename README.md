@@ -4,7 +4,7 @@ With CommuniDog, finding a guide-dog-friendly (and certified) doggy-sitter, shar
 
 Note: to keep our community safe and secure, only users approved by the community center for foster dogs are allowed.
 
-## Notes for open-source contributers:
+## Notes for open-source contributers
 * This project is under the MIT License
 * The app is written in Android Studio (version 4.1 at least) using Java - Supported from API level 16 and more.
 * We are using Firebase platform to restore all relevant data about users and app data.
@@ -26,6 +26,10 @@ Note: to keep our community safe and secure, only users approved by the communit
 * Install Android Studio: https://developer.android.com/studio/install.
 * Clone this `github` repository: `git clone https://github.com/IdoSagiv/CommuniDog.git`
 * Open the project via android studio.
+* (Optional): Install Android Emulator and Android Virtual Device
+  * Install Android Emulator - follow the instructions in https://developer.android.com/studio/run/emulator 
+  * Install AVD - https://developer.android.com/studio/run/managing-avds
+  * Note: This step is relevant to you if you want to run the widget on a virtual device instead on your real phone.
 * Make sure to sync the 'build.gradle' files (in the app folder and in the main folder).
 * You can choose to run the app on your phone or on an emulator that has an android os.
 * For best results, we recommend running the app on your own android phone, or if not possible use pixel 3 emulator.
@@ -33,5 +37,5 @@ Note: to keep our community safe and secure, only users approved by the communit
 * If you have any problem during the installation, see [Q&A page](https://github.com/IdoSagiv/CommuniDog/wiki/Q&A)
 
 ## instructions for running the app:
-* Sign up, make sure to provide a valid Israeli ID number.
+* Sign up, make sure to provide a valid Israeli ID number that is appeoved by the community center for foster dogs.
 * Find your dog's service!
