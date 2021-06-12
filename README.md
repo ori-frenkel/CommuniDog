@@ -38,4 +38,8 @@ Note: to keep our community safe and secure, only users approved by the communit
 
 ## instructions for running the app:
 * Sign up, make sure to provide a valid Israeli ID number that is appeoved by the community center for foster dogs.
-* Find your dog's service!
+* Find your dog's service!<br/>
+**note** To try out the app, you can contact one of the founders to get login details of a dummy user
+
+## Founders
+[Lotan Aharoni](https://github.com/lotanaharoni) [Hadas Aizik](https://github.com/hadasAizik) [Ido Sagiv](https://github.com/IdoSagiv)
