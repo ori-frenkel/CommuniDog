@@ -6,7 +6,7 @@ Note: to keep our community safe and secure, only users approved by the communit
 
 ## Notes for open-source contributers:
 * This project is under the MIT License
-* The app is written in Android Studio using Java - Supported from API level 16 and more.
+* The app is written in Android Studio (version 4.1 at least) using Java - Supported from API level 16 and more.
 * We are using Firebase platform to restore all relevant data about users and app data.
 * The map service is Open-Street Map Package
 * The app requires an internet connection to work properly and works best with location services (GPS) enabled.
@@ -22,13 +22,14 @@ Note: to keep our community safe and secure, only users approved by the communit
 * Finding partners for dog parks (notifying for the closest users, etc.)
 #### feel free to add whatever you like, we will be happy to see what you have thought of.
 
-## instructions for installation the app:
+## How to install the app:
 * Install Android Studio: https://developer.android.com/studio/install.
 * Clone this `github` repository: `git clone https://github.com/IdoSagiv/CommuniDog.git`
 * Open the project via android studio.
 * Make sure to sync the 'build.gradle' files (in the app folder and in the main folder).
 * You can choose to run the app on your phone or on an emulator that has an android os.
-* For best results, we recommend running the app on your own android phone, or if not possible use pixel 3 emulator
+* For best results, we recommend running the app on your own android phone, or if not possible use pixel 3 emulator.
+* To control your location in emulator - open the emulator, click on the 3 dots by it and then enter location to set emulator in.
 * If you have any problem during the installation, see [Q&A page](https://github.com/IdoSagiv/CommuniDog/wiki/Q&A)
 
 ## instructions for running the app:
