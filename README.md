@@ -5,7 +5,7 @@ With CommuniDog, finding a guide-dog-friendly (and certified) doggy-sitter, shar
 Note: to keep our community safe and secure, only users approved by the community center for foster dogs are allowed.
 
 ## Notes for open-source contributers
-* This project is under the MIT License
+* [![License](https://img.shields.io/badge/License-MIT-red.svg)](https://www.mit.edu/~amini/LICENSE.md)
 * The app is written in Android Studio (version 4.1 at least) using Java - Supported from API level 16 and more.
 * We are using Firebase platform to restore all relevant data about users and app data.
 * The map service is Open-Street Map Package
@@ -37,7 +37,7 @@ Note: to keep our community safe and secure, only users approved by the communit
 * If you have any problem during the installation, see [Q&A page](https://github.com/IdoSagiv/CommuniDog/wiki/Q&A)
 
 ## instructions for running the app:
-* Sign up, make sure to provide a valid Israeli ID number that is appeoved by the community center for foster dogs.
+* Sign up, make sure to provide a valid Israeli ID number that is approved by the community center for foster dogs.
 * Find your dog's service!<br/>
 **note** To try out the app, you can contact one of the founders to get login details of a dummy user
 
