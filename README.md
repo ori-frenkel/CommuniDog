@@ -29,7 +29,7 @@ Note: to keep our community safe and secure, only users approved by the communit
 * (Optional): Install Android Emulator and Android Virtual Device
   * Install Android Emulator - follow the instructions in https://developer.android.com/studio/run/emulator 
   * Install AVD - https://developer.android.com/studio/run/managing-avds
-  * Note: This step is relevant to you if you want to run the widget on a virtual device instead on your real phone.
+  * Note: This step is relevant to you if you want to run the app on a virtual device instead on your real phone.
 * Make sure to sync the 'build.gradle' files (in the app folder and in the main folder).
 * You can choose to run the app on your phone or on an emulator that has an android os.
 * For best results, we recommend running the app on your own android phone, or if not possible use pixel 3 emulator.
