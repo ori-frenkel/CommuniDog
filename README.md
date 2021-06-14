@@ -4,28 +4,28 @@ With CommuniDog, finding a guide-dog-friendly (and certified) doggy-sitter, shar
 
 Note: to keep our community safe and secure, only users approved by the community center for foster dogs are allowed.
 
-## Notes for open-source contributers
+## Notes for open-source contributors:
 * [![License](https://img.shields.io/badge/License-MIT-red.svg)](https://www.mit.edu/~amini/LICENSE.md)
 * The app is written in [Android Studio](https://developer.android.com/studio) (version 4.1 at least) using Java - Supported from API level 16 and more.
 * We are using [Firebase](https://firebase.google.com/) platform to store all relevant data about users and app data.
 * The map service is Open-Street Map Package
 * The app requires an internet connection to work properly and works best with location services (GPS) enabled.
-* Every change in the code, requires a proper and well documented pull request.
+* Every change in the code, requires a proper and well documented pull request, which will only be accepted after being reviewed and approved by all main authors of the app.
 
 ## Improvements and future goals:
-### Low effort
+### Short-Term goals
 * Keep and show profile pictures for users.
 * Keep and show photo albums for users, to be shown on the profile page.
-### Big(ger) effort
+### Long-Term goals
 * Trainings-schedule planner
 * Direct messages between users
 * Finding partners for dog parks (notifying for the closest users, etc.)
-#### feel free to add whatever you like, we will be happy to see what you have thought of.
+#### Feel free to add whatever you like, we will be happy to see what you have thought of.
 
 ## How to install the app:
 * Install Android Studio: https://developer.android.com/studio/install.
 * Clone this `github` repository: `git clone https://github.com/IdoSagiv/CommuniDog.git`
-* Open the project via android studio.
+* Open the project via Android Studio.
 * (Optional): Install Android Emulator and Android Virtual Device
   * Install Android Emulator - follow the instructions in https://developer.android.com/studio/run/emulator 
   * Install AVD - https://developer.android.com/studio/run/managing-avds
@@ -35,10 +35,10 @@ Note: to keep our community safe and secure, only users approved by the communit
 * Make sure to sync the 'build.gradle' files (in the app folder and in the main folder).
 * If you have any problems during the installation, see [Q&A page](https://github.com/IdoSagiv/CommuniDog/wiki/Q&A)
 
-## instructions for running the app:
+## Instructions for running the app:
 * Sign up, make sure to provide a valid Israeli ID number that is approved by the community center for foster dogs.
 * Find your dog's service!<br/>
-**note** To try out the app, you can contact one of the founders to get login details of a dummy user
+**note** To try out the app, you can contact one of the founders to get login details of a dummy user.
 
-## Founders
+## Main Authors:
 [Lotan Aharoni](https://github.com/lotanaharoni) [Hadas Aizik](https://github.com/hadasAizik) [Ido Sagiv](https://github.com/IdoSagiv)
