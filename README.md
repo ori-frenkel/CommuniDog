@@ -41,4 +41,4 @@ Note: to keep our community safe and secure, only users approved by the communit
 **note** To try out the app, you can contact one of the founders to get login details of a dummy user.
 
 ## Main Authors:
-[Lotan Aharoni](https://github.com/lotanaharoni) [Hadas Aizik](https://github.com/hadasAizik) [Ido Sagiv](https://github.com/IdoSagiv)
+[Lotan Aharoni](https://github.com/lotanaharoni)<br/> [Hadas Aizik](https://github.com/hadasAizik)<br/> [Ido Sagiv](https://github.com/IdoSagiv)<br/>
