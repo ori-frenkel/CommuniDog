@@ -4,184 +4,173 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".emergency_numbers">
+    tools:context=".Emergency_numbers">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/logo_image"
+                android:layout_width="184dp"
+                android:layout_height="143dp"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@string/logo_description"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/logo_full" />
+
+            <TextView
+                android:id="@+id/not_emer_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="not an emergency:"
+                android:textColor="#4CAF50"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                 />
+
+            <TextView
+                android:id="@+id/not_em_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/not_em_1"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/not_em_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/not_em_2"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/not_em_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/not_em_3"
+                android:textAlignment="center"
+
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/not_em_4"
+                android:layout_width="375dp"
+                android:layout_height="39dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="20dp"
+                android:text="@string/not_em_4"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/emer_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="emergency:"
+                android:textColor="#FF0000"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/em_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/em_1"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/em_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/em_2"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/em_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/em_3"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/em_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/em_4"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/em_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/em_5"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/em_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/em_6"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                />
 
 
-    <ImageView
-        android:id="@+id/logo_image"
-        android:layout_width="184dp"
-        android:layout_height="143dp"
-        android:layout_marginTop="10dp"
-        android:contentDescription="@string/logo_description"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_full" />
+            <TextView
+                android:id="@+id/call_if_emer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="#FF9800"
+                android:text="in case of an emergency call: 08-9408213"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                />
 
-    <TextView
-        android:id="@+id/not_emer_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="not an emergency:"
-        android:textColor="#4CAF50"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo_image" />
-
-    <TextView
-        android:id="@+id/not_em_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/not_em_1"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="@+id/not_emer_title"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="@+id/not_emer_title"
-        app:layout_constraintTop_toBottomOf="@+id/not_emer_title" />
-
-    <TextView
-        android:id="@+id/not_em_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/not_em_2"
-        android:textAlignment="center"
-
-        app:layout_constraintEnd_toEndOf="@+id/not_em_1"
-        app:layout_constraintHorizontal_bias="0.545"
-        app:layout_constraintStart_toStartOf="@+id/not_em_1"
-        app:layout_constraintTop_toBottomOf="@+id/not_em_1" />
-
-    <TextView
-        android:id="@+id/not_em_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/not_em_3"
-        android:textAlignment="center"
-
-        app:layout_constraintEnd_toEndOf="@+id/not_em_2"
-        app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintStart_toStartOf="@+id/not_em_2"
-        app:layout_constraintTop_toBottomOf="@+id/not_em_2" />
-
-    <TextView
-        android:id="@+id/not_em_4"
-        android:layout_width="375dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="20dp"
-        android:text="@string/not_em_4"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="@+id/not_em_3"
-        app:layout_constraintStart_toStartOf="@+id/not_em_3"
-        app:layout_constraintTop_toBottomOf="@+id/not_em_3" />
-
-    <TextView
-        android:id="@+id/emer_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="emergency:"
-        android:textColor="#FF0000"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/not_em_4" />
-
-    <TextView
-        android:id="@+id/em_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/em_1"
-        android:textAlignment="center"
-
-        app:layout_constraintEnd_toEndOf="@+id/emer_title"
-        app:layout_constraintStart_toStartOf="@+id/emer_title"
-        app:layout_constraintTop_toBottomOf="@+id/emer_title" />
-
-    <TextView
-        android:id="@+id/em_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/em_2"
-        android:textAlignment="center"
-
-        app:layout_constraintEnd_toEndOf="@+id/em_1"
-        app:layout_constraintStart_toStartOf="@+id/em_1"
-        app:layout_constraintTop_toBottomOf="@+id/em_1" />
-
-    <TextView
-        android:id="@+id/em_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/em_3"
-        android:textAlignment="center"
-
-        app:layout_constraintEnd_toEndOf="@+id/em_2"
-        app:layout_constraintStart_toStartOf="@+id/em_2"
-        app:layout_constraintTop_toBottomOf="@+id/em_2" />
-
-    <TextView
-        android:id="@+id/em_4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/em_4"
-        android:textAlignment="center"
-
-        app:layout_constraintEnd_toEndOf="@+id/em_3"
-        app:layout_constraintStart_toStartOf="@+id/em_3"
-        app:layout_constraintTop_toBottomOf="@+id/em_3" />
-
-    <TextView
-        android:id="@+id/em_5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/em_5"
-        android:textAlignment="center"
-
-        app:layout_constraintEnd_toEndOf="@+id/em_4"
-        app:layout_constraintStart_toStartOf="@+id/em_4"
-        app:layout_constraintTop_toBottomOf="@+id/em_4" />
-
-    <TextView
-        android:id="@+id/em_6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/em_6"
-        android:textAlignment="center"
-
-        app:layout_constraintEnd_toEndOf="@+id/em_5"
-        app:layout_constraintStart_toStartOf="@+id/em_5"
-        app:layout_constraintTop_toBottomOf="@+id/em_5" />
+        </LinearLayout>
+    </ScrollView>
 
 
-    <TextView
-        android:id="@+id/call_if_emer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="#FF9800"
-        android:text="in case of an emergency call: 08-9408213"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/em_6"
-        app:layout_constraintStart_toStartOf="@+id/em_6"
-        app:layout_constraintTop_toBottomOf="@+id/em_6" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
