@@ -20,24 +20,23 @@ public class DB implements Serializable {
     private final static String SP_CURR_LATITUDE = "latitude";
     private final static String SP_CURR_LONGITUDE = "longitude";
 
-    private FirebaseDatabase database;
-    private DatabaseReference IdsRef;
-    private DatabaseReference usersRef;
-    private DatabaseReference mapStateRef;
-    private HashSet<User> users;
-    private HashSet<String> allIDs;
+    private final DatabaseReference IdsRef;
+    private final DatabaseReference usersRef;
+    private final DatabaseReference mapStateRef;
+    private final HashMap<String, User> users;
+    private final HashSet<String> allIDs;
     private User currentUser;
-    private MapState mapState;
+    private final MapState mapState;
     private final SharedPreferences sp;
 
     public DB(Context context) {
-        this.database = FirebaseDatabase.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         this.sp = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
         this.IdsRef = database.getReference("ID's");
         this.usersRef = database.getReference("Users");
         this.mapStateRef = database.getReference("MapState");
         this.allIDs = new HashSet<>();
-        this.users = new HashSet<>();
+        this.users = new HashMap<>();
         this.currentUser = new User();
         this.refreshDataUsers();
         this.refreshDataMapState();
@@ -62,7 +61,7 @@ public class DB implements Serializable {
     public void refreshDataUsers() {
         readDataIdsInUse(new DB.FirebaseCallback() {
             @Override
-            public void onCallback(HashSet<User> users, HashSet<String> allIds) {
+            public void onCallback(HashMap<String, User> users, HashSet<String> allIds) {
             }
         });
     }
@@ -80,7 +79,6 @@ public class DB implements Serializable {
         ValueEventListener valueEventListenerUsers = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                 HashMap<String, MarkerDescriptor> markersDescriptors = new HashMap<>();
                 for (DataSnapshot ds : snapshot.child("markersDescriptors").getChildren()) {
                     if (ds != null) {
@@ -91,7 +89,8 @@ public class DB implements Serializable {
                         Boolean isDogSitter = ds.child("dogsitter").getValue(Boolean.class);
                         Boolean isFood = ds.child("food").getValue(Boolean.class);
                         Boolean isMedication = ds.child("medication").getValue(Boolean.class);
-                        MarkerDescriptor newMarkerDescriptor = new MarkerDescriptor(text, latitude, longitude, isDogSitter, isFood, isMedication, id);
+                        MarkerDescriptor newMarkerDescriptor =
+                                new MarkerDescriptor(text, latitude, longitude, isDogSitter, isFood, isMedication, id);
                         markersDescriptors.put(ds.getKey(), newMarkerDescriptor);
                     }
                 }
@@ -111,6 +110,7 @@ public class DB implements Serializable {
         ValueEventListener valueEventListenerUsers = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                users.clear();
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     if (ds != null) {
                         String id = ds.child("id").getValue(String.class);
@@ -123,7 +123,7 @@ public class DB implements Serializable {
                         phoneNumber = phoneNumber != null ? phoneNumber : "";
                         String description = ds.child("userDescription").getValue(String.class);
                         description = description != null ? description : "";
-                        users.add(new User(id, email, password, name, phoneNumber, dogName, description));
+                        users.put(id, new User(id, email, password, name, phoneNumber, dogName, description));
                     }
                 }
                 firebaseCallback.onCallback(users, allIDs);
@@ -138,6 +138,7 @@ public class DB implements Serializable {
         ValueEventListener valueEventListenerIds = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                allIDs.clear();
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     if (ds != null) {
                         allIDs.add((String) ds.getValue());
@@ -154,7 +155,7 @@ public class DB implements Serializable {
     }
 
     private interface FirebaseCallback {
-        void onCallback(HashSet<User> users, HashSet<String> allIds);
+        void onCallback(HashMap<String, User> users, HashSet<String> allIds);
     }
 
     private interface FirebaseCallbackMapState {
@@ -166,11 +167,9 @@ public class DB implements Serializable {
         this.usersRef.child(userId).setValue(newUser);
     }
 
-    public boolean isUserExists(String userId, String userPassword) {
-        for (User user : users) {
-            if (user.getId().equals(userId) && user.getPassword().equals(userPassword)) {
-                return true;
-            }
+    public boolean isValidUserPassword(String userId, String userPassword) {
+        if (users.containsKey(userId)) {
+            return users.get(userId).getPassword().equals(userPassword);
         }
         return false;
     }
@@ -181,12 +180,7 @@ public class DB implements Serializable {
     }
 
     public boolean idDoubleUser(String id) {
-        for (User user : users) {
-            if (user.getId().equals(id)) {
-                return true;
-            }
-        }
-        return false;
+        return users.containsKey(id);
     }
 
     public boolean idExistsInDB(String id) {
@@ -194,19 +188,24 @@ public class DB implements Serializable {
     }
 
     public void setCurrentUser(String userId) {
-        for (User user : users) {
-            if (user.getId().equals(userId)) {
-                this.currentUser = user;
-            }
+        if (users.containsKey(userId)) {
+            this.currentUser = users.get(userId);
         }
     }
 
-    public User getUser() {
+    public User getCurrentUser() {
         return this.currentUser;
     }
 
+    public User getUser(String userId) {
+        if (users.containsKey(userId)) {
+            return users.get(userId);
+        }
+        return null;
+    }
+
     public void resetUser() {
-        this.currentUser = new User();
+        this.currentUser = new User(); // todo: why new User? why not null?
         SharedPreferences.Editor spEditor = sp.edit();
         spEditor.remove(SP_CURR_LATITUDE);
         spEditor.remove(SP_CURR_LONGITUDE);
