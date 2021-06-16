@@ -87,6 +87,10 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
             mMapHandler.updateCenter();
             moreInfoDrawerLayout.openDrawer(GravityCompat.START);
         });
+
+        MapState.getInstance().markersDescriptorsLD.observe(this, markers -> {
+            mMapHandler.showMarkers(markers);
+        });
     }
 
     private void initMoreInfoBar() {
