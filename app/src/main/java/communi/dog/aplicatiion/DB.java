@@ -217,11 +217,10 @@ public class DB implements Serializable {
         return mapState;
     }
 
-    public void addMarkerDescriptor(MarkerDescriptor markerDescriptor) {
-        this.mapStateRef.child("markersDescriptors").child(markerDescriptor.getId()).setValue(markerDescriptor);
-    }
-
-    public void setMarker(MarkerDescriptor marker) {
+    /**
+     * if the descriptor already in the bd, update it, else add a new one
+     */
+    public void updateMarkerDescriptor(MarkerDescriptor marker) {
         this.mapStateRef.child("markersDescriptors").child(marker.getId()).setValue(marker);
     }
 
