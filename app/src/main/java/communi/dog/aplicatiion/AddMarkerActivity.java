@@ -55,33 +55,34 @@ public class AddMarkerActivity extends AppCompatActivity {
                 return;
             }
 
-            final double latitude = incomingIntent.getDoubleExtra("new_latitude", MISSING_COORD);
-            final double longitude = incomingIntent.getDoubleExtra("new_longitude", MISSING_COORD);
+            double latitude = incomingIntent.getDoubleExtra("new_latitude", MISSING_COORD);
+            double longitude = incomingIntent.getDoubleExtra("new_longitude", MISSING_COORD);
             String newText = getMarkerTitle(isDogsitter, isFood, isMedication);
 
             if (markerToEdit != null) {
                 // edit existing marker
-                if (latitude != MISSING_COORD && longitude != MISSING_COORD) {
-                    markerToEdit.setNewLocation(latitude, longitude);
+                if (latitude == MISSING_COORD || longitude == MISSING_COORD) {
+                    // don't change location
+                    latitude = markerToEdit.getLatitude();
+                    longitude = markerToEdit.getLongitude();
                 }
-                markerToEdit.setServices(isDogsitter, isFood, isMedication);
-                markerToEdit.setText(newText);
+                mapState.updateMarker(markerToEdit.getId(), newText, latitude, longitude, isDogsitter, isFood, isMedication);
                 mapState.setCenter(markerToEdit.getLatitude(), markerToEdit.getLongitude());
-                this.appDB.setMarker(markerToEdit);
+                this.appDB.updateMarkerDescriptor(markerToEdit);
 
             } else {
                 // add new marker
                 MarkerDescriptor newMarker = new MarkerDescriptor(
                         newText, latitude, longitude, isDogsitter, isFood, isMedication, currentUser.getId());
-                mapState.addMarker(newMarker); //todo
-                appDB.addMarkerDescriptor(newMarker);
+                mapState.addMarker(newMarker);
+                appDB.updateMarkerDescriptor(newMarker);
             }
             backToMap();
         });
 
         buttonDeleteMarker.setOnClickListener(v -> {
             if (markerToEdit == null) return;
-            mapState.removeMarker(markerToEdit.getId()); //todo
+            mapState.removeMarker(markerToEdit.getId());
             this.appDB.removeMarker(markerToEdit.getId());
             backToMap();
         });
