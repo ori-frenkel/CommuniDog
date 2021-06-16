@@ -43,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
         TextView to_register_btn = findViewById(R.id.register_now);
         to_register_btn.setOnClickListener(v -> {
             Intent newIntent = new Intent(this, RegisterActivity.class);
-         //   newIntent.putExtra("DB", this.appDB.currentState());
             startActivity(newIntent);
         });
 

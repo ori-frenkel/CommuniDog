@@ -145,20 +145,12 @@ public class ProfilePage extends AppCompatActivity {
         // negative is positive and vice versa to allow yes on left and no on right
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you want to logout?").setCancelable(false);
-        builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                appDB.resetUser();
-                startActivity(intent);
-            }
+        builder.setNegativeButton("Yes", (dialogInterface, i) -> {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            appDB.resetUser();
+            startActivity(intent);
         });
-        builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
+        builder.setPositiveButton("No", (dialogInterface, i) -> dialogInterface.cancel());
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
