@@ -119,7 +119,6 @@ public class MapHandler {
         MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), mMapView);
         mLocationOverlay.enableMyLocation();
         mLocationOverlay.setOptionsMenuEnabled(true);
-        // todo: make the purple circle disappear
 
         // add to map
         mMapView.getOverlays().add(mLocationOverlay);
@@ -160,12 +159,7 @@ public class MapHandler {
         myMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
         myMarker.setIcon(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_dog_paw, context.getTheme()));
         myMarker.setId(descriptor.getId());
-//        myMarker.setOnMarkerClickListener((marker, mapView) -> {
-//            centerMap(marker.getPosition(), false);
-//            marker.showInfoWindow();
-//            return false;
-//        });
-        // todo: make marker's icon smaller when zooming out or disappear
+
         mMapView.getOverlays().add(myMarker);
     }
 
