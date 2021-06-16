@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Observer;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -26,6 +28,7 @@ import org.osmdroid.config.Configuration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 
 public class MapScreenActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,12 +47,7 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
 
         // more info bar
-        moreInfoDrawerLayout = findViewById(R.id.drawer_layout_more_info);
-        navigationView = findViewById(R.id.nav_view);
-        moreInfoDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        navigationView.setNavigationItemSelectedListener(this);
-        // more info bar
-
+        initMoreInfoBar();
 
         requestPermissionsIfNecessary(new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -89,6 +87,13 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
             mMapHandler.updateCenter();
             moreInfoDrawerLayout.openDrawer(GravityCompat.START);
         });
+    }
+
+    private void initMoreInfoBar() {
+        moreInfoDrawerLayout = findViewById(R.id.drawer_layout_more_info);
+        navigationView = findViewById(R.id.nav_view);
+        moreInfoDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void requestPermissionsIfNecessary(String[] permissions) {
