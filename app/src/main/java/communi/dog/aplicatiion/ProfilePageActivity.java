@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ProfilePage extends AppCompatActivity {
+public class ProfilePageActivity extends AppCompatActivity {
     User currentUser;
 
     TextView usernameEditText;
@@ -156,7 +155,7 @@ public class ProfilePage extends AppCompatActivity {
     }
 
     private void backToMap() {
-        Intent backToMapIntent = new Intent(ProfilePage.this, MapScreenActivity.class);
+        Intent backToMapIntent = new Intent(ProfilePageActivity.this, MapScreenActivity.class);
         backToMapIntent.putExtra("center_to_my_location", false);
         startActivity(backToMapIntent);
     }
