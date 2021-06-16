@@ -10,7 +10,7 @@ public class CommuniDogApp extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-        localDdb = new DB(); // todo: need context? maybe for sp?
+        localDdb = new DB(this);
     }
 
     public static CommuniDogApp getInstance() {
