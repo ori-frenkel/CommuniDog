@@ -93,6 +93,17 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/logoutButton"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:onClick="logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_cancel_editing_profile" />
+
 
     <TextView
         android:id="@+id/profile_to_my_marker"
