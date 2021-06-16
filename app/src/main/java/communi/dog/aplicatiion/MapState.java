@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.Marker;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -20,6 +21,9 @@ public class MapState implements Serializable {
     private double mapCenterLatitude;
     private double mapCenterLongitude;
     private double zoom;
+
+    private final MutableLiveData<HashMap<String, MarkerDescriptor>> markersDescriptorsMutableLD = new MutableLiveData<>();
+    public final LiveData<HashMap<String, MarkerDescriptor>> markersDescriptorsLD = markersDescriptorsMutableLD;
 
     private static MapState instance = null;
 
@@ -63,8 +67,9 @@ public class MapState implements Serializable {
 
     public void addMarker(MarkerDescriptor toAdd) {
         markersDescriptors.put(toAdd.getId(), toAdd);
-        mapCenterLatitude = toAdd.getLatitude();
-        mapCenterLongitude = toAdd.getLongitude();
+        setCenter(toAdd.getLatitude(),toAdd.getLongitude()); // todo: delete?
+
+        markersDescriptorsMutableLD.setValue(this.markersDescriptors);
     }
 
     public boolean hasMarker(String idToSearch) {
@@ -72,7 +77,9 @@ public class MapState implements Serializable {
     }
 
     public void removeMarker(String idToRemove) {
-        markersDescriptors.remove(idToRemove);
+        if (markersDescriptors.remove(idToRemove) != null) {
+            markersDescriptorsMutableLD.setValue(this.markersDescriptors);
+        }
     }
 
     public HashMap<String, MarkerDescriptor> getMarkersDescriptors() {
@@ -84,8 +91,21 @@ public class MapState implements Serializable {
         return null;
     }
 
+    public void updateMarker(String markerId, String newText, double newLat, double newLon,
+                             boolean isDogsitter, boolean isFood, boolean isMedication) {
+        MarkerDescriptor marker = (markersDescriptors.containsKey(markerId)) ? markersDescriptors.get(markerId) : null;
+        if (marker != null) {
+            marker.setNewLocation(newLat, newLon);
+            marker.setServices(isDogsitter, isFood, isMedication);
+            marker.setText(newText);
+            markersDescriptorsMutableLD.setValue(this.markersDescriptors);
+        }
+    }
+
     public void setMarkersDescriptors(HashMap<String, MarkerDescriptor> markersDescriptors) {
         this.markersDescriptors.clear();
         this.markersDescriptors.putAll(markersDescriptors);
+
+        markersDescriptorsMutableLD.setValue(this.markersDescriptors);
     }
 }
