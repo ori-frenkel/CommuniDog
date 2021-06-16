@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.login_button).setOnClickListener(v -> { //todo: check
-            if (this.appDB.isUserExists(idEditText.getText().toString(), userPassword.getText().toString())) {
+            if (this.appDB.isValidUserPassword(idEditText.getText().toString(), userPassword.getText().toString())) {
                 this.appDB.setCurrentUser(idEditText.getText().toString());
                 Intent successIntent = new Intent(this, MapScreenActivity.class);
                 if (activityIntent.hasExtra("map_old_state")) {
