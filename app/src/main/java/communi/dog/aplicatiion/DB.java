@@ -1,5 +1,8 @@
 package communi.dog.aplicatiion;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
@@ -9,13 +12,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
 
 public class DB implements Serializable {
+    private final static String SP_NAME = "local_db";
+    private final static String SP_CURR_LATITUDE = "latitude";
+    private final static String SP_CURR_LONGITUDE = "longitude";
+
     private FirebaseDatabase database;
     private DatabaseReference IdsRef;
     private DatabaseReference usersRef;
@@ -24,9 +28,11 @@ public class DB implements Serializable {
     private HashSet<String> allIDs;
     private User currentUser;
     private MapState mapState;
+    private final SharedPreferences sp;
 
-    public DB() {
+    public DB(Context context) {
         this.database = FirebaseDatabase.getInstance();
+        this.sp = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
         this.IdsRef = database.getReference("ID's");
         this.usersRef = database.getReference("Users");
         this.mapStateRef = database.getReference("MapState");
@@ -35,7 +41,22 @@ public class DB implements Serializable {
         this.currentUser = new User();
         this.refreshDataUsers();
         this.refreshDataMapState();
-        this.mapState = new MapState();
+        this.mapState = MapState.getInstance();
+
+        readLastLocationFromSp();
+    }
+
+    private void readLastLocationFromSp() {
+        double lat = sp.getFloat(SP_CURR_LATITUDE, MapState.DEF_LATITUDE);
+        double lon = sp.getFloat(SP_CURR_LONGITUDE, MapState.DEF_LONGITUDE);
+        mapState.setCenter(lat, lon);
+    }
+
+    public void saveLocationToSp(double latitude, double longitude) {
+        SharedPreferences.Editor spEditor = sp.edit();
+        spEditor.putFloat(SP_CURR_LATITUDE, (float) latitude);
+        spEditor.putFloat(SP_CURR_LONGITUDE, (float) longitude);
+        spEditor.apply();
     }
 
     public void refreshDataUsers() {
@@ -60,7 +81,7 @@ public class DB implements Serializable {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                HashMap<String, MarkerDescriptor> markersDescriptor = new HashMap<>();
+                HashMap<String, MarkerDescriptor> markersDescriptors = new HashMap<>();
                 for (DataSnapshot ds : snapshot.child("markersDescriptors").getChildren()) {
                     if (ds != null) {
                         Double latitude = ds.child("latitude").getValue(Double.class);
@@ -71,11 +92,11 @@ public class DB implements Serializable {
                         Boolean isFood = ds.child("food").getValue(Boolean.class);
                         Boolean isMedication = ds.child("medication").getValue(Boolean.class);
                         MarkerDescriptor newMarkerDescriptor = new MarkerDescriptor(text, latitude, longitude, isDogSitter, isFood, isMedication, id);
-                        markersDescriptor.put(ds.getKey(), newMarkerDescriptor);
+                        markersDescriptors.put(ds.getKey(), newMarkerDescriptor);
                     }
                 }
-                mapState = new MapState();
-                mapState.setMarkersDescriptors(markersDescriptor);
+                mapState.setMarkersDescriptors(markersDescriptors);
+                readLastLocationFromSp();
                 firebaseCallback.onCallbackMapState(mapState);
             }
 
@@ -146,8 +167,8 @@ public class DB implements Serializable {
     }
 
     public boolean isUserExists(String userId, String userPassword) {
-        for (User user: users){
-            if (user.getId().equals(userId) && user.getPassword().equals(userPassword)){
+        for (User user : users) {
+            if (user.getId().equals(userId) && user.getPassword().equals(userPassword)) {
                 return true;
             }
         }
@@ -159,10 +180,9 @@ public class DB implements Serializable {
         this.usersRef.child(userId).setValue(newUser);
     }
 
-
     public boolean idDoubleUser(String id) {
-        for (User user: users){
-            if (user.getId().equals(id)){
+        for (User user : users) {
+            if (user.getId().equals(id)) {
                 return true;
             }
         }
@@ -173,35 +193,39 @@ public class DB implements Serializable {
         return allIDs.contains(id);
     }
 
-    public void setCurrentUser(String userId){
-        for (User user: users){
-            if (user.getId().equals(userId)){
+    public void setCurrentUser(String userId) {
+        for (User user : users) {
+            if (user.getId().equals(userId)) {
                 this.currentUser = user;
             }
         }
     }
 
-    public User getUser(){
+    public User getUser() {
         return this.currentUser;
     }
 
     public void resetUser() {
         this.currentUser = new User();
+        SharedPreferences.Editor spEditor = sp.edit();
+        spEditor.remove(SP_CURR_LATITUDE);
+        spEditor.remove(SP_CURR_LONGITUDE);
+        spEditor.apply();
     }
 
     public MapState getMapState() {
         return mapState;
     }
 
-    public void addMarkerDescriptor(MarkerDescriptor markerDescriptor){
+    public void addMarkerDescriptor(MarkerDescriptor markerDescriptor) {
         this.mapStateRef.child("markersDescriptors").child(markerDescriptor.getId()).setValue(markerDescriptor);
     }
 
-    public void setMarker(MarkerDescriptor marker){
+    public void setMarker(MarkerDescriptor marker) {
         this.mapStateRef.child("markersDescriptors").child(marker.getId()).setValue(marker);
     }
 
-    public void removeMarker(String markerId){
+    public void removeMarker(String markerId) {
         this.mapStateRef.child("markersDescriptors").child(markerId).setValue(null);
     }
 }
