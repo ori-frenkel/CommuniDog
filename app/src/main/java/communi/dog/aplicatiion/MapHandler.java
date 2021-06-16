@@ -18,10 +18,13 @@ import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
+
+import java.util.Collection;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -84,7 +87,7 @@ public class MapHandler {
         mMapView.setTileSource(TileSourceFactory.MAPNIK);
         mMapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT);
         mMapView.setMultiTouchControls(true);
-        mMapView.getController().setZoom(MAP_DEFAULT_ZOOM);
+        mMapView.getController().setZoom(mapState.getZoom());
         mMapView.setMaxZoomLevel(MAP_MAX_ZOOM);
         mMapView.setMinZoomLevel(MAP_MIN_ZOOM);
 
@@ -136,16 +139,16 @@ public class MapHandler {
     }
 
     void mapToCurrentLocation() {
-        if (currentLocation != null) centerMap(currentLocation, true);
+        if (currentLocation != null) centerMap(currentLocation, true, true);
     }
 
-    void centerMap(IGeoPoint newCenter, boolean animate) {
+    void centerMap(IGeoPoint newCenter, boolean animate, boolean zoomToDefault) {
         if (animate) {
             mMapView.getController().animateTo(newCenter);
         } else {
             mMapView.setExpectedCenter(newCenter);
         }
-        mMapView.getController().setZoom(MAP_DEFAULT_ZOOM);
+        if (zoomToDefault) mMapView.getController().setZoom(MAP_DEFAULT_ZOOM);
 
         updateCenter();
     }
@@ -163,26 +166,6 @@ public class MapHandler {
         mMapView.getOverlays().add(myMarker);
     }
 
-//    public void addMarker(MarkerDescriptor descriptor) {
-//        if (mapState.hasMarker(descriptor)) deleteMarker(descriptor);
-//        showMarkerOnMap(descriptor);
-//        mapState.addMarker(descriptor);
-//    }
-//
-//    void deleteMarker(MarkerDescriptor toDelete) {
-//        if (mapState.removeMarker(toDelete) == null) return;
-//        removeMarkerFromMap(toDelete);
-//    }
-//
-//    private void removeMarkerFromMap(MarkerDescriptor toRemove) {
-//        for (Overlay overlay : mMapView.getOverlays()) {
-//            if (overlay instanceof Marker && ((Marker) overlay).getId().equals(toRemove.getId())) {
-//                mMapView.getOverlays().remove(overlay);
-//                return;
-//            }
-//        }
-//    }
-
     public void updateCenter() {
         mapState.setCenter(mMapView.getMapCenter());
         mapState.setZoom(mMapView.getZoomLevelDouble());
@@ -193,12 +176,22 @@ public class MapHandler {
     }
 
     void restoreState() {
-        for (MarkerDescriptor descriptor : mapState.getMarkersDescriptors().values()) {
-            showMarkerOnMap(descriptor);
+        centerMap(mapState.getCenter(), false, false);
+        mMapView.getController().setZoom(mapState.getZoom());
+    }
+
+    public void showMarkers(Collection<MarkerDescriptor> markers) {
+        // remove all old markers
+        for (Overlay overlay : mMapView.getOverlays()) {
+            if (overlay instanceof Marker) {
+                mMapView.getOverlays().remove(overlay);
+            }
         }
 
-        centerMap(mapState.getCenter(), false);
-        mMapView.getController().setZoom(mapState.getZoom());
+        // show the new markers
+        for (MarkerDescriptor descriptor : markers) {
+            showMarkerOnMap(descriptor);
+        }
     }
 
     MapState currentState() {
