@@ -8,6 +8,8 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Marker;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -22,8 +24,8 @@ public class MapState implements Serializable {
     private double mapCenterLongitude;
     private double zoom;
 
-    private final MutableLiveData<HashMap<String, MarkerDescriptor>> markersDescriptorsMutableLD = new MutableLiveData<>();
-    public final LiveData<HashMap<String, MarkerDescriptor>> markersDescriptorsLD = markersDescriptorsMutableLD;
+    private final MutableLiveData<Collection<MarkerDescriptor>> markersDescriptorsMutableLD = new MutableLiveData<>();
+    public final LiveData<Collection<MarkerDescriptor>> markersDescriptorsLD = markersDescriptorsMutableLD;
 
     private static MapState instance = null;
 
@@ -67,9 +69,9 @@ public class MapState implements Serializable {
 
     public void addMarker(MarkerDescriptor toAdd) {
         markersDescriptors.put(toAdd.getId(), toAdd);
-        setCenter(toAdd.getLatitude(),toAdd.getLongitude()); // todo: delete?
+        setCenter(toAdd.getLatitude(), toAdd.getLongitude()); // todo: delete?
 
-        markersDescriptorsMutableLD.setValue(this.markersDescriptors);
+        markersDescriptorsMutableLD.setValue(getMarkersDescriptors());
     }
 
     public boolean hasMarker(String idToSearch) {
@@ -78,12 +80,12 @@ public class MapState implements Serializable {
 
     public void removeMarker(String idToRemove) {
         if (markersDescriptors.remove(idToRemove) != null) {
-            markersDescriptorsMutableLD.setValue(this.markersDescriptors);
+            markersDescriptorsMutableLD.setValue(getMarkersDescriptors());
         }
     }
 
-    public HashMap<String, MarkerDescriptor> getMarkersDescriptors() {
-        return new HashMap<>(markersDescriptors);
+    public ArrayList<MarkerDescriptor> getMarkersDescriptors() {
+        return new ArrayList<>(markersDescriptors.values());
     }
 
     public MarkerDescriptor getMarker(String markerId) {
@@ -98,7 +100,7 @@ public class MapState implements Serializable {
             marker.setNewLocation(newLat, newLon);
             marker.setServices(isDogsitter, isFood, isMedication);
             marker.setText(newText);
-            markersDescriptorsMutableLD.setValue(this.markersDescriptors);
+            markersDescriptorsMutableLD.setValue(getMarkersDescriptors());
         }
     }
 
@@ -106,6 +108,6 @@ public class MapState implements Serializable {
         this.markersDescriptors.clear();
         this.markersDescriptors.putAll(markersDescriptors);
 
-        markersDescriptorsMutableLD.setValue(this.markersDescriptors);
+        markersDescriptorsMutableLD.setValue(getMarkersDescriptors());
     }
 }
