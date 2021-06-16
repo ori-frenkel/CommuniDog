@@ -102,7 +102,7 @@
         android:onClick="logout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_cancel_editing_profile" />
+        tools:srcCompat="@drawable/ic_cancel_editing_profile" />
 
 
     <TextView
