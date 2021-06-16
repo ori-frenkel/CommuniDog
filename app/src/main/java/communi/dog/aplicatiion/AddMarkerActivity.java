@@ -24,7 +24,7 @@ public class AddMarkerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_marker);
         this.appDB = CommuniDogApp.getInstance().getDb();
         incomingIntent = getIntent();
-        currentUser = CommuniDogApp.getInstance().getDb().getUser();
+        currentUser = CommuniDogApp.getInstance().getDb().getCurrentUser();
         ImageView buttonSaveMarker = findViewById(R.id.buttonSaveMarker);
         ImageView buttonDeleteMarker = findViewById(R.id.buttonDeleteMarker);
 

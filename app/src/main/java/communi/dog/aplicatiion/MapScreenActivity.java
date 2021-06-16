@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -20,7 +19,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.Observer;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -28,7 +26,6 @@ import org.osmdroid.config.Configuration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 
 public class MapScreenActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -61,7 +58,7 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
 
         mMapHandler.setLongPressCallback(p -> {
             Intent intent = new Intent(this, AddMarkerActivity.class);
-            String userId = CommuniDogApp.getInstance().getDb().getUser().getId();
+            String userId = CommuniDogApp.getInstance().getDb().getCurrentUser().getId();
             intent.putExtra("new_latitude", p.getLatitude());
             intent.putExtra("new_longitude", p.getLongitude());
             if (CommuniDogApp.getInstance().getMapState().hasMarker(userId)) {

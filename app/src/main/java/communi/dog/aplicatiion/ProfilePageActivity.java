@@ -36,7 +36,7 @@ public class ProfilePageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
         this.appDB = CommuniDogApp.getInstance().getDb();
-        currentUser = this.appDB.getUser();
+        currentUser = this.appDB.getCurrentUser();
 
         usernameEditText = findViewById(R.id.profile_user_name);
         dogNameEditText = findViewById(R.id.profile_dog_name);
