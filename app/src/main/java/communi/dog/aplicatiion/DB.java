@@ -96,7 +96,6 @@ public class DB implements Serializable {
                     }
                 }
                 mapState.setMarkersDescriptors(markersDescriptors);
-                readLastLocationFromSp();
                 firebaseCallback.onCallbackMapState(mapState);
             }
 
@@ -104,8 +103,9 @@ public class DB implements Serializable {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         };
-        mapStateRef.addListenerForSingleValueEvent(valueEventListenerUsers);
+        mapStateRef.addValueEventListener(valueEventListenerUsers);
     }
+
 
     private void readDataIdsInUse(DB.FirebaseCallback firebaseCallback) {
         ValueEventListener valueEventListenerUsers = new ValueEventListener() {
@@ -133,7 +133,7 @@ public class DB implements Serializable {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         };
-        usersRef.addListenerForSingleValueEvent(valueEventListenerUsers);
+        usersRef.addValueEventListener(valueEventListenerUsers);
 
         ValueEventListener valueEventListenerIds = new ValueEventListener() {
             @Override
@@ -150,7 +150,7 @@ public class DB implements Serializable {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         };
-        IdsRef.addListenerForSingleValueEvent(valueEventListenerIds);
+        IdsRef.addValueEventListener(valueEventListenerIds);
     }
 
     private interface FirebaseCallback {
