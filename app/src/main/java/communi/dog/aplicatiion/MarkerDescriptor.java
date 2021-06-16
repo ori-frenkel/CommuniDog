@@ -26,7 +26,9 @@ public class MarkerDescriptor implements Serializable {
         this.isMedication = isMedication;
     }
 
-    public MarkerDescriptor(){}
+    // empty constructor for FireBase
+    public MarkerDescriptor() {
+    }
 
     private String generateMarkerId(String userId) {
         // todo: maybe not just the user id? if not than this field is redundant
@@ -73,6 +75,25 @@ public class MarkerDescriptor implements Serializable {
     }
 
     public String getText() {
+        User user = CommuniDogApp.getInstance().getDb().getUser(id);
+        if (user != null) {
+            text = generateText(user);
+        }
+
         return text;
+    }
+
+    private String generateText(User user) {
+        String msg = user.getUserName() + " offers:\n";
+        if (isDogsitter) msg += "Dogsitter services\n";
+        if (isFood) msg += "Extra food\n";
+        if (isMedication) msg += "Extra medication\n";
+        String contacts = "";
+        if (!user.getEmail().isEmpty())
+            contacts += "Email - " + user.getEmail() + "\n";
+        if (!user.getPhoneNumber().isEmpty())
+            contacts += "Phone - " + user.getPhoneNumber() + "\n";
+        if (!contacts.isEmpty()) msg += "In order to contact:\n" + contacts;
+        return msg;
     }
 }
