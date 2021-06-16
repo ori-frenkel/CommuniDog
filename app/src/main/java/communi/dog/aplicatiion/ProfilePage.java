@@ -1,8 +1,10 @@
 package communi.dog.aplicatiion;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -137,6 +139,28 @@ public class ProfilePage extends AppCompatActivity {
         if (isEdit) {
             btnEditProfile.callOnClick();
         }
+    }
+
+    public void logout (View view) {
+        // negative is positive and vice versa to allow yes on left and no on right
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to logout?").setCancelable(false);
+        builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                appDB.resetUser();
+                startActivity(intent);
+            }
+        });
+        builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void backToMap() {

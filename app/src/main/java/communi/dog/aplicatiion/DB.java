@@ -185,6 +185,10 @@ public class DB implements Serializable {
         return this.currentUser;
     }
 
+    public void resetUser() {
+        this.currentUser = new User();
+    }
+
     public MapState getMapState() {
         return mapState;
     }
