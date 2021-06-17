@@ -14,17 +14,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ProfilePageActivity extends AppCompatActivity {
-    User currentUser;
+    private User currentUser;
 
-    TextView usernameEditText;
-    EditText dogNameEditText;
-    EditText emailEditText;
-    EditText phoneEditText;
-    EditText bioEditText;
+    private TextView usernameEditText;
+    private EditText dogNameEditText;
+    private EditText emailEditText;
+    private EditText phoneEditText;
+    private EditText bioEditText;
     private ImageView btnEditProfile;
-    TextView btnMyMarker;
-    ImageButton btnBackToMap;
-    ImageView btnCancelEdit;
+    private TextView btnMyMarker;
+    private ImageButton btnBackToMap;
+    private ImageView btnCancelEdit;
     private boolean isEdit = false;
     private DB appDB;
 
@@ -83,7 +83,7 @@ public class ProfilePageActivity extends AppCompatActivity {
                 bioBeforeEdit = bioEditText.getText().toString();
             }
             isEdit = !isEdit;
-            setSViewsByState(isEdit);
+            setViewsByState(isEdit);
         });
 
         btnMyMarker.setOnClickListener(v -> {
@@ -122,7 +122,7 @@ public class ProfilePageActivity extends AppCompatActivity {
         emailEditText.setText(savedInstanceState.getString("email"));
         phoneEditText.setText(savedInstanceState.getString("phone"));
         bioEditText.setText(savedInstanceState.getString("bio"));
-        setSViewsByState(isEdit);
+        setViewsByState(isEdit);
     }
 
     private void cancelEditing() {
@@ -141,7 +141,7 @@ public class ProfilePageActivity extends AppCompatActivity {
         startActivity(backToMapIntent);
     }
 
-    private void setSViewsByState(boolean isEditState) {
+    private void setViewsByState(boolean isEditState) {
         if (isEditState) {
             btnCancelEdit.setVisibility(View.VISIBLE);
         } else {
