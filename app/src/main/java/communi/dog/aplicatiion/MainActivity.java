@@ -17,5 +17,6 @@ public class MainActivity extends AppCompatActivity {
         // todo: check if already logged in and open the relevant screen (login or map)
         startActivity(new Intent(this, LoginActivity.class));
     }
+    // bla bla - just a branching test
 }
 
