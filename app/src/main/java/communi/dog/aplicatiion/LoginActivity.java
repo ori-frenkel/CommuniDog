@@ -54,8 +54,8 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.login_button).setOnClickListener(v -> { //todo: check
-            String userIdAndPasswordValidation = this.appDB.isValidUserPassword(idEditText.getText().toString(), userPassword.getText().toString());
-            if (userIdAndPasswordValidation.equals("ok")) {
+            DB.UserIdAndPasswordValidation userIdAndPasswordValidation = this.appDB.isValidUserPassword(idEditText.getText().toString(), userPassword.getText().toString());
+            if (userIdAndPasswordValidation== DB.UserIdAndPasswordValidation.VALID) {
                 this.appDB.setCurrentUser(idEditText.getText().toString());
                 Intent successIntent = new Intent(this, MapScreenActivity.class);
                 if (activityIntent.hasExtra("map_old_state")) {
@@ -64,7 +64,14 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(successIntent);
                 // todo: Move to other activity?
             } else {
-                Toast.makeText(this, userIdAndPasswordValidation, Toast.LENGTH_SHORT).show(); //todo: new Toast?
+                String msg = "";
+                if(userIdAndPasswordValidation== DB.UserIdAndPasswordValidation.INCORRECT_ID){
+                    msg = "incorrect id";
+                }
+                else if(userIdAndPasswordValidation== DB.UserIdAndPasswordValidation.INCORRECT_PASSWORD){
+                    msg = "incorrect password";
+                }
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show(); //todo: new Toast?
             }
         });
 
