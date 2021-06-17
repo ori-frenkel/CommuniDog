@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -176,7 +177,12 @@ public class DB implements Serializable {
 
     public void updateUser(String userId, String userEmail, String userPassword, String userName, String phoneNumber, String dogName, String userDescription) {
         User newUser = new User(userId, userEmail, userPassword, userName, phoneNumber, dogName, userDescription);
-        this.usersRef.child(userId).setValue(newUser);
+        this.usersRef.child(userId).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                currentUser = newUser;
+            }
+        });
     }
 
     public boolean idDoubleUser(String id) {

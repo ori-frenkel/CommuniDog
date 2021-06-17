@@ -72,8 +72,17 @@ public class ProfilePageActivity extends AppCompatActivity {
         btnEditProfile.setOnClickListener(v -> {
             if (isEdit) {
                 btnCancelEdit.setVisibility(View.GONE);
-                // this.appDB.updateUser(userId, email, password, name, phone, dogName, bio); //todo: add
-                //todo: save changes to DB
+                // solving issue #19
+                String userId = currentUser.getId();
+                String password = currentUser.getPassword();
+                String name = currentUser.getUserName();
+
+                // get from user input
+                String email = emailEditText.getText().toString();
+                String phone = phoneEditText.getText().toString();
+                String bio = bioEditText.getText().toString();
+                String dogName = dogNameEditText.getText().toString();
+                this.appDB.updateUser(userId, email, password, name, phone, dogName, bio);
             } else {
                 btnCancelEdit.setVisibility(View.VISIBLE);
                 dogNameBeforeEdit = dogNameEditText.getText().toString();
@@ -158,6 +167,7 @@ public class ProfilePageActivity extends AppCompatActivity {
         Intent backToMapIntent = new Intent(ProfilePageActivity.this, MapScreenActivity.class);
         backToMapIntent.putExtra("center_to_my_location", false);
         startActivity(backToMapIntent);
+        finish();
     }
 
     @Override
