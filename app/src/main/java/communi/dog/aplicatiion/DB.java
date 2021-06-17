@@ -185,7 +185,7 @@ public class DB implements Serializable {
                 }
                 else
                 {
-                    System.out.println("not the current user");
+                    Log.d("sameUserCheck", "not the current user");
                 }
             }
         });
