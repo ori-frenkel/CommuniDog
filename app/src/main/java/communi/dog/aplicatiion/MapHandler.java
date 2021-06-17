@@ -154,13 +154,19 @@ public class MapHandler {
     }
 
     private void showMarkerOnMap(MarkerDescriptor descriptor) {
+        User currUser = CommuniDogApp.getInstance().getDb().getCurrentUser();
         GeoPoint location = new GeoPoint(descriptor.getLatitude(), descriptor.getLongitude());
 
         Marker myMarker = new Marker(mMapView);
         myMarker.setPosition(location);
         myMarker.setTitle(descriptor.getText());
         myMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
-        myMarker.setIcon(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_dog_paw, context.getTheme()));
+        if (currUser != null && currUser.getId().equals(descriptor.getId())){
+            myMarker.setIcon(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_my_marker, context.getTheme()));
+        }
+        else {
+            myMarker.setIcon(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_general_marker, context.getTheme()));
+        }
         myMarker.setId(descriptor.getId());
 
         mMapView.getOverlays().add(myMarker);
