@@ -154,6 +154,20 @@ public class ProfilePageActivity extends AppCompatActivity {
         int edit_ic = isEditState ? R.drawable.ic_save_profile : R.drawable.ic_edit_profile;
         btnEditProfile.setImageResource(edit_ic);
     }
+    
+    public void logout (View view) {
+        // negative is positive and vice versa to allow yes on left and no on right
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to logout?").setCancelable(false);
+        builder.setNegativeButton("Yes", (dialogInterface, i) -> {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            appDB.resetUser();
+            startActivity(intent);
+        });
+        builder.setPositiveButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 
     @Override
     public void onBackPressed() {
