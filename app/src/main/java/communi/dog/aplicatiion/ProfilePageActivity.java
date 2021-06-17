@@ -72,7 +72,7 @@ public class ProfilePageActivity extends AppCompatActivity {
         btnEditProfile.setOnClickListener(v -> {
             if (isEdit) {
                 btnCancelEdit.setVisibility(View.GONE);
-                // solving issue #19
+                // save updated user to DB
                 String userId = currentUser.getId();
                 String password = currentUser.getPassword();
                 String name = currentUser.getUserName();
