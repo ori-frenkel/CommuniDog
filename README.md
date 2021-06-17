@@ -30,7 +30,7 @@ Note: to keep our community safe and secure, only users approved by the communit
 
 ## How to contribute
 * Open a new issue or reference an existing issue and assign yourself to the job.
-* Open a new branch with an informative name (e.g. issue12).
+* Go to the main branch, pull the latest version and from it open a new branch with an informative name (e.g. issue12).
 * After finish working on the change, open a well documented pull request to merge the done branch.<br/>
 **note** a pull request will only be accepted after being reviewed and approved by one or more of the main authors of the project.
 
