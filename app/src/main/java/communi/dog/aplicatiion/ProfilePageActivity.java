@@ -14,14 +14,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ProfilePageActivity extends AppCompatActivity {
-    User currentUser;
+    private User currentUser;
 
-    TextView usernameEditText;
-    EditText dogNameEditText;
-    EditText emailEditText;
-    EditText phoneEditText;
-    EditText bioEditText;
+    private TextView usernameEditText;
+    private EditText dogNameEditText;
+    private EditText emailEditText;
+    private EditText phoneEditText;
+    private EditText bioEditText;
     private ImageView btnEditProfile;
+    private TextView btnMyMarker;
+    private ImageButton btnBackToMap;
+    private ImageView btnCancelEdit;
     private boolean isEdit = false;
     private DB appDB;
 
@@ -44,9 +47,9 @@ public class ProfilePageActivity extends AppCompatActivity {
         phoneEditText = findViewById(R.id.usersPhoneMyProfile);
         bioEditText = findViewById(R.id.profile_bio);
 
-        TextView btnMyMarker = findViewById(R.id.profile_to_my_marker);
-        ImageButton btnBackToMap = findViewById(R.id.backToMapFromProfile);
-        ImageView btnCancelEdit = findViewById(R.id.btnCancelEditProfile);
+        btnMyMarker = findViewById(R.id.profile_to_my_marker);
+        btnBackToMap = findViewById(R.id.backToMapFromProfile);
+        btnCancelEdit = findViewById(R.id.btnCancelEditProfile);
         btnEditProfile = findViewById(R.id.btnEditProfile);
 
         dogNameEditText.setEnabled(false);
@@ -71,23 +74,16 @@ public class ProfilePageActivity extends AppCompatActivity {
 
         btnEditProfile.setOnClickListener(v -> {
             if (isEdit) {
-                btnCancelEdit.setVisibility(View.GONE);
                 // this.appDB.updateUser(userId, email, password, name, phone, dogName, bio); //todo: add
                 //todo: save changes to DB
             } else {
-                btnCancelEdit.setVisibility(View.VISIBLE);
                 dogNameBeforeEdit = dogNameEditText.getText().toString();
                 emailBeforeEdit = emailEditText.getText().toString();
                 phoneBeforeEdit = phoneEditText.getText().toString();
                 bioBeforeEdit = bioEditText.getText().toString();
             }
             isEdit = !isEdit;
-            dogNameEditText.setEnabled(isEdit);
-            bioEditText.setEnabled(isEdit);
-            emailEditText.setEnabled(isEdit);
-            phoneEditText.setEnabled(isEdit);
-            int edit_ic = isEdit ? R.drawable.ic_save_profile : R.drawable.ic_edit_profile;
-            btnEditProfile.setImageResource(edit_ic);
+            setViewsByState(isEdit);
         });
 
         btnMyMarker.setOnClickListener(v -> {
@@ -121,13 +117,12 @@ public class ProfilePageActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         isEdit = savedInstanceState.getBoolean("is_edit");
-        int edit_ic = isEdit ? R.drawable.ic_save_profile : R.drawable.ic_edit_profile;
-        btnEditProfile.setImageResource(edit_ic);
         usernameEditText.setText(savedInstanceState.getString("user_name"));
         dogNameEditText.setText(savedInstanceState.getString("dog_name"));
         emailEditText.setText(savedInstanceState.getString("email"));
         phoneEditText.setText(savedInstanceState.getString("phone"));
         bioEditText.setText(savedInstanceState.getString("bio"));
+        setViewsByState(isEdit);
     }
 
     private void cancelEditing() {
@@ -140,6 +135,26 @@ public class ProfilePageActivity extends AppCompatActivity {
         }
     }
 
+    private void backToMap() {
+        Intent backToMapIntent = new Intent(ProfilePageActivity.this, MapScreenActivity.class);
+        backToMapIntent.putExtra("center_to_my_location", false);
+        startActivity(backToMapIntent);
+    }
+
+    private void setViewsByState(boolean isEditState) {
+        if (isEditState) {
+            btnCancelEdit.setVisibility(View.VISIBLE);
+        } else {
+            btnCancelEdit.setVisibility(View.GONE);
+        }
+        dogNameEditText.setEnabled(isEditState);
+        bioEditText.setEnabled(isEditState);
+        emailEditText.setEnabled(isEditState);
+        phoneEditText.setEnabled(isEditState);
+        int edit_ic = isEditState ? R.drawable.ic_save_profile : R.drawable.ic_edit_profile;
+        btnEditProfile.setImageResource(edit_ic);
+    }
+    
     public void logout (View view) {
         // negative is positive and vice versa to allow yes on left and no on right
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -152,12 +167,6 @@ public class ProfilePageActivity extends AppCompatActivity {
         builder.setPositiveButton("No", (dialogInterface, i) -> dialogInterface.cancel());
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-    }
-
-    private void backToMap() {
-        Intent backToMapIntent = new Intent(ProfilePageActivity.this, MapScreenActivity.class);
-        backToMapIntent.putExtra("center_to_my_location", false);
-        startActivity(backToMapIntent);
     }
 
     @Override
