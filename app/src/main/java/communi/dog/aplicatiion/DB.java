@@ -167,11 +167,18 @@ public class DB implements Serializable {
         this.usersRef.child(userId).setValue(newUser);
     }
 
-    public boolean isValidUserPassword(String userId, String userPassword) {
+    public String isValidUserPassword(String userId, String userPassword) {
         if (users.containsKey(userId)) {
-            return users.get(userId).getPassword().equals(userPassword);
+            if(users.get(userId).getPassword().equals(userPassword)){
+                return "ok";
+            }
+            else{
+                return "incorrect password";
+            }
         }
-        return false;
+        else{
+            return "id is unknown";
+        }
     }
 
     public void updateUser(String userId, String userEmail, String userPassword, String userName, String phoneNumber, String dogName, String userDescription) {

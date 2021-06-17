@@ -54,7 +54,8 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.login_button).setOnClickListener(v -> { //todo: check
-            if (this.appDB.isValidUserPassword(idEditText.getText().toString(), userPassword.getText().toString())) {
+            String userIdAndPasswordValidation = this.appDB.isValidUserPassword(idEditText.getText().toString(), userPassword.getText().toString());
+            if (userIdAndPasswordValidation.equals("ok")) {
                 this.appDB.setCurrentUser(idEditText.getText().toString());
                 Intent successIntent = new Intent(this, MapScreenActivity.class);
                 if (activityIntent.hasExtra("map_old_state")) {
@@ -63,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(successIntent);
                 // todo: Move to other activity?
             } else {
-                Toast.makeText(this, "id is unknown", Toast.LENGTH_SHORT).show(); //todo: new Toast?
+                Toast.makeText(this, userIdAndPasswordValidation, Toast.LENGTH_SHORT).show(); //todo: new Toast?
             }
         });
 
