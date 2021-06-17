@@ -180,7 +180,13 @@ public class DB implements Serializable {
         this.usersRef.child(userId).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                currentUser = newUser;
+                if(newUser.getId().equals(currentUser.getId())){
+                    currentUser = newUser;
+                }
+                else
+                {
+                    System.out.println("not the current user");
+                }
             }
         });
     }
