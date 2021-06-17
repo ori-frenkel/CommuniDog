@@ -74,8 +74,18 @@ public class ProfilePageActivity extends AppCompatActivity {
 
         btnEditProfile.setOnClickListener(v -> {
             if (isEdit) {
-                // this.appDB.updateUser(userId, email, password, name, phone, dogName, bio); //todo: add
-                //todo: save changes to DB
+                btnCancelEdit.setVisibility(View.GONE);
+                // save updated user to DB
+                String userId = currentUser.getId();
+                String password = currentUser.getPassword();
+                String name = currentUser.getUserName();
+
+                // get from user input
+                String email = emailEditText.getText().toString();
+                String phone = phoneEditText.getText().toString();
+                String bio = bioEditText.getText().toString();
+                String dogName = dogNameEditText.getText().toString();
+                this.appDB.updateUser(userId, email, password, name, phone, dogName, bio);
             } else {
                 dogNameBeforeEdit = dogNameEditText.getText().toString();
                 emailBeforeEdit = emailEditText.getText().toString();
@@ -135,12 +145,6 @@ public class ProfilePageActivity extends AppCompatActivity {
         }
     }
 
-    private void backToMap() {
-        Intent backToMapIntent = new Intent(ProfilePageActivity.this, MapScreenActivity.class);
-        backToMapIntent.putExtra("center_to_my_location", false);
-        startActivity(backToMapIntent);
-    }
-
     private void setViewsByState(boolean isEditState) {
         if (isEditState) {
             btnCancelEdit.setVisibility(View.VISIBLE);
@@ -167,6 +171,13 @@ public class ProfilePageActivity extends AppCompatActivity {
         builder.setPositiveButton("No", (dialogInterface, i) -> dialogInterface.cancel());
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    private void backToMap() {
+        Intent backToMapIntent = new Intent(ProfilePageActivity.this, MapScreenActivity.class);
+        backToMapIntent.putExtra("center_to_my_location", false);
+        startActivity(backToMapIntent);
+        finish();
     }
 
     @Override

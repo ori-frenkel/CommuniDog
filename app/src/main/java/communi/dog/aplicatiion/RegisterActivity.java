@@ -184,20 +184,26 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("userID", id.getText().toString());
-        outState.putString("userEmail", emailAddress.getText().toString());
-        outState.putString("userPass1", pass1.getText().toString());
-        outState.putString("userPass2", pass2.getText().toString());
-        outState.putString("userName", userName.getText().toString());
+        // as part of fix for issue 19 - no longer needed
+        // because every time we enter this screen we take the data from firebase
+
+//        outState.putString("userID", id.getText().toString());
+//        outState.putString("userEmail", emailAddress.getText().toString());
+//        outState.putString("userPass1", pass1.getText().toString());
+//        outState.putString("userPass2", pass2.getText().toString());
+//        outState.putString("userName", userName.getText().toString());
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        id.setText(savedInstanceState.getString("userID"));
-        emailAddress.setText(savedInstanceState.getString("userEmail"));
-        pass1.setText(savedInstanceState.getString("userPass1"));
-        pass2.setText(savedInstanceState.getString("userPass2"));
-        userName.setText(savedInstanceState.getString("userName"));
+        // as part of fix for issue 19 - no longer needed
+        // because every time we enter this screen we take the data from firebase
+
+//        id.setText(savedInstanceState.getString("userID"));
+//        emailAddress.setText(savedInstanceState.getString("userEmail"));
+//        pass1.setText(savedInstanceState.getString("userPass1"));
+//        pass2.setText(savedInstanceState.getString("userPass2"));
+//        userName.setText(savedInstanceState.getString("userName"));
     }
 }
