@@ -25,6 +25,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText pass1;
     EditText pass2;
     EditText userName;
+    EditText accessCode;
     Button register;
     TextView to_register_btn;
     private DB appDB;
@@ -34,11 +35,13 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        id = findViewById(R.id.input_id_register);
+//        id = findViewById(R.id.input_id_register);
+        accessCode = findViewById(R.id.enterAccessCode);
         emailAddress = findViewById(R.id.input_email_register);
         pass1 = findViewById(R.id.input_pass_reg);
         pass2 = findViewById(R.id.input_repass_reg);
         register = findViewById(R.id.register_bt);
+
         to_register_btn = findViewById(R.id.back_to_login);
         userName = findViewById(R.id.input_user_name_register);
 
@@ -47,8 +50,11 @@ public class RegisterActivity extends AppCompatActivity {
         this.appDB = CommuniDogApp.getInstance().getDb();
         this.appDB.refreshDataUsers();
 
+
+
         register.setOnClickListener(v -> checkDataEntered());
         to_register_btn.setOnClickListener(v ->
+
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
 
         findViewById(R.id.registerConstraintLayout).setOnClickListener(v -> {
@@ -58,17 +64,17 @@ public class RegisterActivity extends AppCompatActivity {
             id.clearFocus();
         });
 
-        id.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            public void afterTextChanged(Editable s) {
-                register.setEnabled(checkButtonRegisterEnable());
-            }
-        });
+//        id.addTextChangedListener(new TextWatcher() {
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//            }
+//
+//            public void afterTextChanged(Editable s) {
+//                register.setEnabled(checkButtonRegisterEnable());
+//            }
+//        });
 
         emailAddress.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

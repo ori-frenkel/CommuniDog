@@ -29,7 +29,7 @@ public class NotificationsActivity extends AppCompatActivity {
 
         listView = (ListView)findViewById(R.id.listView);
         mailUserName = "sagi5362@gmail.com";
-        mailPW = "0546906507";
+        mailPW = "";
 
         // initialize general account that will send mail
         m = new Mail(mailUserName, mailPW);

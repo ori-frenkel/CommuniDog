@@ -14,25 +14,39 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class RequestAccessActivity extends AppCompatActivity {
+
+    Button registerButton;
+    Button askForAccess;
+    String email;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_access);
-        Button registerButton = findViewById(R.id.requestAccessRegister);
-        Button askForAccess = findViewById(R.id.askForAccess);
+
+        registerButton = findViewById(R.id.requestAccessRegister);
+        askForAccess = findViewById(R.id.askForAccess);
+
         EditText accessCodeEditText = findViewById(R.id.enterAccessCode);
         registerButton.setOnClickListener(v -> {
-            // todo: add isValidAccessCode method to the DB and check validation by it
-            int accessCode = Integer.parseInt(accessCodeEditText.getText().toString());
-            if (accessCode == 1234) {
-                // move to register activity
-                Intent successIntent = new Intent(this, RegisterActivity.class);
-                startActivity(successIntent);
+            if (accessCodeEditText.getText().length() == 4) {
+                int accessCode = Integer.parseInt(accessCodeEditText.getText().toString());
+                if (accessCode == 1234) {// todo: add isValidAccessCode method to the DB and check validation by it
+
+                    // move to register activity
+                    Intent successIntent = new Intent(getApplicationContext(), RegisterActivity.class);
+                    startActivity(successIntent);
+                }
             }
+
         });
         askForAccess.setOnClickListener(v -> {
             showRequestAccessByEmailPopup();
+            //add email to notification DB
+            //add alertdialog that request was sent upon success
         });
+
+
 
 
     }
@@ -47,7 +61,7 @@ public class RequestAccessActivity extends AppCompatActivity {
         builder.setView(emailInput);
 
         builder.setPositiveButton("request", (dialog, which) -> {
-            String email = emailInput.getText().toString();
+            email = emailInput.getText().toString();
             // todo: send an email to the organization
         });
         builder.setNegativeButton("cancel", (dialog, which) -> {
