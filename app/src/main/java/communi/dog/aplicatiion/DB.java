@@ -30,6 +30,12 @@ public class DB implements Serializable {
     private final MapState mapState;
     private final SharedPreferences sp;
 
+    enum  UserIdAndPasswordValidation {
+        VALID,
+        INCORRECT_ID,
+        INCORRECT_PASSWORD
+    }
+
     public DB(Context context) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         this.sp = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
@@ -168,11 +174,18 @@ public class DB implements Serializable {
         this.usersRef.child(userId).setValue(newUser);
     }
 
-    public boolean isValidUserPassword(String userId, String userPassword) {
+    public UserIdAndPasswordValidation isValidUserPassword(String userId, String userPassword) {
         if (users.containsKey(userId)) {
-            return users.get(userId).getPassword().equals(userPassword);
+            if(users.get(userId).getPassword().equals(userPassword)){
+                return UserIdAndPasswordValidation.VALID;
+            }
+            else{
+                return UserIdAndPasswordValidation.INCORRECT_PASSWORD;
+            }
         }
-        return false;
+        else{
+            return UserIdAndPasswordValidation.INCORRECT_ID;
+        }
     }
 
     public void updateUser(String userId, String userEmail, String userPassword, String userName, String phoneNumber, String dogName, String userDescription) {
