@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    tools:context=".MapScreenActivity"
     tools:openDrawer="start">
 
 
@@ -17,7 +18,9 @@
         <org.osmdroid.views.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="-9dp" />
 
         <ImageView
             android:id="@+id/buttonCenterMap"
@@ -43,6 +46,20 @@
             android:focusable="true"
             android:src="@drawable/ic_my_profile"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/buttonNotificationActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@android:drawable/ic_popup_reminder"
+            android:onClick="notificationsActivity"
+            app:tint="#A3B11C"
+            app:layout_constraintEnd_toStartOf="@+id/buttonMyProfileInMapActivity"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView

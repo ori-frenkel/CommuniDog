@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.CommuniDog">
+        <activity android:name=".NotificationsActivity"></activity>
         <activity android:name=".Emergency_numbers" />
         <activity android:name=".ProfilePageActivity" />
         <activity android:name=".RegisterActivity" />

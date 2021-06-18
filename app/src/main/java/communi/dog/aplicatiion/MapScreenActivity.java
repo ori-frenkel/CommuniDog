@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -179,5 +180,11 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
     private void goToUrl(String s) {
         Uri url = Uri.parse(s);
         startActivity(new Intent(Intent.ACTION_VIEW, url));
+    }
+
+
+    public void notificationsActivity(View view) {
+        Intent intent = new Intent(getApplicationContext(), NotificationsActivity.class);
+        startActivity(intent);
     }
 }
