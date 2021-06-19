@@ -52,5 +52,7 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title_activity_energency_numbers_activity">energency_numbers_activity</string>
+    <string name="about_section">About</string>
+    <string name="about_section_text">This app in an open source one.\nYou can look at the source code and contribute in our repo at:\nhttps://github.com/IdoSagiv/CommuniDog</string>
 
 </resources>
