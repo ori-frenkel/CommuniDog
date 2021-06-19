@@ -77,18 +77,18 @@ public class AddMarkerActivity extends AppCompatActivity {
                 mapState.addMarker(newMarker);
                 appDB.updateMarkerDescriptor(newMarker);
             }
-            backToMap();
+            backButton();
         });
 
         buttonDeleteMarker.setOnClickListener(v -> {
             if (markerToEdit == null) return;
             mapState.removeMarker(markerToEdit.getId());
             this.appDB.removeMarker(markerToEdit.getId());
-            backToMap();
+            backButton();
         });
 
         ImageView buttonCancel = findViewById(R.id.buttonCancelMarker);
-        buttonCancel.setOnClickListener(view -> backToMap());
+        buttonCancel.setOnClickListener(view -> backButton());
     }
 
     private String getMarkerTitle(boolean isDogsitter, boolean isFood, boolean isMedication) {
@@ -105,8 +105,8 @@ public class AddMarkerActivity extends AppCompatActivity {
         return msg;
     }
 
-    private void backToMap() {
-        Intent backToMapIntent = new Intent(this, MapScreenActivity.class);
+    private void backButton() {
+        Intent backToMapIntent = new Intent(this, ProfilePageActivity.class);
         backToMapIntent.putExtra("center_to_my_location", false);
         startActivity(backToMapIntent);
     }
