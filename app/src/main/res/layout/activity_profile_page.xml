@@ -80,19 +80,20 @@
             android:textColor="@color/black"
             android:textSize="24sp" />
 
-        <EditText
-            android:id="@+id/profile_bio"
-            android:layout_width="match_parent"
-            android:layout_height="104dp"
-            android:layout_marginTop="8dp"
-            android:background="@null"
-            android:hint="add bio..."
-            android:maxLines="3"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
+            <EditText
+                android:id="@+id/profile_bio"
+                android:layout_width="match_parent"
+                android:layout_height="104dp"
+                android:layout_marginTop="8dp"
+                android:isScrollContainer="true"
+                android:background="@null"
+                android:hint="add bio..."
+                android:overScrollMode="always"
+                android:maxLines="3"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
     </LinearLayout>
-
     <ImageView
         android:id="@+id/logoutButton"
         android:layout_width="20dp"

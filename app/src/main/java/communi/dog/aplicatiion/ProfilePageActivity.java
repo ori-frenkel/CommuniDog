@@ -51,11 +51,12 @@ public class ProfilePageActivity extends AppCompatActivity {
         btnBackToMap = findViewById(R.id.backToMapFromProfile);
         btnCancelEdit = findViewById(R.id.btnCancelEditProfile);
         btnEditProfile = findViewById(R.id.btnEditProfile);
-
         dogNameEditText.setEnabled(false);
         emailEditText.setEnabled(false);
         phoneEditText.setEnabled(false);
-        bioEditText.setEnabled(false);
+        // making the bio edittext scrollable but not editable.
+        bioEditText.setFocusableInTouchMode(false);
+        bioEditText.clearFocus();
 
         usernameEditText.setText(currentUser.getUserName());
         dogNameEditText.setText(currentUser.getUserDogName());
@@ -152,7 +153,9 @@ public class ProfilePageActivity extends AppCompatActivity {
             btnCancelEdit.setVisibility(View.GONE);
         }
         dogNameEditText.setEnabled(isEditState);
-        bioEditText.setEnabled(isEditState);
+        // making the bio edit text editable/ no editanle accordingly (and always scrollable)
+        bioEditText.setFocusableInTouchMode(isEditState);
+        bioEditText.clearFocus();
         emailEditText.setEnabled(isEditState);
         phoneEditText.setEnabled(isEditState);
         int edit_ic = isEditState ? R.drawable.ic_save_profile : R.drawable.ic_edit_profile;
