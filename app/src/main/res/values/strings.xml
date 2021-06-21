@@ -13,7 +13,7 @@
     <string name="from_login_to_register">register now</string>
     <string name="login_button">login</string>
     <string name="login_password">password</string>
-    <string name="login_id">id</string>
+    <string name="login_email">email</string>
     <string name="login_title">Login</string>
 
     <!--    Strings for menu   -->
