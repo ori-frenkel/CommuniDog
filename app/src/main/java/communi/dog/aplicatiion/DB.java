@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -40,12 +39,6 @@ public class DB implements Serializable {
     private MutableLiveData<User> currentUSerMutableLiveData = new MutableLiveData<>();
     public LiveData<User> currentUSerLiveData = currentUSerMutableLiveData;
 
-
-    enum UserIdAndPasswordValidation {
-        VALID,
-        INCORRECT_ID,
-        INCORRECT_PASSWORD
-    }
 
     public DB(Context context) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -186,28 +179,13 @@ public class DB implements Serializable {
         this.usersRef.child(userId).setValue(newUser);
     }
 
-    public UserIdAndPasswordValidation isValidUserPassword(String userId, String userPassword) {
-        if (users.containsKey(userId)) {
-            if (users.get(userId).getPassword().equals(userPassword)) {
-                return UserIdAndPasswordValidation.VALID;
-            } else {
-                return UserIdAndPasswordValidation.INCORRECT_PASSWORD;
-            }
-        } else {
-            return UserIdAndPasswordValidation.INCORRECT_ID;
-        }
-    }
-
     public void updateUser(String userId, String userEmail, String userPassword, String userName, String phoneNumber, String dogName, String userDescription) {
         User newUser = new User(userId, userEmail, userPassword, userName, phoneNumber, dogName, userDescription);
-        this.usersRef.child(userId).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                if (newUser.getId().equals(currentUser.getId())) {
-                    currentUser = newUser;
-                } else {
-                    Log.d("sameUserCheck", "not the current user");
-                }
+        this.usersRef.child(userId).setValue(newUser).addOnSuccessListener(aVoid -> {
+            if (newUser.getId().equals(currentUser.getId())) {
+                currentUser = newUser;
+            } else {
+                Log.d("sameUserCheck", "not the current user");
             }
         });
     }
@@ -221,7 +199,6 @@ public class DB implements Serializable {
     }
 
     public void setCurrentUser(FirebaseUser user) {
-        // todo: connect to the apps user
         if (user != null) {
             this.currentFbUser = user;
             if (users.containsKey(user.getUid())) {
