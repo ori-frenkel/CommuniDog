@@ -5,9 +5,12 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,9 +32,14 @@ public class DB implements Serializable {
     private final HashMap<String, User> users;
     private final HashSet<String> allIDs;
     private User currentUser;
+    private FirebaseUser currentFbUser;
     private final MapState mapState;
     private final SharedPreferences sp;
     private final FirebaseAuth mAuth;
+
+    private MutableLiveData<User> currentUSerMutableLiveData = new MutableLiveData<>();
+    public LiveData<User> currentUSerLiveData = currentUSerMutableLiveData;
+
 
     enum UserIdAndPasswordValidation {
         VALID,
@@ -75,24 +83,18 @@ public class DB implements Serializable {
     }
 
     public void refreshDataUsers() {
-        readDataIdsInUse(new DB.FirebaseCallback() {
-            @Override
-            public void onCallback(HashMap<String, User> users, HashSet<String> allIds) {
-            }
+        readDataIdsInUse((users, allIds) -> {
         });
     }
 
     public void refreshDataMapState() {
-        readDataMapState(new DB.FirebaseCallbackMapState() {
-            @Override
-            public void onCallbackMapState(MapState mapState) {
-            }
+        readDataMapState(mapState -> {
         });
     }
 
 
     private void readDataMapState(DB.FirebaseCallbackMapState firebaseCallback) {
-        ValueEventListener valueEventListenerUsers = new ValueEventListener() {
+        ValueEventListener valueEventListenerMarkers = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 HashMap<String, MarkerDescriptor> markersDescriptors = new HashMap<>();
@@ -118,7 +120,7 @@ public class DB implements Serializable {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         };
-        mapStateRef.addValueEventListener(valueEventListenerUsers);
+        mapStateRef.addValueEventListener(valueEventListenerMarkers);
     }
 
 
@@ -142,6 +144,7 @@ public class DB implements Serializable {
                         users.put(id, new User(id, email, password, name, phoneNumber, dogName, description));
                     }
                 }
+                setCurrentUser(currentFbUser);
                 firebaseCallback.onCallback(users, allIDs);
             }
 
@@ -217,9 +220,14 @@ public class DB implements Serializable {
         return allIDs.contains(id);
     }
 
-    public void setCurrentUser(String userId) {
-        if (users.containsKey(userId)) {
-            this.currentUser = users.get(userId);
+    public void setCurrentUser(FirebaseUser user) {
+        // todo: connect to the apps user
+        if (user != null) {
+            this.currentFbUser = user;
+            if (users.containsKey(user.getUid())) {
+                this.currentUser = users.get(user.getUid());
+                currentUSerMutableLiveData.setValue(currentUser);
+            }
         }
     }
 
