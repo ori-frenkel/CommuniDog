@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,8 +31,9 @@ public class DB implements Serializable {
     private User currentUser;
     private final MapState mapState;
     private final SharedPreferences sp;
+    private final FirebaseAuth mAuth;
 
-    enum  UserIdAndPasswordValidation {
+    enum UserIdAndPasswordValidation {
         VALID,
         INCORRECT_ID,
         INCORRECT_PASSWORD
@@ -49,9 +51,15 @@ public class DB implements Serializable {
         this.refreshDataUsers();
         this.refreshDataMapState();
         this.mapState = MapState.getInstance();
+        this.mAuth = FirebaseAuth.getInstance();
 
         readLastLocationFromSp();
     }
+
+    public FirebaseAuth getUsersAuthenticator() {
+        return mAuth;
+    }
+
 
     private void readLastLocationFromSp() {
         double lat = sp.getFloat(SP_CURR_LATITUDE, MapState.DEF_LATITUDE);
@@ -177,14 +185,12 @@ public class DB implements Serializable {
 
     public UserIdAndPasswordValidation isValidUserPassword(String userId, String userPassword) {
         if (users.containsKey(userId)) {
-            if(users.get(userId).getPassword().equals(userPassword)){
+            if (users.get(userId).getPassword().equals(userPassword)) {
                 return UserIdAndPasswordValidation.VALID;
-            }
-            else{
+            } else {
                 return UserIdAndPasswordValidation.INCORRECT_PASSWORD;
             }
-        }
-        else{
+        } else {
             return UserIdAndPasswordValidation.INCORRECT_ID;
         }
     }
@@ -194,11 +200,9 @@ public class DB implements Serializable {
         this.usersRef.child(userId).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                if(newUser.getId().equals(currentUser.getId())){
+                if (newUser.getId().equals(currentUser.getId())) {
                     currentUser = newUser;
-                }
-                else
-                {
+                } else {
                     Log.d("sameUserCheck", "not the current user");
                 }
             }
