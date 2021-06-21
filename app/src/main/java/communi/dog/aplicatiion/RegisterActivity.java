@@ -111,7 +111,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     boolean checkButtonRegisterEnable() {
-        return !isEmptyEditText(idEditText) && !isEmptyEditText(emailEditText) && !isEmptyEditText(passwordEditText) && !isEmptyEditText(rePasswordEditText);
+        return !(isEmptyEditText(idEditText) || isEmptyEditText(emailEditText) || isEmptyEditText(passwordEditText) || isEmptyEditText(rePasswordEditText));
     }
 
 
@@ -170,12 +170,6 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                 }
             });
-
-            // todo: delete! old authentication
-//            this.db.addUser(this.idEditText.getText().toString(), this.emailEditText.getText().toString(),
-//                    this.passwordEditText.getText().toString(), this.userNameEditText.getText().toString());
-//            this.db.setCurrentUser(this.idEditText.getText().toString());
-//            startActivity(new Intent(this, MapScreenActivity.class));
         }
     }
 

@@ -76,25 +76,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
 
-            // todo: delete! old login
-//            DB.UserIdAndPasswordValidation userIdAndPasswordValidation = this.db.isValidUserPassword(idEditText.getText().toString(), userPassword.getText().toString());
-//            if (userIdAndPasswordValidation == DB.UserIdAndPasswordValidation.VALID) {
-//                this.db.setCurrentUser(idEditText.getText().toString());
-//                Intent successIntent = new Intent(this, MapScreenActivity.class);
-//                if (activityIntent.hasExtra("map_old_state")) {
-//                    successIntent.putExtra("map_old_state", activityIntent.getSerializableExtra("map_old_state"));
-//                }
-//                startActivity(successIntent);
-//            } else {
-//                String msg = "";
-//                if (userIdAndPasswordValidation == DB.UserIdAndPasswordValidation.INCORRECT_ID) {
-//                    msg = "incorrect id";
-//                } else if (userIdAndPasswordValidation == DB.UserIdAndPasswordValidation.INCORRECT_PASSWORD) {
-//                    msg = "incorrect password";
-//                }
-//                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-//            }
-
             updateLoginButtonState();
         });
 
@@ -145,15 +126,6 @@ public class LoginActivity extends AppCompatActivity {
         builder.setMessage("Close the app?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
-
-    // todo: delete! old login
-//    boolean isId(EditText text) {
-//        String input = text.getText().toString();
-//        String regex = "[0-9]+";
-//        Pattern p = Pattern.compile(regex);
-//        Matcher m = p.matcher(input);
-//        return m.matches() && input.length() == 9;
-//    }
 
     private void updateLoginButtonState() {
         loginButton.setEnabled(!emailEditText.getText().toString().isEmpty() &&
