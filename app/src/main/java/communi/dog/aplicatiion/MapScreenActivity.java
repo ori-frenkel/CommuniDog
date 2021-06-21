@@ -179,6 +179,16 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mMapHandler.updateCenter();
+        outState.putBoolean("is_more_info_open", moreInfoDrawerLayout.isDrawerOpen(GravityCompat.START));
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        boolean openDrawer = savedInstanceState.getBoolean("is_more_info_open", false);
+        if (openDrawer) {
+            moreInfoDrawerLayout.openDrawer(GravityCompat.START);
+        }
     }
 
     private void goToUrl(String s) {
