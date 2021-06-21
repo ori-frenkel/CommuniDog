@@ -166,6 +166,11 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
                 Intent goToEmergencyPage = new Intent(MapScreenActivity.this, Emergency_numbers.class);
                 startActivity(goToEmergencyPage);
                 break;
+            case R.id.about_section:
+                Intent goToAboutPage = new Intent(MapScreenActivity.this, AboutPage.class);
+                startActivity(goToAboutPage);
+                break;
+
         }
         return true;
     }
