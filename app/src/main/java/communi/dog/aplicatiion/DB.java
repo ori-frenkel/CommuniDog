@@ -242,8 +242,10 @@ public class DB implements Serializable {
         return null;
     }
 
-    public void resetUser() {
-        this.currentUser = new User(); // todo: why new User? why not null?
+    public void logoutUser() {
+        mAuth.signOut();
+        this.currentFbUser = null;
+        this.currentUser = new User();
         SharedPreferences.Editor spEditor = sp.edit();
         spEditor.remove(SP_CURR_LATITUDE);
         spEditor.remove(SP_CURR_LONGITUDE);
