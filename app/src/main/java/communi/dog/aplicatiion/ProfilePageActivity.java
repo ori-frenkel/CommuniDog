@@ -75,17 +75,13 @@ public class ProfilePageActivity extends AppCompatActivity {
         btnEditProfile.setOnClickListener(v -> {
             if (isEdit) {
                 btnCancelEdit.setVisibility(View.GONE);
-                // save updated user to DB
-                String userId = currentUser.getId();
-                String password = currentUser.getPassword();
-                String name = currentUser.getUserName();
-
-                // get from user input
-                String email = emailEditText.getText().toString();
-                String phone = phoneEditText.getText().toString();
-                String bio = bioEditText.getText().toString();
-                String dogName = dogNameEditText.getText().toString();
-                this.appDB.updateUser(userId, email, password, name, phone, dogName, bio);
+                this.appDB.updateUser(currentUser.getId(),
+                        emailEditText.getText().toString(),
+                        currentUser.getPassword(),
+                        currentUser.getUserName(),
+                        phoneEditText.getText().toString(),
+                        dogNameEditText.getText().toString(),
+                        bioEditText.getText().toString());
             } else {
                 dogNameBeforeEdit = dogNameEditText.getText().toString();
                 emailBeforeEdit = emailEditText.getText().toString();
