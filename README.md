@@ -47,5 +47,5 @@ Note: to keep our community safe and secure, only users approved by the communit
 ## Main Authors:
 [Lotan Aharoni](https://github.com/lotanaharoni)<br/> [Hadas Aizik](https://github.com/hadasAizik)<br/> [Ido Sagiv](https://github.com/IdoSagiv)<br/>
 ## Contributors 
-[Sagi Dekel](https://github.com/sagi5362), [Adi Apel](https://github.com/adiapel), [Tadassa Tafarra](https://github.com/TtedyT)
+[Sagi Dekel](https://github.com/sagi5362), [Adi Apel](https://github.com/adiapel), [Tadassa Tafarra](https://github.com/TtedyT), [Ori Frenkel](https://github.com/ori-frenkel)
 
