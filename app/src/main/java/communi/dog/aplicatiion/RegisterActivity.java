@@ -52,6 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         registerBtn.setOnClickListener(v -> tryToRegister());
         to_register_btn.setOnClickListener(v ->
+
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
 
         findViewById(R.id.registerConstraintLayout).setOnClickListener(v -> {
