@@ -1,6 +1,8 @@
 package communi.dog.aplicatiion;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +31,18 @@ public class UserApprovalActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
-        db.unapprovedUsersLiveData.observe(this, adapter::setItems);
+        db.unapprovedUsersLiveData.observe(this, users -> {
+            TextView noUsersMsg = findViewById(R.id.noUsersToApproveTextView);
+            adapter.setItems(users);
+            if (users.isEmpty()) {
+                recyclerView.setVisibility(View.GONE);
+                noUsersMsg.setVisibility(View.VISIBLE);
+
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                noUsersMsg.setVisibility(View.GONE);
+            }
+        });
 
         adapter.onApproveCallback = user -> {
             //Initialize confirmation mail
