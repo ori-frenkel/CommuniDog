@@ -5,32 +5,30 @@ import androidx.annotation.NonNull;
 public class User {
     private String id;
     private String email;
-    private String password;
     private String phoneNumber;
     private String userName;
     private String userDogName;
     private String userDescription;
 
-    public User(String id, String email, String password, String userName) {
+    public User(String id, String email, String userName) {
         this.id = id;
         this.email = email;
-        this.password = password;
         this.userName = userName;
         this.userDogName = "";
         this.phoneNumber = "";
         this.userDescription = "";
     }
 
-    public User(String id, String email, String password, String userName, String phoneNumber, String dogName, String userDescription) {
+    public User(String id, String email, String userName, String phoneNumber, String dogName, String userDescription) {
         this.id = id;
         this.email = email;
-        this.password = password;
         this.userName = userName;
         this.userDogName = dogName;
         this.phoneNumber = phoneNumber;
         this.userDescription = userDescription;
     }
 
+    // empty constructor for FireStore
     public User() {
     }
 
@@ -56,10 +54,6 @@ public class User {
     @NonNull
     public String getPhoneNumber() {
         return noNull(phoneNumber);
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getUserDescription() {
@@ -89,10 +83,6 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public void setUserDescription(String userDescription) {

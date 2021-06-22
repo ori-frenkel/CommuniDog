@@ -21,20 +21,18 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <EditText
-        android:id="@+id/input_id_login"
+        android:id="@+id/input_email_login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:layout_marginTop="42dp"
         android:layout_marginEnd="50dp"
-        android:digits="0123456789"
-        android:maxLength="9"
         android:drawableLeft="@drawable/ic_baseline"
         android:drawablePadding="10dp"
         android:ems="10"
-        android:hint="@string/login_id"
+        android:hint="@string/login_email"
         android:importantForAutofill="no"
-        android:inputType="number"
+        android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_logo" />
@@ -50,9 +48,9 @@
         android:hint="@string/login_password"
         android:importantForAutofill="no"
         android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="@+id/input_id_login"
-        app:layout_constraintStart_toStartOf="@+id/input_id_login"
-        app:layout_constraintTop_toBottomOf="@+id/input_id_login" />
+        app:layout_constraintEnd_toEndOf="@+id/input_email_login"
+        app:layout_constraintStart_toStartOf="@+id/input_email_login"
+        app:layout_constraintTop_toBottomOf="@+id/input_email_login" />
 
     <Button
         android:id="@+id/login_button"
@@ -82,6 +80,7 @@
         android:id="@+id/logo_image"
         android:layout_width="184dp"
         android:layout_height="163dp"
+        android:layout_marginTop="20dp"
         android:contentDescription="@string/logo_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

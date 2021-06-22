@@ -1,10 +1,7 @@
 package communi.dog.aplicatiion;
 
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import junit.framework.TestCase;
 
@@ -12,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
@@ -45,7 +41,7 @@ public class LoginActivityTest extends TestCase {
 
         assertFalse(login_button.isEnabled());
 
-        EditText idEditText = loginActivity.findViewById(R.id.input_id_login);
+        EditText idEditText = loginActivity.findViewById(R.id.input_email_login);
         EditText userPassword = loginActivity.findViewById(R.id.user_password);
 
         idEditText.setText("123456789");
@@ -64,7 +60,7 @@ public class LoginActivityTest extends TestCase {
 
         assertFalse(login_button.isEnabled());
 
-        EditText idEditText = loginActivity.findViewById(R.id.input_id_login);
+        EditText idEditText = loginActivity.findViewById(R.id.input_email_login);
         EditText userPassword = loginActivity.findViewById(R.id.user_password);
 
         idEditText.setText("123456789");

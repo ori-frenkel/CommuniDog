@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,62 +22,64 @@ import android.widget.Button;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class LoginActivity extends AppCompatActivity {
 
-    private DB appDB;
-    EditText idEditText;
-    EditText userPassword;
+    private DB db;
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        this.appDB = CommuniDogApp.getInstance().getDb();
+        this.db = CommuniDogApp.getInstance().getDb();
 
-        Intent activityIntent = getIntent();
+        // fiend email and password views
+        emailEditText = findViewById(R.id.input_email_login);
+        passwordEditText = findViewById(R.id.user_password);
 
-        idEditText = findViewById(R.id.input_id_login);
-        userPassword = findViewById(R.id.user_password);
-
+        // register button
         TextView to_register_btn = findViewById(R.id.register_now);
         to_register_btn.setOnClickListener(v -> {
-            Intent newIntent = new Intent(this, RegisterActivity.class);
-            startActivity(newIntent);
+            startActivity(new Intent(this, RegisterActivity.class));
         });
 
+        // close keyboard when click outside editText
         findViewById(R.id.loginConstraintLayout).setOnClickListener(v -> {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            idEditText.requestFocus();
-            imm.hideSoftInputFromWindow(idEditText.getWindowToken(), 0);
-            idEditText.clearFocus();
+            emailEditText.requestFocus();
+            imm.hideSoftInputFromWindow(emailEditText.getWindowToken(), 0);
+            emailEditText.clearFocus();
         });
 
-        findViewById(R.id.login_button).setOnClickListener(v -> { //todo: check
-            DB.UserIdAndPasswordValidation userIdAndPasswordValidation = this.appDB.isValidUserPassword(idEditText.getText().toString(), userPassword.getText().toString());
-            if (userIdAndPasswordValidation== DB.UserIdAndPasswordValidation.VALID) {
-                this.appDB.setCurrentUser(idEditText.getText().toString());
-                Intent successIntent = new Intent(this, MapScreenActivity.class);
-                if (activityIntent.hasExtra("map_old_state")) {
-                    successIntent.putExtra("map_old_state", activityIntent.getSerializableExtra("map_old_state"));
+        // login button
+        loginButton = findViewById(R.id.login_button);
+        loginButton.setOnClickListener(v -> {
+            FirebaseAuth auth = db.getUsersAuthenticator();
+            auth.signInWithEmailAndPassword(emailEditText.getText().toString(),
+                    passwordEditText.getText().toString()).addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d("LoginActivity", "signInWithEmail:success");
+                    FirebaseUser user = auth.getCurrentUser();
+                    db.setCurrentUser(user);
+                    startActivity(new Intent(this, MapScreenActivity.class));
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w("LoginActivity", "signInWithEmail:failure", task.getException());
+                    Toast.makeText(this, "Authentication failed.",
+                            Toast.LENGTH_SHORT).show();
                 }
-                startActivity(successIntent);
-                // todo: Move to other activity?
-            } else {
-                String msg = "";
-                if(userIdAndPasswordValidation== DB.UserIdAndPasswordValidation.INCORRECT_ID){
-                    msg = "incorrect id";
-                }
-                else if(userIdAndPasswordValidation== DB.UserIdAndPasswordValidation.INCORRECT_PASSWORD){
-                    msg = "incorrect password";
-                }
-                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show(); //todo: new Toast?
-            }
+            });
+
+            updateLoginButtonState();
         });
 
-        Button loginButton = findViewById(R.id.login_button);
-        loginButton.setEnabled(false);
-
-        idEditText.addTextChangedListener(new TextWatcher() {
+        emailEditText.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
@@ -84,11 +87,11 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             public void afterTextChanged(Editable s) {
-                loginButton.setEnabled(!isEmpty(idEditText) && !isEmpty(userPassword));
+                updateLoginButtonState();
             }
         });
 
-        userPassword.addTextChangedListener(new TextWatcher() {
+        passwordEditText.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
@@ -96,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             public void afterTextChanged(Editable s) {
-                loginButton.setEnabled(!isEmpty(idEditText) && !isEmpty(userPassword));
+                updateLoginButtonState();
             }
         });
 
@@ -124,48 +127,23 @@ public class LoginActivity extends AppCompatActivity {
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
-
-    void checkDataEntered() {
-        boolean valid_input = true;
-        if (!isId(idEditText)) {
-            idEditText.setError("id is invalid!");
-            valid_input = false;
-        }
-        if (isEmpty(userPassword)) {
-            userPassword.setError("password is missing");
-            valid_input = false;
-        }
-
-        if (valid_input) {
-            // todo: check in DB
-        }
-
-    }
-
-    boolean isId(EditText text) {
-        String input = text.getText().toString();
-        String regex = "[0-9]+";
-        Pattern p = Pattern.compile(regex);
-        Matcher m = p.matcher(input);
-        return m.matches() && input.length() == 9;
-    }
-
-    boolean isEmpty(EditText text) {
-        CharSequence str = text.getText().toString();
-        return TextUtils.isEmpty(str);
+    private void updateLoginButtonState() {
+        loginButton.setEnabled(!emailEditText.getText().toString().isEmpty() &&
+                !passwordEditText.getText().toString().isEmpty());
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("userID", idEditText.getText().toString());
-        outState.putString("userPassword", userPassword.getText().toString());
+        outState.putString("userEmail", emailEditText.getText().toString());
+        outState.putString("userPassword", passwordEditText.getText().toString());
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        idEditText.setText(savedInstanceState.getString("userID"));
-        userPassword.setText(savedInstanceState.getString("userPassword"));
+        emailEditText.setText(savedInstanceState.getString("userEmail"));
+        passwordEditText.setText(savedInstanceState.getString("userPassword"));
+        updateLoginButtonState();
     }
 }
