@@ -26,11 +26,9 @@ public class DB implements Serializable {
     private final static String SP_CURR_LATITUDE = "latitude";
     private final static String SP_CURR_LONGITUDE = "longitude";
 
-    private final DatabaseReference IdsRef;
     private final DatabaseReference usersRef;
     private final DatabaseReference mapStateRef;
     private final HashMap<String, User> users;
-    private final HashSet<String> allIDs;
     private User currentUser;
     private FirebaseUser currentFbUser;
     private final MapState mapState;
@@ -47,10 +45,8 @@ public class DB implements Serializable {
     public DB(Context context) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         this.sp = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
-        this.IdsRef = database.getReference("ID's");
         this.usersRef = database.getReference("Users");
         this.mapStateRef = database.getReference("MapState");
-        this.allIDs = new HashSet<>();
         this.users = new HashMap<>();
         this.currentUser = new User();
         this.refreshDataUsers();
@@ -80,7 +76,7 @@ public class DB implements Serializable {
     }
 
     public void refreshDataUsers() {
-        readDataIdsInUse((users, allIds) -> {
+        readDataIdsInUse((users) -> {
         });
     }
 
@@ -123,14 +119,14 @@ public class DB implements Serializable {
                     if (ds != null) {
                         User user = ds.getValue(User.class);
                         users.put(user.getId(), user);
-                        if(!user.isApproved()){
+                        if (!user.isApproved()) {
                             unapproved.add(user);
                         }
                     }
                 }
                 setCurrentUser(currentFbUser);
                 unapprovedUsersMutableLiveData.setValue(unapproved);
-                firebaseCallback.onCallback(users, allIDs);
+                firebaseCallback.onCallback(users);
             }
 
             @Override
@@ -138,28 +134,10 @@ public class DB implements Serializable {
             }
         };
         usersRef.addValueEventListener(valueEventListenerUsers);
-
-        ValueEventListener valueEventListenerIds = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                allIDs.clear();
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    if (ds != null) {
-                        allIDs.add((String) ds.getValue());
-                    }
-                }
-                firebaseCallback.onCallback(users, allIDs);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        };
-        IdsRef.addValueEventListener(valueEventListenerIds);
     }
 
     private interface FirebaseCallback {
-        void onCallback(HashMap<String, User> users, HashSet<String> allIds);
+        void onCallback(HashMap<String, User> users);
     }
 
     private interface FirebaseCallbackMapState {
@@ -183,12 +161,11 @@ public class DB implements Serializable {
         });
     }
 
-    public boolean idDoubleUser(String id) {
-        return users.containsKey(id);
-    }
-
-    public boolean idExistsInDB(String id) {
-        return allIDs.contains(id);
+    public boolean idUserExists(String email) {
+        for (User user : users.values()) {
+            if (user.getEmail().equals(email)) return true;
+        }
+        return false;
     }
 
     public void setCurrentUser(FirebaseUser user) {
@@ -212,8 +189,8 @@ public class DB implements Serializable {
         return null;
     }
 
-    public void approveUser(String userId){
-        if(users.containsKey(userId)){
+    public void approveUser(String userId) {
+        if (users.containsKey(userId)) {
             User toApprove = users.get(userId);
             toApprove.setApproved(true);
             this.usersRef.child(userId).setValue(toApprove);
