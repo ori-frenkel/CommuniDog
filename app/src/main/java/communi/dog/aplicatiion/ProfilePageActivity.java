@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.KeyListener;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -27,6 +28,7 @@ public class ProfilePageActivity extends AppCompatActivity {
     private ImageView btnCancelEdit;
     private boolean isEdit = false;
     private DB appDB;
+    private KeyListener bioEditTextKeyListener;
 
     private String dogNameBeforeEdit;
     private String emailBeforeEdit;
@@ -46,17 +48,19 @@ public class ProfilePageActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.usersEmailMyProfile);
         phoneEditText = findViewById(R.id.usersPhoneMyProfile);
         bioEditText = findViewById(R.id.profile_bio);
+        bioEditTextKeyListener = bioEditText.getKeyListener();
 
         btnMyMarker = findViewById(R.id.profile_to_my_marker);
         btnBackToMap = findViewById(R.id.backToMapFromProfile);
         btnCancelEdit = findViewById(R.id.btnCancelEditProfile);
+        // getting the profile bio edit text key listener. (this way we will enable and disable the
+        // option to edit it)
         btnEditProfile = findViewById(R.id.btnEditProfile);
 
         dogNameEditText.setEnabled(false);
         emailEditText.setEnabled(false);
         phoneEditText.setEnabled(false);
-        bioEditText.setFocusableInTouchMode(false);
-        bioEditText.clearFocus();
+        bioEditText.setKeyListener(null); // bio edittext won't listen to new keys (cant edit it)
 
         usernameEditText.setText(currentUser.getUserName());
         dogNameEditText.setText(currentUser.getUserDogName());
@@ -147,12 +151,12 @@ public class ProfilePageActivity extends AppCompatActivity {
     private void setViewsByState(boolean isEditState) {
         if (isEditState) {
             btnCancelEdit.setVisibility(View.VISIBLE);
+            bioEditText.setKeyListener(bioEditTextKeyListener); // bio edittext will listen to new keys (enable to edit it)
         } else {
             btnCancelEdit.setVisibility(View.GONE);
+            bioEditText.setKeyListener(null); // bio edittext won't listen to new keys (cant edit it)
         }
         dogNameEditText.setEnabled(isEditState);
-        bioEditText.setFocusableInTouchMode(isEditState);
-        bioEditText.clearFocus();
         emailEditText.setEnabled(isEditState);
         phoneEditText.setEnabled(isEditState);
         int edit_ic = isEditState ? R.drawable.ic_save_profile : R.drawable.ic_edit_profile;
