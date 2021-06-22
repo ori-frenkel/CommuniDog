@@ -23,17 +23,15 @@ public class ProfilePageActivity extends AppCompatActivity {
     private EditText phoneEditText;
     private EditText bioEditText;
     private ImageView btnEditProfile;
-    private TextView btnMyMarker;
-    private ImageButton btnBackToMap;
     private ImageView btnCancelEdit;
     private boolean isEdit = false;
     private DB appDB;
-    private KeyListener bioEditTextKeyListener;
 
     private String dogNameBeforeEdit;
     private String emailBeforeEdit;
     private String phoneBeforeEdit;
     private String bioBeforeEdit;
+    private KeyListener bioEditTextKeyListener;
 
 
     @Override
@@ -50,11 +48,9 @@ public class ProfilePageActivity extends AppCompatActivity {
         bioEditText = findViewById(R.id.profile_bio);
         bioEditTextKeyListener = bioEditText.getKeyListener();
 
-        btnMyMarker = findViewById(R.id.profile_to_my_marker);
-        btnBackToMap = findViewById(R.id.backToMapFromProfile);
+        TextView btnMyMarker = findViewById(R.id.profile_to_my_marker);
+        ImageButton btnBackToMap = findViewById(R.id.backToMapFromProfile);
         btnCancelEdit = findViewById(R.id.btnCancelEditProfile);
-        // getting the profile bio edit text key listener. (this way we will enable and disable the
-        // option to edit it)
         btnEditProfile = findViewById(R.id.btnEditProfile);
 
         dogNameEditText.setEnabled(false);
@@ -85,7 +81,8 @@ public class ProfilePageActivity extends AppCompatActivity {
                         currentUser.getUserName(),
                         phoneEditText.getText().toString(),
                         dogNameEditText.getText().toString(),
-                        bioEditText.getText().toString());
+                        bioEditText.getText().toString(), currentUser.isManager(),
+                        currentUser.isApproved());
             } else {
                 dogNameBeforeEdit = dogNameEditText.getText().toString();
                 emailBeforeEdit = emailEditText.getText().toString();
@@ -151,7 +148,7 @@ public class ProfilePageActivity extends AppCompatActivity {
     private void setViewsByState(boolean isEditState) {
         if (isEditState) {
             btnCancelEdit.setVisibility(View.VISIBLE);
-            bioEditText.setKeyListener(bioEditTextKeyListener); // bio edittext will listen to new keys (enable to edit it)
+            bioEditText.setKeyListener(bioEditTextKeyListener); // bio edittext won't listen to new keys (cant edit it)
         } else {
             btnCancelEdit.setVisibility(View.GONE);
             bioEditText.setKeyListener(null); // bio edittext won't listen to new keys (cant edit it)
@@ -176,12 +173,6 @@ public class ProfilePageActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
-//    private void backToMap() {
-//        Intent backToMapIntent = new Intent(ProfilePageActivity.this, MapScreenActivity.class);
-//        backToMapIntent.putExtra("center_to_my_location", false);
-//        startActivity(backToMapIntent);
-//    }
 
     @Override
     public void onBackPressed() {
