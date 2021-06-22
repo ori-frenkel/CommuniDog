@@ -10,10 +10,10 @@
 
     <!-- screen's logo -->
     <ImageView
-        android:id="@+id/app_logo"
+        android:id="@+id/appLogoInRegister"
         android:layout_width="230dp"
         android:layout_height="112dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="16dp"
         android:contentDescription="@string/logo_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -27,7 +27,7 @@
         android:layout_marginTop="40dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_logo">
+        app:layout_constraintTop_toBottomOf="@+id/appLogoInRegister">
 
         <!-- register fields -->
         <LinearLayout

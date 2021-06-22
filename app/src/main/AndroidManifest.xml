@@ -23,7 +23,7 @@
             android:theme="@style/AppTheme.CustomTheme" />
         <activity android:name=".ProfilePageActivity" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".RequestAccessActivity" />
+        <activity android:name=".WaitForAccessActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
