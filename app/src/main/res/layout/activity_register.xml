@@ -7,11 +7,6 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     tools:context=".RegisterActivity">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp">
 
     <!-- screen's logo -->
     <ImageView
@@ -26,25 +21,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_full" />
 
-    <!-- screen's title -->
-    <TextView
-        android:id="@+id/registerScreenTitleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/register_title"
-        android:textSize="36sp"
-        app:layout_constraintEnd_toEndOf="@+id/app_logo"
-        app:layout_constraintStart_toStartOf="@+id/app_logo"
-        app:layout_constraintTop_toBottomOf="@+id/app_logo" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="40dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registerScreenTitleTextView">
+        app:layout_constraintTop_toBottomOf="@+id/app_logo">
 
         <!-- register fields -->
         <LinearLayout
