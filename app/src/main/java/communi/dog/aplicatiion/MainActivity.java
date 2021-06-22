@@ -19,17 +19,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            DB db = CommuniDogApp.getInstance().getDb();
-            db.setCurrentUser(user);
-            db.currentUSerLiveData.observe(this, user1 -> {
-                startActivity(new Intent(this, MapScreenActivity.class));
-                finish();
-            });
-
-        } else {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-        }
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
+        //todo: need to fix synchronization problems in the remember logged in users
+//        if (user != null) {
+//            DB db = CommuniDogApp.getInstance().getDb();
+//            db.setCurrentUser(user);
+//            db.currentUSerLiveData.observe(this, user1 -> {
+//                startActivity(new Intent(this, MapScreenActivity.class));
+//                finish();
+//            });
+//
+//        } else {
+//            startActivity(new Intent(this, LoginActivity.class));
+//            finish();
+//        }
     }
 }
