@@ -13,25 +13,31 @@
     <string name="from_login_to_register">register now</string>
     <string name="login_button">login</string>
     <string name="login_password">password</string>
-    <string name="login_id">id</string>
+    <string name="login_email">email</string>
     <string name="login_title">Login</string>
 
     <!--    Strings for menu   -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <!--    Strings for Drawer header   -->
+    <string name="drawer_header">Information</string>
+
     <!--    Strings for emergency   -->
-    <string name="not_em_1">random vomiting - keep track if escalating</string>
-    <string name="not_em_2">ear infection - red and warm ears</string>
-    <string name="not_em_3">eye infection - green sections, treat with tea bags</string>
-    <string name="not_em_4">diarrhea - do not give food for 24 hours, than give rice until recovery</string>
-    <string name="not_em_5">limping - do not run and play with other dogs, keep track if escalating</string>
-    <string name="em_1">car accident</string>
-    <string name="em_2">bitten by a dog</string>
-    <string name="em_3">scratched by a cat in the eyes</string>
-    <string name="em_4">unable to stand on his feet, does not respond to his name</string>
-    <string name="em_5">a lost dog</string>
-    <string name="em_6">frequent vomiting - 2 times in an hour for 3 hours</string>
+    <string name="em_title">Emergency</string>
+    <string name="not_em_title">Not an emergency:</string>
+    <string name="not_em_1">Random vomiting - keep track if escalating</string>
+    <string name="not_em_2">Ear infection - red and warm ears</string>
+    <string name="not_em_3">Eye infection - green sections, treat with tea bags</string>
+    <string name="not_em_4">Diarrhea - do not give food for 24 hours, than give rice until recovery</string>
+    <string name="not_em_5">Limping - do not run and play with other dogs, keep track if escalating</string>
+    <string name="em_1">Car accident</string>
+    <string name="em_2">Bitten by a dog</string>
+    <string name="em_3">Scratched by a cat in the eyes</string>
+    <string name="em_4">Unable to stand on his feet, does not respond to his name</string>
+    <string name="em_5">A lost dog</string>
+    <string name="em_6">Frequent vomiting - 2 times in an hour for 3 hours</string>
+    <string name="emergency_call">In case of an emergency call: 08-9408213</string>
 
     <!--    Strings for Add Marker layout-->
     <string name="add_marker_page_title">Add Marker</string>
@@ -52,5 +58,17 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title_activity_energency_numbers_activity">energency_numbers_activity</string>
+    <string name="about_section">About</string>
+    <string name="about_section_text">This app in an open source one.\nYou can look at the source code and contribute in our repo at:\nhttps://github.com/IdoSagiv/CommuniDog</string>
+
+    <!-- Strings for Profile page -->
+    <string name="dog_name_filed">Dog name</string>
+    <string name="username_field">Username</string>
+    <string name="add_bio">Add bio...</string>
+    <string name="my_marker">My marker</string>
+    <string name="phone_number_field">Phone number</string>
+    <string name="email_field">Email address</string>
+
+
 
 </resources>

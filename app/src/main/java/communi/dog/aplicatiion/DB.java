@@ -5,8 +5,11 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,14 +31,14 @@ public class DB implements Serializable {
     private final HashMap<String, User> users;
     private final HashSet<String> allIDs;
     private User currentUser;
+    private FirebaseUser currentFbUser;
     private final MapState mapState;
     private final SharedPreferences sp;
+    private final FirebaseAuth mAuth;
 
-    enum  UserIdAndPasswordValidation {
-        VALID,
-        INCORRECT_ID,
-        INCORRECT_PASSWORD
-    }
+    private final MutableLiveData<User> currentUSerMutableLiveData = new MutableLiveData<>();
+    public final LiveData<User> currentUSerLiveData = currentUSerMutableLiveData;
+
 
     public DB(Context context) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -49,9 +52,15 @@ public class DB implements Serializable {
         this.refreshDataUsers();
         this.refreshDataMapState();
         this.mapState = MapState.getInstance();
+        this.mAuth = FirebaseAuth.getInstance();
 
         readLastLocationFromSp();
     }
+
+    public FirebaseAuth getUsersAuthenticator() {
+        return mAuth;
+    }
+
 
     private void readLastLocationFromSp() {
         double lat = sp.getFloat(SP_CURR_LATITUDE, MapState.DEF_LATITUDE);
@@ -67,39 +76,25 @@ public class DB implements Serializable {
     }
 
     public void refreshDataUsers() {
-        readDataIdsInUse(new DB.FirebaseCallback() {
-            @Override
-            public void onCallback(HashMap<String, User> users, HashSet<String> allIds) {
-            }
+        readDataIdsInUse((users, allIds) -> {
         });
     }
 
     public void refreshDataMapState() {
-        readDataMapState(new DB.FirebaseCallbackMapState() {
-            @Override
-            public void onCallbackMapState(MapState mapState) {
-            }
+        readDataMapState(mapState -> {
         });
     }
 
 
     private void readDataMapState(DB.FirebaseCallbackMapState firebaseCallback) {
-        ValueEventListener valueEventListenerUsers = new ValueEventListener() {
+        ValueEventListener valueEventListenerMarkers = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 HashMap<String, MarkerDescriptor> markersDescriptors = new HashMap<>();
                 for (DataSnapshot ds : snapshot.child("markersDescriptors").getChildren()) {
                     if (ds != null) {
-                        Double latitude = ds.child("latitude").getValue(Double.class);
-                        Double longitude = ds.child("longitude").getValue(Double.class);
-                        String text = ds.child("text").getValue(String.class);
-                        String id = ds.child("id").getValue(String.class);
-                        Boolean isDogSitter = ds.child("dogsitter").getValue(Boolean.class);
-                        Boolean isFood = ds.child("food").getValue(Boolean.class);
-                        Boolean isMedication = ds.child("medication").getValue(Boolean.class);
-                        MarkerDescriptor newMarkerDescriptor =
-                                new MarkerDescriptor(text, latitude, longitude, isDogSitter, isFood, isMedication, id);
-                        markersDescriptors.put(ds.getKey(), newMarkerDescriptor);
+                        MarkerDescriptor marker = ds.getValue(MarkerDescriptor.class);
+                        markersDescriptors.put(ds.getKey(), marker);
                     }
                 }
                 mapState.setMarkersDescriptors(markersDescriptors);
@@ -110,7 +105,7 @@ public class DB implements Serializable {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         };
-        mapStateRef.addValueEventListener(valueEventListenerUsers);
+        mapStateRef.addValueEventListener(valueEventListenerMarkers);
     }
 
 
@@ -121,19 +116,22 @@ public class DB implements Serializable {
                 users.clear();
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     if (ds != null) {
-                        String id = ds.child("id").getValue(String.class);
-                        String password = ds.child("password").getValue(String.class);
-                        String email = ds.child("email").getValue(String.class);
-                        String name = ds.child("userName").getValue(String.class);
-                        String dogName = ds.child("userDogName").getValue(String.class);
-                        dogName = dogName != null ? dogName : "";
-                        String phoneNumber = ds.child("phoneNumber").getValue(String.class);
-                        phoneNumber = phoneNumber != null ? phoneNumber : "";
-                        String description = ds.child("userDescription").getValue(String.class);
-                        description = description != null ? description : "";
-                        users.put(id, new User(id, email, password, name, phoneNumber, dogName, description));
+                        User user = ds.getValue(User.class);
+                        users.put(user.getId(), user);
+//                        String id = ds.child("id").getValue(String.class);
+//                        String password = ds.child("password").getValue(String.class); // todo: delete - no need to save password anymore
+//                        String email = ds.child("email").getValue(String.class);
+//                        String name = ds.child("userName").getValue(String.class);
+//                        String dogName = ds.child("userDogName").getValue(String.class);
+//                        dogName = dogName != null ? dogName : "";
+//                        String phoneNumber = ds.child("phoneNumber").getValue(String.class);
+//                        phoneNumber = phoneNumber != null ? phoneNumber : "";
+//                        String description = ds.child("userDescription").getValue(String.class);
+//                        description = description != null ? description : "";
+//                        users.put(id, new User(id, email, password, name, phoneNumber, dogName, description));
                     }
                 }
+                setCurrentUser(currentFbUser);
                 firebaseCallback.onCallback(users, allIDs);
             }
 
@@ -170,37 +168,18 @@ public class DB implements Serializable {
         void onCallbackMapState(MapState mapState);
     }
 
-    public void addUser(String userId, String userEmail, String userPassword, String userName) {
-        User newUser = new User(userId, userEmail, userPassword, userName);
+    public void addUser(String userId, String userEmail, String userName) {
+        User newUser = new User(userId, userEmail, userName);
         this.usersRef.child(userId).setValue(newUser);
     }
 
-    public UserIdAndPasswordValidation isValidUserPassword(String userId, String userPassword) {
-        if (users.containsKey(userId)) {
-            if(users.get(userId).getPassword().equals(userPassword)){
-                return UserIdAndPasswordValidation.VALID;
-            }
-            else{
-                return UserIdAndPasswordValidation.INCORRECT_PASSWORD;
-            }
-        }
-        else{
-            return UserIdAndPasswordValidation.INCORRECT_ID;
-        }
-    }
-
-    public void updateUser(String userId, String userEmail, String userPassword, String userName, String phoneNumber, String dogName, String userDescription) {
-        User newUser = new User(userId, userEmail, userPassword, userName, phoneNumber, dogName, userDescription);
-        this.usersRef.child(userId).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                if(newUser.getId().equals(currentUser.getId())){
-                    currentUser = newUser;
-                }
-                else
-                {
-                    Log.d("sameUserCheck", "not the current user");
-                }
+    public void updateUser(String userId, String userEmail, String userName, String phoneNumber, String dogName, String userDescription) {
+        User newUser = new User(userId, userEmail, userName, phoneNumber, dogName, userDescription);
+        this.usersRef.child(userId).setValue(newUser).addOnSuccessListener(aVoid -> {
+            if (newUser.getId().equals(currentUser.getId())) {
+                currentUser = newUser;
+            } else {
+                Log.d("sameUserCheck", "not the current user");
             }
         });
     }
@@ -213,9 +192,13 @@ public class DB implements Serializable {
         return allIDs.contains(id);
     }
 
-    public void setCurrentUser(String userId) {
-        if (users.containsKey(userId)) {
-            this.currentUser = users.get(userId);
+    public void setCurrentUser(FirebaseUser user) {
+        if (user != null) {
+            this.currentFbUser = user;
+            if (users.containsKey(user.getUid())) {
+                this.currentUser = users.get(user.getUid());
+                currentUSerMutableLiveData.setValue(currentUser);
+            }
         }
     }
 
@@ -230,8 +213,10 @@ public class DB implements Serializable {
         return null;
     }
 
-    public void resetUser() {
-        this.currentUser = new User(); // todo: why new User? why not null?
+    public void logoutUser() {
+        mAuth.signOut();
+        this.currentFbUser = null;
+        this.currentUser = new User();
         SharedPreferences.Editor spEditor = sp.edit();
         spEditor.remove(SP_CURR_LATITUDE);
         spEditor.remove(SP_CURR_LONGITUDE);

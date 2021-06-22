@@ -18,6 +18,9 @@
         android:theme="@style/Theme.CommuniDog">
         <activity android:name=".NotificationsActivity"></activity>
         <activity android:name=".Emergency_numbers" />
+        <activity
+            android:name=".AboutPage"
+            android:theme="@style/AppTheme.CustomTheme" />
         <activity android:name=".ProfilePageActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".RequestAccessActivity" />

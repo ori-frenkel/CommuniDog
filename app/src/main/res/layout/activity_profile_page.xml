@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_my_profile_small"
             android:drawablePadding="10dp"
-            android:hint="username"
+            android:hint="@string/username_field"
             android:maxLines="1"
             android:textColor="@color/black"
             android:textSize="24sp" />
@@ -50,7 +50,7 @@
             android:background="@null"
             android:drawableStart="@drawable/ic_dog_face"
             android:drawablePadding="10dp"
-            android:hint="dog name"
+            android:hint="@string/dog_name_filed"
             android:textColor="@color/black"
             android:textSize="24sp" />
 
@@ -62,7 +62,8 @@
             android:background="@null"
             android:drawableStart="@drawable/ic_contact_mail"
             android:drawablePadding="10dp"
-            android:hint="Email address"
+            android:hint="@string/email_field"
+            android:inputType="textEmailAddress"
             android:maxLines="1"
             android:textColor="@color/black"
             android:textSize="24sp" />
@@ -75,7 +76,10 @@
             android:background="@null"
             android:drawableStart="@drawable/ic_phone"
             android:drawablePadding="10dp"
-            android:hint="Phone number"
+            android:digits="0123456789"
+            android:maxLength="10"
+            android:inputType="number"
+            android:hint="@string/phone_number_field"
             android:maxLines="1"
             android:textColor="@color/black"
             android:textSize="24sp" />
@@ -86,7 +90,7 @@
             android:layout_height="104dp"
             android:layout_marginTop="8dp"
             android:background="@null"
-            android:hint="add bio..."
+            android:hint="@string/add_bio"
             android:maxLines="3"
             android:textColor="@color/black"
             android:textSize="18sp" />
@@ -111,7 +115,7 @@
         android:layout_height="28dp"
         android:layout_marginBottom="56dp"
         android:background="@color/white"
-        android:text="my marker"
+        android:text="@string/my_marker"
         android:textAlignment="center"
         android:textSize="18sp"
         android:textStyle="bold"

@@ -1,6 +1,5 @@
 package communi.dog.aplicatiion;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -9,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -16,67 +16,53 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.regex.*;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText id;
-    EditText emailAddress;
-    EditText pass1;
-    EditText pass2;
-    EditText userName;
-    EditText accessCode;
-    Button register;
+    EditText idEditText;
+    EditText emailEditText;
+    EditText passwordEditText;
+    EditText rePasswordEditText;
+    EditText userNameEditText;
+    Button registerBtn;
     TextView to_register_btn;
-    private DB appDB;
+    private DB db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-//        id = findViewById(R.id.input_id_register);
-        accessCode = findViewById(R.id.enterAccessCode);
-        emailAddress = findViewById(R.id.input_email_register);
-        pass1 = findViewById(R.id.input_pass_reg);
-        pass2 = findViewById(R.id.input_repass_reg);
-        register = findViewById(R.id.register_bt);
-
+        idEditText = findViewById(R.id.input_id_register);
+        emailEditText = findViewById(R.id.input_email_register);
+        passwordEditText = findViewById(R.id.input_pass_reg);
+        rePasswordEditText = findViewById(R.id.input_repass_reg);
+        registerBtn = findViewById(R.id.register_bt);
         to_register_btn = findViewById(R.id.back_to_login);
-        userName = findViewById(R.id.input_user_name_register);
+        userNameEditText = findViewById(R.id.input_user_name_register);
 
-        register.setEnabled(false);
+        registerBtn.setEnabled(false);
 
-        this.appDB = CommuniDogApp.getInstance().getDb();
-        this.appDB.refreshDataUsers();
+        this.db = CommuniDogApp.getInstance().getDb();
+        this.db.refreshDataUsers();
 
-
-
-        register.setOnClickListener(v -> checkDataEntered());
+        registerBtn.setOnClickListener(v -> tryToRegister());
         to_register_btn.setOnClickListener(v ->
 
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
 
         findViewById(R.id.registerConstraintLayout).setOnClickListener(v -> {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            id.requestFocus();
-            imm.hideSoftInputFromWindow(id.getWindowToken(), 0);
-            id.clearFocus();
+            idEditText.requestFocus();
+            imm.hideSoftInputFromWindow(idEditText.getWindowToken(), 0);
+            idEditText.clearFocus();
         });
 
-//        id.addTextChangedListener(new TextWatcher() {
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//            }
-//
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//            }
-//
-//            public void afterTextChanged(Editable s) {
-//                register.setEnabled(checkButtonRegisterEnable());
-//            }
-//        });
-
-        emailAddress.addTextChangedListener(new TextWatcher() {
+        idEditText.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
@@ -84,11 +70,11 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             public void afterTextChanged(Editable s) {
-                register.setEnabled(checkButtonRegisterEnable());
+                registerBtn.setEnabled(checkButtonRegisterEnable());
             }
         });
 
-        pass1.addTextChangedListener(new TextWatcher() {
+        emailEditText.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
@@ -96,11 +82,11 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             public void afterTextChanged(Editable s) {
-                register.setEnabled(checkButtonRegisterEnable());
+                registerBtn.setEnabled(checkButtonRegisterEnable());
             }
         });
 
-        pass2.addTextChangedListener(new TextWatcher() {
+        passwordEditText.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
@@ -108,33 +94,44 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             public void afterTextChanged(Editable s) {
-                register.setEnabled(checkButtonRegisterEnable());
+                registerBtn.setEnabled(checkButtonRegisterEnable());
+            }
+        });
+
+        rePasswordEditText.addTextChangedListener(new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            public void afterTextChanged(Editable s) {
+                registerBtn.setEnabled(checkButtonRegisterEnable());
             }
         });
     }
 
     boolean checkButtonRegisterEnable() {
-        return !isEmpty(id) && !isEmpty(emailAddress) && !isEmpty(pass1) && !isEmpty(pass2);
+        return !(isEmptyEditText(idEditText) || isEmptyEditText(emailEditText) || isEmptyEditText(passwordEditText) || isEmptyEditText(rePasswordEditText));
     }
 
 
-    void checkDataEntered() {
+    void tryToRegister() {
         boolean valid_input = true;
-        boolean id_known = true;
-        if (!isId(id)) {
-            id.setError("id is invalid!");
+        if (!isId(idEditText)) {
+            idEditText.setError("invalid id");
             valid_input = false;
         }
-        if (!isEmail(emailAddress)) {
-            emailAddress.setError("email is not valid!");
+        if (!isEmail(emailEditText)) {
+            emailEditText.setError("invalid email");
             valid_input = false;
         }
-        if (isEmpty(pass1)) {
-            pass1.setError("password is required!");
+        if (!isValidPassword(passwordEditText.getText().toString())) {
+            passwordEditText.setError("password should has least 6 characters");
             valid_input = false;
         } else {
-            if (!pass1.getText().toString().equals(pass2.getText().toString())) {
-                pass2.setError("does not match");
+            if (!passwordEditText.getText().toString().equals(rePasswordEditText.getText().toString())) {
+                rePasswordEditText.setError("does not match");
                 valid_input = false;
             }
         }
@@ -142,23 +139,43 @@ public class RegisterActivity extends AppCompatActivity {
         if (!valid_input) return;
 
         // DB validation
-        if (!this.appDB.idExistsInDB(id.getText().toString())) {
-            Toast.makeText(this, "id is unknown", Toast.LENGTH_SHORT).show();
-            valid_input = false;
+        if (!this.db.idExistsInDB(idEditText.getText().toString())) {
+//            Toast.makeText(this, "id is unknown", Toast.LENGTH_SHORT).show();
+//            valid_input = false;
         } else {
-            if (this.appDB.idDoubleUser(id.getText().toString())) {
+            if (this.db.idDoubleUser(idEditText.getText().toString())) {
                 Toast.makeText(this, "id is already register", Toast.LENGTH_SHORT).show();
                 valid_input = false;
             }
         }
 
         if (valid_input) {
-            this.appDB.addUser(this.id.getText().toString(), this.emailAddress.getText().toString(),
-                    this.pass1.getText().toString(), this.userName.getText().toString());
-            this.appDB.setCurrentUser(this.id.getText().toString());
-            Intent successIntent = new Intent(this, MapScreenActivity.class);
-            startActivity(successIntent);
+            // fireBase authentication
+            FirebaseAuth auth = db.getUsersAuthenticator();
+            auth.createUserWithEmailAndPassword(emailEditText.getText().toString(),
+                    passwordEditText.getText().toString()).addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    Log.d("RegisterActivity", "createUserWithEmail:success");
+
+                    // add user
+                    FirebaseUser user = auth.getCurrentUser();
+                    db.addUser(user.getUid(), this.emailEditText.getText().toString(),
+                            this.userNameEditText.getText().toString());
+                    db.setCurrentUser(user);
+
+                    // update UI
+                    startActivity(new Intent(this, MapScreenActivity.class));
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w("RegisterActivity", "createUserWithEmail:failure", task.getException());
+                    Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
+    }
+
+    private boolean isValidPassword(String pass) {
+        return pass.length() >= 6;
     }
 
     boolean isId(EditText text) {
@@ -174,42 +191,8 @@ public class RegisterActivity extends AppCompatActivity {
         return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
-    boolean isEmpty(EditText text) {
+    boolean isEmptyEditText(EditText text) {
         return text.getText().toString().isEmpty();
     }
 
-    /*
-    private boolean idDoubleUser(EditText id) {
-        // todo: is there a better way to check that? do we really need to hold all id's in memory? why not a simple DB query??
-        //  also, why don't we have a class for all the db queries? e.g. getPassword(id), isRegistered(id) etc.
-        return allInUseIDs.contains(id.getText().toString());
-    }
-
-     */
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // as part of fix for issue 19 - no longer needed
-        // because every time we enter this screen we take the data from firebase
-
-//        outState.putString("userID", id.getText().toString());
-//        outState.putString("userEmail", emailAddress.getText().toString());
-//        outState.putString("userPass1", pass1.getText().toString());
-//        outState.putString("userPass2", pass2.getText().toString());
-//        outState.putString("userName", userName.getText().toString());
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        // as part of fix for issue 19 - no longer needed
-        // because every time we enter this screen we take the data from firebase
-
-//        id.setText(savedInstanceState.getString("userID"));
-//        emailAddress.setText(savedInstanceState.getString("userEmail"));
-//        pass1.setText(savedInstanceState.getString("userPass1"));
-//        pass2.setText(savedInstanceState.getString("userPass2"));
-//        userName.setText(savedInstanceState.getString("userName"));
-    }
 }
