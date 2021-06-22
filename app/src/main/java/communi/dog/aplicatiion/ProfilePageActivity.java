@@ -77,7 +77,6 @@ public class ProfilePageActivity extends AppCompatActivity {
                 btnCancelEdit.setVisibility(View.GONE);
                 this.appDB.updateUser(currentUser.getId(),
                         emailEditText.getText().toString(),
-                        currentUser.getPassword(),
                         currentUser.getUserName(),
                         phoneEditText.getText().toString(),
                         dogNameEditText.getText().toString(),

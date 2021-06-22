@@ -159,7 +159,7 @@ public class RegisterActivity extends AppCompatActivity {
                     // add user
                     FirebaseUser user = auth.getCurrentUser();
                     db.addUser(user.getUid(), this.emailEditText.getText().toString(),
-                            this.passwordEditText.getText().toString(), this.userNameEditText.getText().toString());
+                            this.userNameEditText.getText().toString());
                     db.setCurrentUser(user);
 
                     // update UI
