@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -88,6 +89,15 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
 
         MapState.getInstance().markersDescriptorsLD.observe(this, markers -> {
             mMapHandler.showMarkers(markers);
+        });
+
+        CommuniDogApp.getInstance().getDb().currentUSerLiveData.observe(this, user -> {
+            ImageView btnNotification = findViewById(R.id.buttonNotificationActivity);
+            if (user.getIsManager()) {
+                btnNotification.setVisibility(View.VISIBLE);
+            } else {
+                btnNotification.setVisibility(View.GONE);
+            }
         });
     }
 

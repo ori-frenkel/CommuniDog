@@ -3,6 +3,7 @@ package communi.dog.aplicatiion;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -102,8 +103,17 @@ public class LoginActivity extends AppCompatActivity {
                 updateLoginButtonState();
             }
         });
+    }
 
-
+    public void updateUI(){
+        db.currentUSerLiveData.observe(this, user -> {
+            if(user.getIsApproved()){
+                startActivity(new Intent(this, MapScreenActivity.class));
+            }else{
+                startActivity(new Intent(this, RequestAccessActivity.class));
+            }
+            finish();
+        });
     }
 
     @Override
