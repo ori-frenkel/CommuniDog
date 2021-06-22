@@ -139,8 +139,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         // DB validation
         if (!this.db.idExistsInDB(idEditText.getText().toString())) {
-            Toast.makeText(this, "id is unknown", Toast.LENGTH_SHORT).show();
-            valid_input = false;
+//            Toast.makeText(this, "id is unknown", Toast.LENGTH_SHORT).show();
+//            valid_input = false;
         } else {
             if (this.db.idDoubleUser(idEditText.getText().toString())) {
                 Toast.makeText(this, "id is already register", Toast.LENGTH_SHORT).show();
