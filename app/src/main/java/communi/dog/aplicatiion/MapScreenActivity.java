@@ -144,10 +144,6 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE: {
-//                    Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
-//                    intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    intent1.putExtra("LOGOUT", true);
-//                    startActivity(intent1);
                     finish();
                     break;
                 }
@@ -157,8 +153,10 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Close the app?").setPositiveButton("Yes", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener).show();
+        builder.setMessage("Close the app?")
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener)
+                .show();
     }
 
     @Override
@@ -174,12 +172,10 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
                 goToUrl("https://drive.google.com/drive/u/1/folders/1tnP3SC9jdjHN-3QWdvIyb17k71k93hdF");
                 break;
             case R.id.emergency_num:
-                Intent goToEmergencyPage = new Intent(MapScreenActivity.this, Emergency_numbers.class);
-                startActivity(goToEmergencyPage);
+                startActivity(new Intent(MapScreenActivity.this, Emergency_numbers.class));
                 break;
             case R.id.about_section:
-                Intent goToAboutPage = new Intent(MapScreenActivity.this, AboutPage.class);
-                startActivity(goToAboutPage);
+                startActivity(new Intent(MapScreenActivity.this, AboutPage.class));
                 break;
 
         }
@@ -209,7 +205,6 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
 
 
     public void notificationsActivity(View view) {
-        Intent intent = new Intent(getApplicationContext(), UserApprovalActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(getApplicationContext(), UserApprovalActivity.class));
     }
 }

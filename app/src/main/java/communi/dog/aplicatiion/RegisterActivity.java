@@ -19,15 +19,13 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.regex.*;
-
 public class RegisterActivity extends AppCompatActivity {
     private EditText emailEditText;
     private EditText passwordEditText;
     private EditText rePasswordEditText;
     private EditText userNameEditText;
     private Button registerBtn;
-    private TextView to_register_btn;
+    private TextView to_login_btn;
     private DB db;
 
     @Override
@@ -39,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.input_pass_reg);
         rePasswordEditText = findViewById(R.id.input_repass_reg);
         registerBtn = findViewById(R.id.register_bt);
-        to_register_btn = findViewById(R.id.back_to_login);
+        to_login_btn = findViewById(R.id.back_to_login);
         userNameEditText = findViewById(R.id.input_user_name_register);
 
         registerBtn.setEnabled(false);
@@ -48,8 +46,8 @@ public class RegisterActivity extends AppCompatActivity {
         this.db.refreshDataUsers();
 
         registerBtn.setOnClickListener(v -> tryToRegister());
-        to_register_btn.setOnClickListener(v ->
-                startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
+        to_login_btn.setOnClickListener(v ->
+                startActivity(new Intent(this, LoginActivity.class)));
 
         findViewById(R.id.registerConstraintLayout).setOnClickListener(v -> {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -140,6 +138,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                     // update UI
                     startActivity(new Intent(this, WaitForAccessActivity.class));
+                    finish();
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("RegisterActivity", "createUserWithEmail:failure", task.getException());

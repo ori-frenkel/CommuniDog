@@ -172,12 +172,6 @@ public class ProfilePageActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-//    private void backToMap() {
-//        Intent backToMapIntent = new Intent(ProfilePageActivity.this, MapScreenActivity.class);
-//        backToMapIntent.putExtra("center_to_my_location", false);
-//        startActivity(backToMapIntent);
-//    }
-
     @Override
     public void onBackPressed() {
         if (isEdit) {

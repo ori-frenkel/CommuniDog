@@ -42,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         TextView to_register_btn = findViewById(R.id.register_now);
         to_register_btn.setOnClickListener(v -> {
             startActivity(new Intent(this, RegisterActivity.class));
+            finish();
         });
 
         // close keyboard when click outside editText
@@ -100,11 +101,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void updateUI(){
+    public void updateUI() {
         db.currentUserLiveData.observe(this, user -> {
-            if(user.isApproved()){
+            if (user.isApproved()) {
                 startActivity(new Intent(this, MapScreenActivity.class));
-            }else{
+            } else {
                 startActivity(new Intent(this, WaitForAccessActivity.class));
             }
             finish();
@@ -116,10 +117,7 @@ public class LoginActivity extends AppCompatActivity {
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE: {
-                    Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
-                    intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent1.putExtra("LOGOUT", true);
-                    startActivity(intent1);
+                    finish();
                     break;
                 }
                 case DialogInterface.BUTTON_NEGATIVE:
