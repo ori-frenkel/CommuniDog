@@ -125,7 +125,7 @@ public class RegisterActivity extends AppCompatActivity {
             emailEditText.setError("invalid email");
             valid_input = false;
         }
-        if (isValidPassword(passwordEditText.getText().toString())) {
+        if (!isValidPassword(passwordEditText.getText().toString())) {
             passwordEditText.setError("password should has least 6 characters");
             valid_input = false;
         } else {
