@@ -10,7 +10,6 @@ public class MarkerDescriptor implements Serializable {
     private double longitude;
     private String text;
     private String id; //final
-    private String userId; //final
     private boolean isDogsitter;
     private boolean isFood;
     private boolean isMedication;
@@ -19,14 +18,13 @@ public class MarkerDescriptor implements Serializable {
         this.latitude = latitude;
         this.longitude = longitude;
         this.text = text;
-        this.userId = creatorUserId;
         this.id = generateMarkerId(creatorUserId);
         this.isDogsitter = isDogsitter;
         this.isFood = isFood;
         this.isMedication = isMedication;
     }
 
-    // empty constructor for FireBase
+    // empty constructor for FireBase redundant
     public MarkerDescriptor() {
     }
 
