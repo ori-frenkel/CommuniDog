@@ -90,7 +90,7 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
             mMapHandler.showMarkers(markers);
         });
 
-        CommuniDogApp.getInstance().getDb().currentUSerLiveData.observe(this, user -> {
+        CommuniDogApp.getInstance().getDb().currentUserLiveData.observe(this, user -> {
             ImageView btnNotification = findViewById(R.id.buttonNotificationActivity);
             if (user.isManager()) {
                 btnNotification.setVisibility(View.VISIBLE);
@@ -209,7 +209,7 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
 
 
     public void notificationsActivity(View view) {
-        Intent intent = new Intent(getApplicationContext(), NotificationsActivity.class);
+        Intent intent = new Intent(getApplicationContext(), UserApprovalActivity.class);
         startActivity(intent);
     }
 }

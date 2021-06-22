@@ -37,8 +37,8 @@ public class DB implements Serializable {
     private final SharedPreferences sp;
     private final FirebaseAuth mAuth;
 
-    private final MutableLiveData<User> currentUSerMutableLiveData = new MutableLiveData<>();
-    public final LiveData<User> currentUSerLiveData = currentUSerMutableLiveData;
+    private final MutableLiveData<User> currentUserMutableLiveData = new MutableLiveData<>();
+    public final LiveData<User> currentUserLiveData = currentUserMutableLiveData;
 
     private final MutableLiveData<ArrayList<User>> unapprovedUsersMutableLiveData = new MutableLiveData<>();
     public final LiveData<ArrayList<User>> unapprovedUsersLiveData = unapprovedUsersMutableLiveData;
@@ -196,7 +196,7 @@ public class DB implements Serializable {
             this.currentFbUser = user;
             if (users.containsKey(user.getUid())) {
                 this.currentUser = users.get(user.getUid());
-                currentUSerMutableLiveData.setValue(currentUser);
+                currentUserMutableLiveData.setValue(currentUser);
             }
         }
     }
@@ -210,6 +210,14 @@ public class DB implements Serializable {
             return users.get(userId);
         }
         return null;
+    }
+
+    public void approveUser(String userId){
+        if(users.containsKey(userId)){
+            User toApprove = users.get(userId);
+            toApprove.setApproved(true);
+            this.usersRef.child(userId).setValue(toApprove);
+        }
     }
 
     public void logoutUser() {

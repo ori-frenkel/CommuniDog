@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void updateUI(){
-        db.currentUSerLiveData.observe(this, user -> {
+        db.currentUserLiveData.observe(this, user -> {
             if(user.isApproved()){
                 startActivity(new Intent(this, MapScreenActivity.class));
             }else{
