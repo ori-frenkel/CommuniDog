@@ -77,7 +77,7 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
         ImageView btnMyProfile = findViewById(R.id.buttonMyProfileInMapActivity);
         btnMyProfile.setOnClickListener(v -> {
             mMapHandler.updateCenter();
-            startActivity(new Intent(this, WaitForAccessActivity.class));
+            startActivity(new Intent(this, ProfilePageActivity.class));
         });
 
         ImageView btnMoreInfo = findViewById(R.id.buttonMoreInfoMapActivity);
