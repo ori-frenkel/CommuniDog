@@ -55,7 +55,8 @@ public class ProfilePageActivity extends AppCompatActivity {
         dogNameEditText.setEnabled(false);
         emailEditText.setEnabled(false);
         phoneEditText.setEnabled(false);
-        bioEditText.setEnabled(false);
+        bioEditText.setFocusableInTouchMode(false);
+        bioEditText.clearFocus();
 
         usernameEditText.setText(currentUser.getUserName());
         dogNameEditText.setText(currentUser.getUserDogName());
@@ -150,7 +151,8 @@ public class ProfilePageActivity extends AppCompatActivity {
             btnCancelEdit.setVisibility(View.GONE);
         }
         dogNameEditText.setEnabled(isEditState);
-        bioEditText.setEnabled(isEditState);
+        bioEditText.setFocusableInTouchMode(isEditState);
+        bioEditText.clearFocus();
         emailEditText.setEnabled(isEditState);
         phoneEditText.setEnabled(isEditState);
         int edit_ic = isEditState ? R.drawable.ic_save_profile : R.drawable.ic_edit_profile;
