@@ -80,7 +80,8 @@ public class ProfilePageActivity extends AppCompatActivity {
                         currentUser.getUserName(),
                         phoneEditText.getText().toString(),
                         dogNameEditText.getText().toString(),
-                        bioEditText.getText().toString());
+                        bioEditText.getText().toString(), currentUser.getIsManager(),
+                        currentUser.getIsApproved());
             } else {
                 dogNameBeforeEdit = dogNameEditText.getText().toString();
                 emailBeforeEdit = emailEditText.getText().toString();

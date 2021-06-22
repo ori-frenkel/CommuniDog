@@ -9,6 +9,8 @@ public class User {
     private String userName;
     private String userDogName;
     private String userDescription;
+    private boolean isManager;
+    private boolean isApproved;
 
     public User(String id, String email, String userName) {
         this.id = id;
@@ -17,15 +19,20 @@ public class User {
         this.userDogName = "";
         this.phoneNumber = "";
         this.userDescription = "";
+        this.isManager = false;
+        this.isApproved = false;
     }
 
-    public User(String id, String email, String userName, String phoneNumber, String dogName, String userDescription) {
+    public User(String id, String email, String userName, String phoneNumber, String dogName, String userDescription,
+                boolean isManager, boolean isApproved) {
         this.id = id;
         this.email = email;
         this.userName = userName;
         this.userDogName = dogName;
         this.phoneNumber = phoneNumber;
         this.userDescription = userDescription;
+        this.isManager = isManager;
+        this.isApproved = isApproved;
     }
 
     // empty constructor for FireStore
@@ -83,6 +90,22 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public boolean getIsManager() {
+        return isManager;
+    }
+
+    public boolean getIsApproved() {
+        return isApproved;
+    }
+
+    public void setManager(boolean manager) {
+        isManager = manager;
+    }
+
+    public void setApproved(boolean approved) {
+        isApproved = approved;
     }
 
     public void setUserDescription(String userDescription) {

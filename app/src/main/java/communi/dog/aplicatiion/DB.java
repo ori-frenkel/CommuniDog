@@ -173,8 +173,9 @@ public class DB implements Serializable {
         this.usersRef.child(userId).setValue(newUser);
     }
 
-    public void updateUser(String userId, String userEmail, String userName, String phoneNumber, String dogName, String userDescription) {
-        User newUser = new User(userId, userEmail, userName, phoneNumber, dogName, userDescription);
+    public void updateUser(String userId, String userEmail, String userName, String phoneNumber, String dogName, String userDescription,
+                           boolean isManager, boolean isApproved) {
+        User newUser = new User(userId, userEmail, userName, phoneNumber, dogName, userDescription, isManager, isApproved);
         this.usersRef.child(userId).setValue(newUser).addOnSuccessListener(aVoid -> {
             if (newUser.getId().equals(currentUser.getId())) {
                 currentUser = newUser;
