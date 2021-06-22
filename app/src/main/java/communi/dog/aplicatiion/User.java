@@ -92,11 +92,11 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public boolean getIsManager() {
+    public boolean isManager() {
         return isManager;
     }
 
-    public boolean getIsApproved() {
+    public boolean isApproved() {
         return isApproved;
     }
 

@@ -10,7 +10,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -78,7 +77,7 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
         ImageView btnMyProfile = findViewById(R.id.buttonMyProfileInMapActivity);
         btnMyProfile.setOnClickListener(v -> {
             mMapHandler.updateCenter();
-            startActivity(new Intent(this, RequestAccessActivity.class));
+            startActivity(new Intent(this, WaitForAccessActivity.class));
         });
 
         ImageView btnMoreInfo = findViewById(R.id.buttonMoreInfoMapActivity);
@@ -91,9 +90,9 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
             mMapHandler.showMarkers(markers);
         });
 
-        CommuniDogApp.getInstance().getDb().currentUSerLiveData.observe(this, user -> {
+        CommuniDogApp.getInstance().getDb().currentUserLiveData.observe(this, user -> {
             ImageView btnNotification = findViewById(R.id.buttonNotificationActivity);
-            if (user.getIsManager()) {
+            if (user.isManager()) {
                 btnNotification.setVisibility(View.VISIBLE);
             } else {
                 btnNotification.setVisibility(View.GONE);
@@ -145,10 +144,11 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE: {
-                    Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
-                    intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent1.putExtra("LOGOUT", true);
-                    startActivity(intent1);
+//                    Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
+//                    intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    intent1.putExtra("LOGOUT", true);
+//                    startActivity(intent1);
+                    finish();
                     break;
                 }
                 case DialogInterface.BUTTON_NEGATIVE:
@@ -209,7 +209,7 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
 
 
     public void notificationsActivity(View view) {
-        Intent intent = new Intent(getApplicationContext(), NotificationsActivity.class);
+        Intent intent = new Intent(getApplicationContext(), UserApprovalActivity.class);
         startActivity(intent);
     }
 }

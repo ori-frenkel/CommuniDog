@@ -17,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -25,28 +26,27 @@ public class DB implements Serializable {
     private final static String SP_CURR_LATITUDE = "latitude";
     private final static String SP_CURR_LONGITUDE = "longitude";
 
-    private final DatabaseReference IdsRef;
     private final DatabaseReference usersRef;
     private final DatabaseReference mapStateRef;
     private final HashMap<String, User> users;
-    private final HashSet<String> allIDs;
     private User currentUser;
     private FirebaseUser currentFbUser;
     private final MapState mapState;
     private final SharedPreferences sp;
     private final FirebaseAuth mAuth;
 
-    private final MutableLiveData<User> currentUSerMutableLiveData = new MutableLiveData<>();
-    public final LiveData<User> currentUSerLiveData = currentUSerMutableLiveData;
+    private final MutableLiveData<User> currentUserMutableLiveData = new MutableLiveData<>();
+    public final LiveData<User> currentUserLiveData = currentUserMutableLiveData;
+
+    private final MutableLiveData<ArrayList<User>> unapprovedUsersMutableLiveData = new MutableLiveData<>();
+    public final LiveData<ArrayList<User>> unapprovedUsersLiveData = unapprovedUsersMutableLiveData;
 
 
     public DB(Context context) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         this.sp = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
-        this.IdsRef = database.getReference("ID's");
         this.usersRef = database.getReference("Users");
         this.mapStateRef = database.getReference("MapState");
-        this.allIDs = new HashSet<>();
         this.users = new HashMap<>();
         this.currentUser = new User();
         this.refreshDataUsers();
@@ -76,7 +76,7 @@ public class DB implements Serializable {
     }
 
     public void refreshDataUsers() {
-        readDataIdsInUse((users, allIds) -> {
+        readDataIdsInUse((users) -> {
         });
     }
 
@@ -114,25 +114,19 @@ public class DB implements Serializable {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 users.clear();
+                ArrayList<User> unapproved = new ArrayList<>();
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     if (ds != null) {
                         User user = ds.getValue(User.class);
                         users.put(user.getId(), user);
-//                        String id = ds.child("id").getValue(String.class);
-//                        String password = ds.child("password").getValue(String.class); // todo: delete - no need to save password anymore
-//                        String email = ds.child("email").getValue(String.class);
-//                        String name = ds.child("userName").getValue(String.class);
-//                        String dogName = ds.child("userDogName").getValue(String.class);
-//                        dogName = dogName != null ? dogName : "";
-//                        String phoneNumber = ds.child("phoneNumber").getValue(String.class);
-//                        phoneNumber = phoneNumber != null ? phoneNumber : "";
-//                        String description = ds.child("userDescription").getValue(String.class);
-//                        description = description != null ? description : "";
-//                        users.put(id, new User(id, email, password, name, phoneNumber, dogName, description));
+                        if (!user.isApproved()) {
+                            unapproved.add(user);
+                        }
                     }
                 }
                 setCurrentUser(currentFbUser);
-                firebaseCallback.onCallback(users, allIDs);
+                unapprovedUsersMutableLiveData.setValue(unapproved);
+                firebaseCallback.onCallback(users);
             }
 
             @Override
@@ -140,28 +134,10 @@ public class DB implements Serializable {
             }
         };
         usersRef.addValueEventListener(valueEventListenerUsers);
-
-        ValueEventListener valueEventListenerIds = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                allIDs.clear();
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    if (ds != null) {
-                        allIDs.add((String) ds.getValue());
-                    }
-                }
-                firebaseCallback.onCallback(users, allIDs);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        };
-        IdsRef.addValueEventListener(valueEventListenerIds);
     }
 
     private interface FirebaseCallback {
-        void onCallback(HashMap<String, User> users, HashSet<String> allIds);
+        void onCallback(HashMap<String, User> users);
     }
 
     private interface FirebaseCallbackMapState {
@@ -185,12 +161,11 @@ public class DB implements Serializable {
         });
     }
 
-    public boolean idDoubleUser(String id) {
-        return users.containsKey(id);
-    }
-
-    public boolean idExistsInDB(String id) {
-        return allIDs.contains(id);
+    public boolean idUserExists(String email) {
+        for (User user : users.values()) {
+            if (user.getEmail().equals(email)) return true;
+        }
+        return false;
     }
 
     public void setCurrentUser(FirebaseUser user) {
@@ -198,7 +173,7 @@ public class DB implements Serializable {
             this.currentFbUser = user;
             if (users.containsKey(user.getUid())) {
                 this.currentUser = users.get(user.getUid());
-                currentUSerMutableLiveData.setValue(currentUser);
+                currentUserMutableLiveData.setValue(currentUser);
             }
         }
     }
@@ -212,6 +187,14 @@ public class DB implements Serializable {
             return users.get(userId);
         }
         return null;
+    }
+
+    public void approveUser(String userId) {
+        if (users.containsKey(userId)) {
+            User toApprove = users.get(userId);
+            toApprove.setApproved(true);
+            this.usersRef.child(userId).setValue(toApprove);
+        }
     }
 
     public void logoutUser() {

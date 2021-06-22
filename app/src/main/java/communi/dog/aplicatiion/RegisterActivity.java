@@ -22,14 +22,12 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.regex.*;
 
 public class RegisterActivity extends AppCompatActivity {
-
-    EditText idEditText;
-    EditText emailEditText;
-    EditText passwordEditText;
-    EditText rePasswordEditText;
-    EditText userNameEditText;
-    Button registerBtn;
-    TextView to_register_btn;
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private EditText rePasswordEditText;
+    private EditText userNameEditText;
+    private Button registerBtn;
+    private TextView to_register_btn;
     private DB db;
 
     @Override
@@ -37,7 +35,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        idEditText = findViewById(R.id.input_id_register);
         emailEditText = findViewById(R.id.input_email_register);
         passwordEditText = findViewById(R.id.input_pass_reg);
         rePasswordEditText = findViewById(R.id.input_repass_reg);
@@ -52,26 +49,13 @@ public class RegisterActivity extends AppCompatActivity {
 
         registerBtn.setOnClickListener(v -> tryToRegister());
         to_register_btn.setOnClickListener(v ->
-
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
 
         findViewById(R.id.registerConstraintLayout).setOnClickListener(v -> {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            idEditText.requestFocus();
-            imm.hideSoftInputFromWindow(idEditText.getWindowToken(), 0);
-            idEditText.clearFocus();
-        });
-
-        idEditText.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            public void afterTextChanged(Editable s) {
-                registerBtn.setEnabled(checkButtonRegisterEnable());
-            }
+            emailEditText.requestFocus();
+            imm.hideSoftInputFromWindow(emailEditText.getWindowToken(), 0);
+            emailEditText.clearFocus();
         });
 
         emailEditText.addTextChangedListener(new TextWatcher() {
@@ -112,16 +96,12 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     boolean checkButtonRegisterEnable() {
-        return !(isEmptyEditText(idEditText) || isEmptyEditText(emailEditText) || isEmptyEditText(passwordEditText) || isEmptyEditText(rePasswordEditText));
+        return !(isEmptyEditText(emailEditText) || isEmptyEditText(passwordEditText) || isEmptyEditText(rePasswordEditText));
     }
 
 
     void tryToRegister() {
         boolean valid_input = true;
-        if (!isId(idEditText)) {
-            idEditText.setError("invalid id");
-            valid_input = false;
-        }
         if (!isEmail(emailEditText)) {
             emailEditText.setError("invalid email");
             valid_input = false;
@@ -139,14 +119,9 @@ public class RegisterActivity extends AppCompatActivity {
         if (!valid_input) return;
 
         // DB validation
-        if (!this.db.idExistsInDB(idEditText.getText().toString())) {
-//            Toast.makeText(this, "id is unknown", Toast.LENGTH_SHORT).show();
-//            valid_input = false;
-        } else {
-            if (this.db.idDoubleUser(idEditText.getText().toString())) {
-                Toast.makeText(this, "id is already register", Toast.LENGTH_SHORT).show();
-                valid_input = false;
-            }
+        if (this.db.idUserExists(emailEditText.getText().toString())) {
+            Toast.makeText(this, "user is already register", Toast.LENGTH_SHORT).show();
+            valid_input = false;
         }
 
         if (valid_input) {
@@ -164,7 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
                     db.setCurrentUser(user);
 
                     // update UI
-                    startActivity(new Intent(this, MapScreenActivity.class));
+                    startActivity(new Intent(this, WaitForAccessActivity.class));
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("RegisterActivity", "createUserWithEmail:failure", task.getException());
@@ -176,14 +151,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean isValidPassword(String pass) {
         return pass.length() >= 6;
-    }
-
-    boolean isId(EditText text) {
-        String input = text.getText().toString();
-        String regex = "[0-9]+";
-        Pattern p = Pattern.compile(regex);
-        Matcher m = p.matcher(input);
-        return m.matches() && input.length() == 9;
     }
 
     boolean isEmail(EditText text) {
