@@ -49,7 +49,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         registerBtn.setOnClickListener(v -> tryToRegister());
         to_register_btn.setOnClickListener(v ->
-
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
 
         findViewById(R.id.registerConstraintLayout).setOnClickListener(v -> {
@@ -125,7 +124,6 @@ public class RegisterActivity extends AppCompatActivity {
             valid_input = false;
         }
 
-
         if (valid_input) {
             // fireBase authentication
             FirebaseAuth auth = db.getUsersAuthenticator();
@@ -141,7 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
                     db.setCurrentUser(user);
 
                     // update UI
-                    startActivity(new Intent(this, MapScreenActivity.class));
+                    startActivity(new Intent(this, WaitForAccessActivity.class));
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("RegisterActivity", "createUserWithEmail:failure", task.getException());
