@@ -10,10 +10,10 @@
 
     <!-- screen's logo -->
     <ImageView
-        android:id="@+id/app_logo"
+        android:id="@+id/appLogoInRegister"
         android:layout_width="230dp"
         android:layout_height="112dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="16dp"
         android:contentDescription="@string/logo_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -21,25 +21,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_full" />
 
-    <!-- screen's title -->
-    <TextView
-        android:id="@+id/registerScreenTitleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/register_title"
-        android:textSize="36sp"
-        app:layout_constraintEnd_toEndOf="@+id/app_logo"
-        app:layout_constraintStart_toStartOf="@+id/app_logo"
-        app:layout_constraintTop_toBottomOf="@+id/app_logo" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="40dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registerScreenTitleTextView">
+        app:layout_constraintTop_toBottomOf="@+id/appLogoInRegister">
 
         <!-- register fields -->
         <LinearLayout
@@ -53,21 +41,9 @@
             app:layout_constraintTop_toBottomOf="@+id/registerScreenTitleTextView">
 
             <EditText
-                android:id="@+id/input_id_register"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:digits="0123456789"
-                android:hint="@string/register_id"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                android:maxLength="9"
-                android:textSize="18sp" />
-
-            <EditText
                 android:id="@+id/input_user_name_register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:hint="@string/register_name"
                 android:importantForAutofill="no"
                 android:inputType="textEmailAddress"

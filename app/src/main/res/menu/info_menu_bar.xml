@@ -23,6 +23,12 @@
             android:icon="@drawable/ic_phone"
             android:title="emergency numbers" />
 
+        <item
+            android:id="@+id/about_section"
+            android:icon="@drawable/ic_info"
+            android:title="@string/about_section"
+            />
+
     </group>
 
 </menu>

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -88,6 +89,15 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
         MapState.getInstance().markersDescriptorsLD.observe(this, markers -> {
             mMapHandler.showMarkers(markers);
         });
+
+        CommuniDogApp.getInstance().getDb().currentUserLiveData.observe(this, user -> {
+            ImageView btnNotification = findViewById(R.id.buttonNotificationActivity);
+            if (user.isManager()) {
+                btnNotification.setVisibility(View.VISIBLE);
+            } else {
+                btnNotification.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void initMoreInfoBar() {
@@ -134,10 +144,11 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE: {
-                    Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
-                    intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent1.putExtra("LOGOUT", true);
-                    startActivity(intent1);
+//                    Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
+//                    intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    intent1.putExtra("LOGOUT", true);
+//                    startActivity(intent1);
+                    finish();
                     break;
                 }
                 case DialogInterface.BUTTON_NEGATIVE:
@@ -166,6 +177,11 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
                 Intent goToEmergencyPage = new Intent(MapScreenActivity.this, Emergency_numbers.class);
                 startActivity(goToEmergencyPage);
                 break;
+            case R.id.about_section:
+                Intent goToAboutPage = new Intent(MapScreenActivity.this, AboutPage.class);
+                startActivity(goToAboutPage);
+                break;
+
         }
         return true;
     }
@@ -174,10 +190,26 @@ public class MapScreenActivity extends AppCompatActivity implements NavigationVi
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mMapHandler.updateCenter();
+        outState.putBoolean("is_more_info_open", moreInfoDrawerLayout.isDrawerOpen(GravityCompat.START));
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        boolean openDrawer = savedInstanceState.getBoolean("is_more_info_open", false);
+        if (openDrawer) {
+            moreInfoDrawerLayout.openDrawer(GravityCompat.START);
+        }
     }
 
     private void goToUrl(String s) {
         Uri url = Uri.parse(s);
         startActivity(new Intent(Intent.ACTION_VIEW, url));
+    }
+
+
+    public void notificationsActivity(View view) {
+        Intent intent = new Intent(getApplicationContext(), UserApprovalActivity.class);
+        startActivity(intent);
     }
 }

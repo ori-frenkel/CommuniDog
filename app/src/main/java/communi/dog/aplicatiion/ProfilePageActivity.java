@@ -75,17 +75,13 @@ public class ProfilePageActivity extends AppCompatActivity {
         btnEditProfile.setOnClickListener(v -> {
             if (isEdit) {
                 btnCancelEdit.setVisibility(View.GONE);
-                // save updated user to DB
-                String userId = currentUser.getId();
-                String password = currentUser.getPassword();
-                String name = currentUser.getUserName();
-
-                // get from user input
-                String email = emailEditText.getText().toString();
-                String phone = phoneEditText.getText().toString();
-                String bio = bioEditText.getText().toString();
-                String dogName = dogNameEditText.getText().toString();
-                this.appDB.updateUser(userId, email, password, name, phone, dogName, bio);
+                this.appDB.updateUser(currentUser.getId(),
+                        emailEditText.getText().toString(),
+                        currentUser.getUserName(),
+                        phoneEditText.getText().toString(),
+                        dogNameEditText.getText().toString(),
+                        bioEditText.getText().toString(), currentUser.isManager(),
+                        currentUser.isApproved());
             } else {
                 dogNameBeforeEdit = dogNameEditText.getText().toString();
                 emailBeforeEdit = emailEditText.getText().toString();
@@ -109,7 +105,10 @@ public class ProfilePageActivity extends AppCompatActivity {
 
         btnCancelEdit.setOnClickListener(v -> cancelEditing());
 
-        btnBackToMap.setOnClickListener(v -> backToMap());
+        btnBackToMap.setOnClickListener(v -> {
+            super.onBackPressed();
+            finish();
+        });
     }
 
     @Override
@@ -158,14 +157,14 @@ public class ProfilePageActivity extends AppCompatActivity {
         int edit_ic = isEditState ? R.drawable.ic_save_profile : R.drawable.ic_edit_profile;
         btnEditProfile.setImageResource(edit_ic);
     }
-    
-    public void logout (View view) {
+
+    public void logout(View view) {
         // negative is positive and vice versa to allow yes on left and no on right
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you want to logout?").setCancelable(false);
         builder.setNegativeButton("Yes", (dialogInterface, i) -> {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            appDB.resetUser();
+            appDB.logoutUser();
             startActivity(intent);
         });
         builder.setPositiveButton("No", (dialogInterface, i) -> dialogInterface.cancel());
@@ -173,12 +172,11 @@ public class ProfilePageActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void backToMap() {
-        Intent backToMapIntent = new Intent(ProfilePageActivity.this, MapScreenActivity.class);
-        backToMapIntent.putExtra("center_to_my_location", false);
-        startActivity(backToMapIntent);
-        finish();
-    }
+//    private void backToMap() {
+//        Intent backToMapIntent = new Intent(ProfilePageActivity.this, MapScreenActivity.class);
+//        backToMapIntent.putExtra("center_to_my_location", false);
+//        startActivity(backToMapIntent);
+//    }
 
     @Override
     public void onBackPressed() {
@@ -186,7 +184,7 @@ public class ProfilePageActivity extends AppCompatActivity {
             cancelEditing();
         } else {
             super.onBackPressed();
-            backToMap();
+            finish();
         }
     }
 }

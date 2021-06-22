@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.Marker;
 
 import java.io.Serializable;
 import java.util.ArrayList;

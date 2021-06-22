@@ -5,32 +5,37 @@ import androidx.annotation.NonNull;
 public class User {
     private String id;
     private String email;
-    private String password;
     private String phoneNumber;
     private String userName;
     private String userDogName;
     private String userDescription;
+    private boolean isManager;
+    private boolean isApproved;
 
-    public User(String id, String email, String password, String userName) {
+    public User(String id, String email, String userName) {
         this.id = id;
         this.email = email;
-        this.password = password;
         this.userName = userName;
         this.userDogName = "";
         this.phoneNumber = "";
         this.userDescription = "";
+        this.isManager = false;
+        this.isApproved = false;
     }
 
-    public User(String id, String email, String password, String userName, String phoneNumber, String dogName, String userDescription) {
+    public User(String id, String email, String userName, String phoneNumber, String dogName, String userDescription,
+                boolean isManager, boolean isApproved) {
         this.id = id;
         this.email = email;
-        this.password = password;
         this.userName = userName;
         this.userDogName = dogName;
         this.phoneNumber = phoneNumber;
         this.userDescription = userDescription;
+        this.isManager = isManager;
+        this.isApproved = isApproved;
     }
 
+    // empty constructor for FireStore
     public User() {
     }
 
@@ -56,10 +61,6 @@ public class User {
     @NonNull
     public String getPhoneNumber() {
         return noNull(phoneNumber);
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getUserDescription() {
@@ -91,8 +92,20 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public boolean isManager() {
+        return isManager;
+    }
+
+    public boolean isApproved() {
+        return isApproved;
+    }
+
+    public void setManager(boolean manager) {
+        isManager = manager;
+    }
+
+    public void setApproved(boolean approved) {
+        isApproved = approved;
     }
 
     public void setUserDescription(String userDescription) {

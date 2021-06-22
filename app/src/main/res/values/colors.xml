@@ -6,6 +6,13 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
     <color name="light_yellow">#FFFF99</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="primaryText">#212121</color>
+    <color name="colorAccent">#FFC79C</color>
+    <color name="filter_label_normal">#8A8889</color>
+    <color name="background_about_section">#DEE4EF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">#00ffffff</color>
 </resources>
