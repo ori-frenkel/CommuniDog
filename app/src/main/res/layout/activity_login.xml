@@ -17,49 +17,29 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_full" />
 
-    <TextView
-        android:id="@+id/login_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/login_title"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo_image"
-        app:layout_constraintVertical_bias="0.0" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/login_logo"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_marginTop="42dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo_image">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="65dp"
             android:layout_marginEnd="65dp"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <EditText
-                android:id="@+id/input_id_login"
+                android:id="@+id/input_email_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="42dp"
-                android:digits="0123456789"
-                android:maxLength="9"
                 android:drawableLeft="@drawable/ic_baseline"
                 android:drawablePadding="10dp"
                 android:ems="10"
-                android:hint="@string/login_id"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/login_logo" />
+                android:hint="@string/login_email"
+                android:inputType="textEmailAddress" />
 
             <EditText
                 android:id="@+id/user_password"
@@ -70,11 +50,7 @@
                 android:drawablePadding="10dp"
                 android:ems="10"
                 android:hint="@string/login_password"
-                android:importantForAutofill="no"
-                android:inputType="textPassword"
-                app:layout_constraintEnd_toEndOf="@+id/input_id_login"
-                app:layout_constraintStart_toStartOf="@+id/input_id_login"
-                app:layout_constraintTop_toBottomOf="@+id/input_id_login" />
+                android:inputType="textPassword" />
 
             <Button
                 android:id="@+id/login_button"
@@ -101,8 +77,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/login_button" />
         </LinearLayout>
     </ScrollView>
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
