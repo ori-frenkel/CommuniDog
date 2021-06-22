@@ -17,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -38,6 +39,9 @@ public class DB implements Serializable {
 
     private final MutableLiveData<User> currentUSerMutableLiveData = new MutableLiveData<>();
     public final LiveData<User> currentUSerLiveData = currentUSerMutableLiveData;
+
+    private final MutableLiveData<ArrayList<User>> unapprovedUsersMutableLiveData = new MutableLiveData<>();
+    public final LiveData<ArrayList<User>> unapprovedUsersLiveData = unapprovedUsersMutableLiveData;
 
 
     public DB(Context context) {
@@ -114,24 +118,18 @@ public class DB implements Serializable {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 users.clear();
+                ArrayList<User> unapproved = new ArrayList<>();
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     if (ds != null) {
                         User user = ds.getValue(User.class);
                         users.put(user.getId(), user);
-//                        String id = ds.child("id").getValue(String.class);
-//                        String password = ds.child("password").getValue(String.class); // todo: delete - no need to save password anymore
-//                        String email = ds.child("email").getValue(String.class);
-//                        String name = ds.child("userName").getValue(String.class);
-//                        String dogName = ds.child("userDogName").getValue(String.class);
-//                        dogName = dogName != null ? dogName : "";
-//                        String phoneNumber = ds.child("phoneNumber").getValue(String.class);
-//                        phoneNumber = phoneNumber != null ? phoneNumber : "";
-//                        String description = ds.child("userDescription").getValue(String.class);
-//                        description = description != null ? description : "";
-//                        users.put(id, new User(id, email, password, name, phoneNumber, dogName, description));
+                        if(!user.isApproved()){
+                            unapproved.add(user);
+                        }
                     }
                 }
                 setCurrentUser(currentFbUser);
+                unapprovedUsersMutableLiveData.setValue(unapproved);
                 firebaseCallback.onCallback(users, allIDs);
             }
 
