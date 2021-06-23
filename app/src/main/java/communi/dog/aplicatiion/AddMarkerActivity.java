@@ -77,14 +77,14 @@ public class AddMarkerActivity extends AppCompatActivity {
                 mapState.addMarker(newMarker);
                 appDB.updateMarkerDescriptor(newMarker);
             }
-            backButton();
+            backToMap();
         });
 
         buttonDeleteMarker.setOnClickListener(v -> {
             if (markerToEdit == null) return;
             mapState.removeMarker(markerToEdit.getId());
             this.appDB.removeMarker(markerToEdit.getId());
-            backButton();
+            backToMap();
         });
 
         ImageView buttonCancel = findViewById(R.id.buttonCancelMarker);
@@ -105,8 +105,8 @@ public class AddMarkerActivity extends AppCompatActivity {
         return msg;
     }
 
-    private void backButton() {
-        Intent backToMapIntent = new Intent(this, ProfilePageActivity.class);
+    private void backToMap() {
+        Intent backToMapIntent = new Intent(this, MapScreenActivity.class);
         backToMapIntent.putExtra("center_to_my_location", false);
         startActivity(backToMapIntent);
     }
